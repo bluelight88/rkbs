@@ -37,9 +37,7 @@ final class NavigationManager {
       // ************** OnBoard module ends **************
       // ************** Authentication module starts **************
       RouteName.authScreen => MultiBlocProvider(
-        providers: [
-          BlocProvider(create: (context) => LoginBloc()),
-        ],
+        providers: [BlocProvider(create: (context) => LoginBloc())],
         child: const LoginScreen(),
       ),
       // ************** Authentication module ends **************

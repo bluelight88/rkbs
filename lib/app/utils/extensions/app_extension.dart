@@ -14,8 +14,10 @@ extension StringExtension on String {
   }
 
   String capitalizeAllFirstLetter() {
-    return capitalizeFirstLetter().splitMapJoin(RegExp(r' '),
-        onNonMatch: (str) => str.toString().capitalize());
+    return capitalizeFirstLetter().splitMapJoin(
+      RegExp(r' '),
+      onNonMatch: (str) => str.toString().capitalize(),
+    );
   }
 }
 
@@ -48,7 +50,7 @@ extension DateExtension on DateTime {
       30,
       31,
       30,
-      31
+      31,
     ];
     return daysInMonth[month - 1];
   }
@@ -57,12 +59,14 @@ extension DateExtension on DateTime {
   List<DateTime> getDatesBetweenTwoDates(DateTime endDate) {
     List<DateTime> days = [];
     for (int i = 0; i <= endDate.difference(this).inDays; i++) {
-      days.add(DateTime(
-        year,
-        month,
-        // In Dart you can set more than. 30 days, DateTime will do the trick
-        day + i,
-      ));
+      days.add(
+        DateTime(
+          year,
+          month,
+          // In Dart you can set more than. 30 days, DateTime will do the trick
+          day + i,
+        ),
+      );
     }
     return days;
   }

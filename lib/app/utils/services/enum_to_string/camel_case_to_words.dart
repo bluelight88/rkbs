@@ -21,8 +21,10 @@ const String whitespace =
 const String word =
     '(?:[$upperCase][$diacriticalMark]*)?(?:[$lowerCase][$diacriticalMark]*)+|(?:[$upperCase][$diacriticalMark]*)+(?![$lowerCase])|[$digit]+|[$dingbatBlock]|[^$nonChar$generalPunctuation$whitespace]+';
 
-String camelCaseToWords(String subject,
-    [Pattern customPattern = defaultPattern]) {
+String camelCaseToWords(
+  String subject, [
+  Pattern customPattern = defaultPattern,
+]) {
   if (subject.isEmpty) {
     return '';
   }

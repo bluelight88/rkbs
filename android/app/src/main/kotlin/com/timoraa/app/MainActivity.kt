@@ -1,4 +1,4 @@
-package com.kt.base.base_project
+package com.timoraa.app
 
 
 import io.flutter.embedding.android.FlutterActivity

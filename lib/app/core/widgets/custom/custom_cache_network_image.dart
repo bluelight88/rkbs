@@ -18,20 +18,20 @@ final class CustomNetworkImage extends StatelessWidget {
     this.boxFit = BoxFit.fill,
     this.height,
     this.width,
-    this.errorWidget =
-        const CustomSvgPicture(AssetConstants.appLogo),
+    this.errorWidget = const CustomSvgPicture(AssetConstants.appLogo),
     this.placeholderWidget = const CenterLoaderWidget(),
   });
 
   @override
-  Widget build(BuildContext context) => imageUrl.isNotEmpty
-      ? CachedNetworkImage(
-          fit: boxFit,
-          height: height,
-          width: width,
-          imageUrl: imageUrl,
-          errorWidget: (context, url, error) => errorWidget,
-          placeholder: (context, url) => placeholderWidget,
-        )
-      : errorWidget;
+  Widget build(BuildContext context) =>
+      imageUrl.isNotEmpty
+          ? CachedNetworkImage(
+            fit: boxFit,
+            height: height,
+            width: width,
+            imageUrl: imageUrl,
+            errorWidget: (context, url, error) => errorWidget,
+            placeholder: (context, url) => placeholderWidget,
+          )
+          : errorWidget;
 }

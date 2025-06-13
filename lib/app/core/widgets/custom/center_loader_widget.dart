@@ -16,12 +16,10 @@ final class CenterLoader extends StatelessWidget {
 
   @override
   SizedBox build(BuildContext context) => SizedBox(
-        width: width,
-        height: height,
-        child: const Align(
-          child: CircularProgressIndicator.adaptive(),
-        ),
-      );
+    width: width,
+    height: height,
+    child: const Align(child: CircularProgressIndicator.adaptive()),
+  );
 }
 
 final class SpinKitLoader extends StatelessWidget {
@@ -44,13 +42,9 @@ final class SpinKitLoaderWithToolTip extends StatelessWidget {
 
   @override
   Row build(BuildContext context) => Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SpinKitFadingCircle(color: color),
-          const Gap(10),
-          Text(toolTip),
-        ],
-      );
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [SpinKitFadingCircle(color: color), const Gap(10), Text(toolTip)],
+  );
 }
 
 final class BackgroundFadingSpinKitLoader extends StatelessWidget {
@@ -58,27 +52,20 @@ final class BackgroundFadingSpinKitLoader extends StatelessWidget {
 
   @override
   Align build(BuildContext context) => Align(
-        child: Material(
-          elevation: 10,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
-          ),
-          child: const Padding(
-            padding: EdgeInsets.symmetric(vertical: 25, horizontal: 35),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SpinKitLoader(),
-                  ],
-                ),
-              ],
-            ),
-          ),
+    child: Material(
+      elevation: 10,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      child: const Padding(
+        padding: EdgeInsets.symmetric(vertical: 25, horizontal: 35),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Column(mainAxisSize: MainAxisSize.min, children: [SpinKitLoader()]),
+          ],
         ),
-      );
+      ),
+    ),
+  );
 }
 
 final class LoadingWidget extends StatelessWidget {
@@ -87,8 +74,8 @@ final class LoadingWidget extends StatelessWidget {
 
   @override
   SizedBox build(BuildContext context) => SizedBox(
-        height: height,
-        width: width,
-        child: const BackgroundFadingSpinKitLoader(),
-      );
+    height: height,
+    width: width,
+    child: const BackgroundFadingSpinKitLoader(),
+  );
 }

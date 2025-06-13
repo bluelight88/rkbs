@@ -9,7 +9,6 @@ import '../../../../utils/manager/get_it_manager.dart';
 import '../../../../utils/manager/storage_manager.dart';
 import '../../../../utils/services/app_state.dart';
 import '../login_model.dart';
-import '../otp_timer_model.dart';
 
 final class AuthRepo {
   Future<DataState> login(Map<String, dynamic> params) async {

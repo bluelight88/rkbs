@@ -193,7 +193,7 @@ final class CustomDialog {
     contentTextStyle: const TextStyle(
       fontSize: 16,
       fontFamily: "HelveticaNeueLTArabic",
-      color: ColorConstants.blackColor,
+      color: ColorConstants.primaryColor,
     ),
     actions: _showDesignedMaterialActions(
       context,

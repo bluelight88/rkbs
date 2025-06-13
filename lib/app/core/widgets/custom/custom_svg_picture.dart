@@ -19,11 +19,11 @@ final class CustomSvgPicture extends StatelessWidget {
 
   @override
   SvgPicture build(BuildContext context) => SvgPicture.asset(
-        image,
-        fit: boxFit,
-        width: width,
-        height: height,
-        // ignore: deprecated_member_use
-        color: color,
-      );
+    image,
+    fit: boxFit,
+    width: width,
+    height: height,
+    // ignore: deprecated_member_use
+    color: color,
+  );
 }

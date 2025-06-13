@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:bot_toast/bot_toast.dart';
 
 import '../../../utils/constants/asset_constants.dart';
-import '../../../utils/constants/color_constants.dart';
 
 final class ToastUtils {
   static void showSuccess({required String message, int duration = 3}) {

@@ -16,19 +16,28 @@ final class EnumToString {
   /// So TestEnum.valueOne will become Value One
   static String convertToString(dynamic enumItem, {bool camelCase = false}) {
     assert(enumItem != null);
-    assert(_isEnumItem(enumItem),
-        '$enumItem of type ${enumItem.runtimeType.toString()} is not an enum item');
+    assert(
+      _isEnumItem(enumItem),
+      '$enumItem of type ${enumItem.runtimeType.toString()} is not an enum item',
+    );
     final tmp = enumItem.toString().split('.')[1];
     return !camelCase ? tmp : camelCaseToWords(tmp);
   }
 
-  static T? fromString<T>(List<T> enumValues, String value,
-      {bool camelCase = false}) {
+  static T? fromString<T>(
+    List<T> enumValues,
+    String value, {
+    bool camelCase = false,
+  }) {
     try {
-      return enumValues.singleWhere((enumItem) =>
-          EnumToString.convertToString(enumItem, camelCase: camelCase)
-              .toLowerCase() ==
-          value.toLowerCase());
+      return enumValues.singleWhere(
+        (enumItem) =>
+            EnumToString.convertToString(
+              enumItem,
+              camelCase: camelCase,
+            ).toLowerCase() ==
+            value.toLowerCase(),
+      );
     } on StateError catch (_) {
       return null;
     }
@@ -53,11 +62,15 @@ final class EnumToString {
   /// Bulk convert enum values to a list
   ///
   static List<String> toList<T>(List<T> enumValues, {bool camelCase = false}) {
-    final enumList = enumValues
-        .map((t) => !camelCase
-            ? EnumToString.convertToString(t)
-            : EnumToString.convertToString(t, camelCase: true))
-        .toList();
+    final enumList =
+        enumValues
+            .map(
+              (t) =>
+                  !camelCase
+                      ? EnumToString.convertToString(t)
+                      : EnumToString.convertToString(t, camelCase: true),
+            )
+            .toList();
 
     // I am sure there is a better way to convert a nullable list to a
     // non-nullable one, but this will do until I find out how. Happy if
@@ -77,6 +90,7 @@ final class EnumToString {
   /// Eg. EnumToString.fromList(TestEnum.values, ["valueOne", "value2"]
   static List<T?> fromList<T>(List<T> enumValues, List valueList) {
     return List<T?>.from(
-        valueList.map<T?>((item) => fromString(enumValues, item)));
+      valueList.map<T?>((item) => fromString(enumValues, item)),
+    );
   }
 }

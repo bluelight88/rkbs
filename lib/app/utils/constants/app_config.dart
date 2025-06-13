@@ -41,26 +41,26 @@ final class AppConfig {
 
   Map<String, dynamic> devConstants = {
     _baseUrl: APIS.baseUrlLocal,
-    _isLocal: false
+    _isLocal: false,
   };
 
   Map<String, dynamic> stageConstants = {
     _baseUrl: APIS.baseUrlLocal,
-    _isLocal: false
+    _isLocal: false,
   };
 
   Map<String, dynamic> preProdConstants = {
     _baseUrl: APIS.baseUrlLocal,
-    _isLocal: false
+    _isLocal: false,
   };
 
   Map<String, dynamic> prodConstants = {
     _baseUrl: APIS.baseUrlLocal,
-    _isLocal: false
+    _isLocal: false,
   };
 
   Map<String, dynamic> localConstants = {
     _baseUrl: APIS.baseUrlLocal,
-    _isLocal: false
+    _isLocal: false,
   };
 }

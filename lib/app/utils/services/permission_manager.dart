@@ -11,10 +11,12 @@ final class PermissionManager {
 
   bool get isDialogVisible => _isDialogVisible;
 
-  Future<bool> askPermissions(List<Permission> permissions,
-      {final bool isRequired = true,
-      final String message = "",
-      bool shouldDialogPopOnYesTap = true}) async {
+  Future<bool> askPermissions(
+    List<Permission> permissions, {
+    final bool isRequired = true,
+    final String message = "",
+    bool shouldDialogPopOnYesTap = true,
+  }) async {
     try {
       final permissionsStatus = await permissions.request();
       for (final permission in permissions) {
@@ -41,10 +43,14 @@ final class PermissionManager {
           msg =
               "${appState.localization.pleaseGrant} $askedPermissions ${(permissions.length == 1) ? appState.localization.permissions : appState.localization.permissions} ${appState.localization.fromSettings}";
         }
-        CustomDialog.instance.showAskRequiredPermissionsDialog(() async {
-          _isDialogVisible = false;
-          if (isRequired) await openAppSettings();
-        }, msg, shouldDialogPopOnYesTap: shouldDialogPopOnYesTap);
+        CustomDialog.instance.showAskRequiredPermissionsDialog(
+          () async {
+            _isDialogVisible = false;
+            if (isRequired) await openAppSettings();
+          },
+          msg,
+          shouldDialogPopOnYesTap: shouldDialogPopOnYesTap,
+        );
       }
       return false;
     } on PermissionNotGrantedException catch (_) {

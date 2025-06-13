@@ -5,17 +5,19 @@ extension NavigationExtension on BuildContext {
     String routeName, {
     final bool withNavBar = true,
     Object? args,
-  }) =>
-      Navigator.of(this, rootNavigator: !withNavBar)
-          .pushNamed<T>(routeName, arguments: args);
+  }) => Navigator.of(
+    this,
+    rootNavigator: !withNavBar,
+  ).pushNamed<T>(routeName, arguments: args);
 
-  Future<T?> pushNamedAndRemoveUntil<T extends Object?>(String routeName,
-      {Object? args}) {
-    return Navigator.of(this, rootNavigator: true).pushNamedAndRemoveUntil<T>(
-      routeName,
-      (route) => false,
-      arguments: args,
-    );
+  Future<T?> pushNamedAndRemoveUntil<T extends Object?>(
+    String routeName, {
+    Object? args,
+  }) {
+    return Navigator.of(
+      this,
+      rootNavigator: true,
+    ).pushNamedAndRemoveUntil<T>(routeName, (route) => false, arguments: args);
   }
 
   Future<T?> pushReplacementNamed<T extends Object?, TO extends Object?>(
@@ -23,17 +25,19 @@ extension NavigationExtension on BuildContext {
     TO? result,
     final bool withNavBar = true,
     Object? args,
-  }) =>
-      Navigator.of(this, rootNavigator: !withNavBar)
-          .pushReplacementNamed<T?, TO>(routeName,
-              arguments: args, result: result);
+  }) => Navigator.of(
+    this,
+    rootNavigator: !withNavBar,
+  ).pushReplacementNamed<T?, TO>(routeName, arguments: args, result: result);
 
   void pop<T extends Object?>({T? args, bool withNavBar = true}) =>
       Navigator.of(this, rootNavigator: !withNavBar).pop<T?>(args);
 
   bool canPop({final bool withNavBar = true}) {
-    final NavigatorState? navigator =
-        Navigator.maybeOf(this, rootNavigator: !withNavBar);
+    final NavigatorState? navigator = Navigator.maybeOf(
+      this,
+      rootNavigator: !withNavBar,
+    );
     return navigator != null && navigator.canPop();
   }
 

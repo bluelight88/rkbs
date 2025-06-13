@@ -9,10 +9,10 @@ final class UnderDevelopmentScreen extends StatelessWidget {
 
   @override
   Scaffold build(BuildContext context) => Scaffold(
-        appBar: CustomAppBar(
-          appState.localization.underDevelopment,
-          showLeading: showLeading,
-        ),
-        body: Center(child: Text(appState.localization.comingSoon)),
-      );
+    appBar: CustomAppBar(
+      appState.localization.underDevelopment,
+      showLeading: showLeading,
+    ),
+    body: Center(child: Text(appState.localization.comingSoon)),
+  );
 }

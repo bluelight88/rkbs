@@ -28,9 +28,10 @@ final class StorageManager {
 
   Future<String?> getData(String key) async => _spInstance.getString(key);
 
-  Future<bool> getBoolData(String key,
-          {final bool defaultValue = false}) async =>
-      _spInstance.getBool(key) ?? false;
+  Future<bool> getBoolData(
+    String key, {
+    final bool defaultValue = false,
+  }) async => _spInstance.getBool(key) ?? false;
 
   Future<int?> getIntData(String key) async => _spInstance.getInt(key);
 

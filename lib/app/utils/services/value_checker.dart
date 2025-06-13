@@ -21,8 +21,9 @@ final class ValueChecker {
   }
 
   String? mobileNumberValidator(String? value) {
-    final RegExp regExp =
-        RegExp(r'^((?:[+?0?0?966]+)(?:\s?\d{2})(?:\s?\d{7}))$');
+    final RegExp regExp = RegExp(
+      r'^((?:[+?0?0?966]+)(?:\s?\d{2})(?:\s?\d{7}))$',
+    );
     if (value!.isEmpty || value.length != 10) {
       return appState.localization.enterValidMobileNumber;
     } else {
@@ -48,8 +49,9 @@ final class ValueChecker {
   }
 
   String? passwordValidator(String? value, {String passwordText = ''}) {
-    RegExp regExp =
-        RegExp(r'^(?=.*?[A-Z])(?=.*[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$');
+    RegExp regExp = RegExp(
+      r'^(?=.*?[A-Z])(?=.*[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$',
+    );
     if (value!.isEmpty) {
       return passwordText.isNotEmpty
           ? passwordText
@@ -61,5 +63,4 @@ final class ValueChecker {
     }
     return null;
   }
-
 }

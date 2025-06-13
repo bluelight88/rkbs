@@ -4,7 +4,6 @@ import 'package:equatable/equatable.dart';
 import '../../../../core/models/api/data_state.dart';
 import '../../../../utils/manager/get_it_manager.dart';
 import '../../../../utils/services/app_state.dart';
-import '../../model/login_model.dart';
 import '../../model/repo/auth_repo.dart';
 
 part 'login_event.dart';
@@ -26,9 +25,7 @@ final class LoginBloc extends Bloc<LoginEvent, LoginState> {
     };
     final response = await getIt<AuthRepo>().login(params);
     if (response is DataSuccess) {
-      emit(LoginSuccess(
-        msg: "Login Success",
-      ));
+      emit(LoginSuccess(msg: "Login Success"));
     } else if (response is DataFailure) {
       emit(LoginFailure(response.error.description));
     }

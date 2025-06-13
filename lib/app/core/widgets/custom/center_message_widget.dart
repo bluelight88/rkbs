@@ -21,30 +21,31 @@ final class CenterMessageWidget extends StatelessWidget {
 
   @override
   SizedBox build(BuildContext context) => SizedBox(
-        width: width,
-        height: height,
-        child: Center(
-          child: onRefresh != null
+    width: width,
+    height: height,
+    child: Center(
+      child:
+          onRefresh != null
               ? Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(text, textAlign: TextAlign.center),
-                    const Gap(5),
-                    AppOutlinedIconButton(
-                      icon: const Icon(Icons.refresh_outlined),
-                      onPressed: onRefresh ?? () {},
-                      width: 125,
-                      outlineColor: ColorConstants.primaryColor,
-                      child: Text(
-                        appState.localization.refresh,
-                        style: const TextStyle(height: 1.5),
-                      ),
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(text, textAlign: TextAlign.center),
+                  const Gap(5),
+                  AppOutlinedIconButton(
+                    icon: const Icon(Icons.refresh_outlined),
+                    onPressed: onRefresh ?? () {},
+                    width: 125,
+                    outlineColor: ColorConstants.primaryColor,
+                    child: Text(
+                      appState.localization.refresh,
+                      style: const TextStyle(height: 1.5),
                     ),
-                  ],
-                )
+                  ),
+                ],
+              )
               : Text(text, textAlign: TextAlign.center),
-        ),
-      );
+    ),
+  );
 }
 
 final class FailureWidget extends StatelessWidget {
@@ -62,9 +63,9 @@ final class FailureWidget extends StatelessWidget {
 
   @override
   CenterMessageWidget build(BuildContext context) => CenterMessageWidget(
-        msg,
-        height: height,
-        width: width,
-        onRefresh: onRefresh,
-      );
+    msg,
+    height: height,
+    width: width,
+    onRefresh: onRefresh,
+  );
 }

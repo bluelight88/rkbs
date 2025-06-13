@@ -4,6 +4,7 @@ import 'dart:developer' show log;
 
 import 'package:flutter/foundation.dart' show debugPrint, kDebugMode;
 
+// ignore: depend_on_referenced_packages
 import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
 
@@ -359,8 +360,8 @@ final class APIController {
       if (response.data.isNotEmpty) {
         error = ErrorModel(
           appState.localization.error,
-         responseData['result']['status']['error_message'] ??
-                  appState.localization.somethingWentWrong,
+          responseData['result']['status']['error_message'] ??
+              appState.localization.somethingWentWrong,
           responseData['result']['status']['error_code'] ?? 401,
         );
         apiResponse = ApiResponseModel(null, error, false);

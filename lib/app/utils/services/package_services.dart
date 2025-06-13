@@ -72,11 +72,9 @@ final class PackageServices {
             file.extension != null &&
             file.path!.isNotEmpty &&
             file.extension!.isNotEmpty) {
-          files.add(FileInfo(
-            path: file.path!,
-            name: file.name,
-            ext: file.extension!,
-          ));
+          files.add(
+            FileInfo(path: file.path!, name: file.name, ext: file.extension!),
+          );
         }
       }
       return files;

@@ -15,11 +15,8 @@ final class ErrorModel {
 
   ErrorModel(this.title, this.description, this.statusCode);
 
-  factory ErrorModel.fromJson(Map<String, dynamic> json) => ErrorModel(
-        json["title"],
-        json["description"],
-        json["statusCode"],
-      );
+  factory ErrorModel.fromJson(Map<String, dynamic> json) =>
+      ErrorModel(json["title"], json["description"], json["statusCode"]);
 }
 
 class ValidationErrorModel {
@@ -39,8 +36,9 @@ class ValidationErrorModel {
       ValidationErrorModel(
         name: json["name"],
         message: json["message"],
-        arguments: List<String>.from(json["arguments"]
-            .map((x) => UtilMethods().emptyStringValueParser(x))),
+        arguments: List<String>.from(
+          json["arguments"].map((x) => UtilMethods().emptyStringValueParser(x)),
+        ),
         exceptionType: json["exception_type"],
       );
 }
