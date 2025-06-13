@@ -30,13 +30,30 @@ class _LoginScreenState extends State<LoginScreen> {
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: 30),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Text(
+                "Sign with Mobile",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                  color: ColorConstants.primaryColor,
+                ),
+              ),
+              const Gap(5),
+              Text(
+                "We will send one time password for into login",
+                style: TextStyle(
+                  fontSize: 12,
+                  color: ColorConstants.primaryColor,
+                ),
+              ),
+              const Gap(25),
               IntlPhoneField(
                 controller: mobileNumber,
                 focusNode: phoneFocusNode,
-                dropdownIcon: Icon(Icons.arrow_drop_down_rounded, size: 15),
+                dropdownIcon: Icon(Icons.arrow_drop_down, size: 15),
                 flagsButtonPadding: EdgeInsets.symmetric(horizontal: 10),
                 textInputAction: TextInputAction.done,
                 keyboardType: TextInputType.phone,

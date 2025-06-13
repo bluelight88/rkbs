@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:base_project/app/utils/constants/asset_constants.dart';
 import 'package:base_project/app/utils/constants/color_constants.dart';
 import 'package:base_project/app/utils/constants/route_name.dart';
 import 'package:base_project/app/utils/extensions/navigation_extension.dart';
@@ -24,8 +25,12 @@ final class _SplashScreenState extends State<SplashScreen> {
   @override
   Scaffold build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorConstants.whiteColor,
-      body: Center(child: FlutterLogo(size: 150)),
+      backgroundColor: ColorConstants.primaryColor,
+      body: Image.asset(
+        AssetConstants.splashScreen,
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+      ),
     );
   }
 }
