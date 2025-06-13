@@ -192,7 +192,7 @@ final class CustomTheme {
           return null;
         }),
       ),
-      dialogTheme: DialogTheme(
+      dialogTheme: DialogThemeData(
         titleTextStyle: Typography.whiteMountainView.displayLarge?.copyWith(
             color: Colors.black,
             fontSize: 18,
