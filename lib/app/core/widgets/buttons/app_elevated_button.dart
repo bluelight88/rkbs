@@ -42,7 +42,7 @@ final class AppElevatedButton extends StatelessWidget {
     this.foregroundColor = ColorConstants.whiteColor,
     this.width = double.infinity,
     this.height = 40,
-    this.borderRadius = 15,
+    this.borderRadius = 10,
   });
 
   @override
@@ -52,7 +52,6 @@ final class AppElevatedButton extends StatelessWidget {
       maximumSize: Size(width, height),
       minimumSize: Size(width, height),
       side: BorderSide(color: backgroundColor),
-      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
       backgroundColor: backgroundColor,
       foregroundColor: foregroundColor,
       shape: RoundedRectangleBorder(
