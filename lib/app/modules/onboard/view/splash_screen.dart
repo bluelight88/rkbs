@@ -18,7 +18,7 @@ final class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Timer(Duration(seconds: 3), () {
-      context.pushReplacementNamed(RouteName.authScreen);
+      context.pushReplacementNamed(RouteName.onBoardingScreen);
     });
   }
 

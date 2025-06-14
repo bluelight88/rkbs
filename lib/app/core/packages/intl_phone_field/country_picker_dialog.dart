@@ -1,4 +1,4 @@
-import 'package:base_project/app/modules/packages/intl_phone_field/helpers.dart';
+import 'package:base_project/app/core/packages/intl_phone_field/helpers.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 

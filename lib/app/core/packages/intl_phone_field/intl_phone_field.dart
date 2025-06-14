@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import './countries.dart';
-import './phone_number.dart';
+import 'phone_number.dart';
 import 'country_picker_dialog.dart';
 import 'helpers.dart';
 

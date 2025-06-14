@@ -15,5 +15,6 @@ class APIS {
   // Authentication
   static const String loginAPI = '${version}api/login',
       todo = 'to_do',
-      logout = '${version}api/logout';
+      logout = '${version}api/logout',
+      sendOtp = '${version}api/send/otp';
 }

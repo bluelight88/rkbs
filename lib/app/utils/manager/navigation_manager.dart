@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../modules/auth/view/login/login_screen.dart';
 import '../../modules/auth/view_model/login/login_bloc.dart';
+import '../../modules/onboard/view/on_boarding_screen.dart';
 import '../../modules/onboard/view/splash_screen.dart';
 import '../../modules/onboard/view/under_development_screen.dart';
 import '../constants/route_name.dart';
@@ -40,6 +41,7 @@ final class NavigationManager {
         providers: [BlocProvider(create: (context) => LoginBloc())],
         child: const LoginScreen(),
       ),
+      RouteName.onBoardingScreen => const OnBoardingScreen(),
       // ************** Authentication module ends **************
       _ => UnderDevelopmentScreen(showLeading: args['showLeading'] ?? true),
     };

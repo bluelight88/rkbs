@@ -35,4 +35,19 @@ final class AuthRepo {
       return UnknownDataFailure(e);
     }
   }
+
+  Future<DataState> sendOtpSms(Map<String, dynamic> params) async {
+    try {
+      final response = await getIt<APIController>().request(
+        APIS.sendOtp,
+        APIMethod.post,
+        param: params,
+      );
+      return DataSuccess(response.data);
+    } on ErrorException catch (e) {
+      return DataFailure(e.error);
+    } catch (e) {
+      return UnknownDataFailure(e);
+    }
+  }
 }
