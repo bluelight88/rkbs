@@ -38,7 +38,7 @@ final class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     UtilMethods.instance.setOrientation();
     return MaterialApp(
-      title: 'Base Setup',
+      title: 'Timoraa',
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.light,
       theme: CustomTheme.lightTheme(),
