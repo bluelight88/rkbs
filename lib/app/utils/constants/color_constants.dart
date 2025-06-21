@@ -12,6 +12,7 @@ final class ColorConstants {
       whiteColor = Colors.white,
       lightGreyColor = Color(0xffDEDEDE),
       bottomNavBarUnselectedColor = Color(0xffCACACA),
+      searchFieldTextColor = Color(0xFF848484),
       greyColor = Colors.grey,
       redColor = Colors.red;
 }

@@ -17,7 +17,7 @@ class OnBoardingScreen extends StatelessWidget {
       body: Stack(
         children: [
           Image.asset(
-            AssetConstants.onBoardingImage,
+            AssetConstants.splashScreen,
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height * 0.99,
             fit: BoxFit.fitHeight,
@@ -58,7 +58,7 @@ class OnBoardingScreen extends StatelessWidget {
                   },
                 ),
               ),
-              const Gap(30),
+              const Gap(50),
             ],
           ),
         ],

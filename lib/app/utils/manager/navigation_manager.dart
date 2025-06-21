@@ -1,3 +1,4 @@
+import 'package:base_project/app/modules/dashboard/view/dashboard_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -42,6 +43,8 @@ final class NavigationManager {
         child: const LoginScreen(),
       ),
       RouteName.onBoardingScreen => const OnBoardingScreen(),
+      // DashBoard
+      RouteName.dashboardScreen => const DashboardScreen(),
       // ************** Authentication module ends **************
       _ => UnderDevelopmentScreen(showLeading: args['showLeading'] ?? true),
     };

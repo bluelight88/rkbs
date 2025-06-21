@@ -1,9 +1,11 @@
 import 'package:base_project/app/utils/constants/asset_constants.dart';
 import 'package:base_project/app/utils/constants/color_constants.dart';
+import 'package:base_project/app/utils/extensions/navigation_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import '../../../../core/packages/intl_phone_field/intl_phone_field.dart';
 import '../../../../core/widgets/buttons/app_elevated_button.dart';
+import '../../../../utils/constants/route_name.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -144,7 +146,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       },
                     ),
                     const Gap(20),
-                    AppElevatedButton(Text("Get OTP"), onPressed: () {}),
+                    AppElevatedButton(
+                      Text("Get OTP"),
+                      onPressed: () {
+                        context.pushReplacementNamed(RouteName.dashboardScreen);
+                      },
+                    ),
                     const Gap(20),
                     Row(
                       children: [

@@ -5,5 +5,8 @@ class RouteName {
       onBoardingScreen = 'onBoardingScreen',
           // Auth
           authScreen =
-          "loginScreen";
+          "loginScreen",
+          // Dashboard
+          dashboardScreen =
+          'dashboardScreen';
 }
