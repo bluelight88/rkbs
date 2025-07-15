@@ -1,10 +1,13 @@
 import 'dart:async';
 
-import 'package:base_project/app/utils/constants/asset_constants.dart';
-import 'package:base_project/app/utils/constants/color_constants.dart';
-import 'package:base_project/app/utils/constants/route_name.dart';
-import 'package:base_project/app/utils/extensions/navigation_extension.dart';
+import 'package:timoraa/app/utils/constants/asset_constants.dart';
+import 'package:timoraa/app/utils/constants/color_constants.dart';
+import 'package:timoraa/app/utils/constants/route_name.dart';
+import 'package:timoraa/app/utils/extensions/navigation_extension.dart';
 import 'package:flutter/material.dart';
+import 'package:timoraa/app/utils/manager/api_controller.dart';
+
+import '../../../utils/services/app_state.dart';
 
 final class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -17,8 +20,12 @@ final class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Timer(Duration(seconds: 3), () {
-      context.pushReplacementNamed(RouteName.onBoardingScreen);
+    APIController().getUserLocationInfo().then((code) {
+      appState.countryCode.value = code.countryCode;
+      appState.ipAddress.value = code.ipAddress;
+      Timer(Duration(seconds: 3), () {
+        context.pushReplacementNamed(RouteName.onBoardingScreen);
+      });
     });
   }
 

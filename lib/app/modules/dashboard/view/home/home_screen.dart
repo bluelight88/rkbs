@@ -1,5 +1,5 @@
-import 'package:base_project/app/utils/constants/asset_constants.dart';
-import 'package:base_project/app/utils/constants/custom_text_form_field.dart';
+import 'package:timoraa/app/utils/constants/asset_constants.dart';
+import 'package:timoraa/app/utils/constants/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 

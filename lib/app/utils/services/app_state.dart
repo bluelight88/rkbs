@@ -82,6 +82,9 @@ final class AppState {
 
   set setUserRole(String userRole) => _userRole = userRole;
 
+  ValueNotifier<String> countryCode = ValueNotifier<String>("UK");
+  ValueNotifier<String> ipAddress = ValueNotifier<String>("");
+
   /// Method to set initial Values
   Future<void> setInitialValues() async {
     _timeZone = await FlutterTimezone.getLocalTimezone();

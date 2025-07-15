@@ -1,5 +1,5 @@
-import 'package:base_project/app/core/widgets/buttons/app_elevated_button.dart';
-import 'package:base_project/app/utils/extensions/navigation_extension.dart';
+import 'package:timoraa/app/core/widgets/buttons/app_elevated_button.dart';
+import 'package:timoraa/app/utils/extensions/navigation_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
@@ -54,7 +54,7 @@ class OnBoardingScreen extends StatelessWidget {
                   ),
                   backgroundColor: ColorConstants.whiteColor,
                   onPressed: () {
-                    context.pushReplacementNamed(RouteName.authScreen);
+                    context.pushReplacementNamed(RouteName.dashboardScreen);
                   },
                 ),
               ),

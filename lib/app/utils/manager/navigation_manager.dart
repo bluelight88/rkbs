@@ -1,4 +1,4 @@
-import 'package:base_project/app/modules/dashboard/view/dashboard_screen.dart';
+import 'package:timoraa/app/modules/dashboard/view/dashboard_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';

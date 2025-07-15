@@ -1,8 +1,9 @@
-import 'package:base_project/app/modules/dashboard/view/appointment/widget/appointment_card.dart';
-import 'package:base_project/app/utils/constants/color_constants.dart';
+import 'package:timoraa/app/modules/dashboard/view/appointment/widget/appointment_card.dart';
+import 'package:timoraa/app/utils/constants/color_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
+import '../../../../utils/services/app_state.dart';
 import '../../../auth/model/appointment_model.dart';
 
 class AppointmentScreen extends StatefulWidget {
@@ -59,26 +60,34 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
     return Scaffold(
       backgroundColor: ColorConstants.whiteColor,
       appBar: AppBar(title: Text("Appointments")),
-      body: ListView.separated(
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 25),
-        itemCount: appointments.length,
-        separatorBuilder: (context, index) {
-          return Gap(20);
-        },
-        itemBuilder: (context, index) {
-          return AppointmentCard(
-            status: appointments[index].status,
-            statusColor: getStatusColor(appointments[index].status),
-            statusTextColor: getStatusTextColor(appointments[index].status),
-            date: appointments[index].date,
-            time: appointments[index].time,
-            showButton: true,
-            service: appointments[index].service,
-            staff: appointments[index].staffName,
-            salon: appointments[index].salonName,
-          );
-        },
-      ),
+      body:
+          appState.userId.isEmpty
+              ? Center(child: Text("APPOINTMENTS"))
+              : ListView.separated(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 15,
+                  vertical: 25,
+                ),
+                itemCount: appointments.length,
+                separatorBuilder: (context, index) {
+                  return Gap(20);
+                },
+                itemBuilder: (context, index) {
+                  return AppointmentCard(
+                    status: appointments[index].status,
+                    statusColor: getStatusColor(appointments[index].status),
+                    statusTextColor: getStatusTextColor(
+                      appointments[index].status,
+                    ),
+                    date: appointments[index].date,
+                    time: appointments[index].time,
+                    showButton: true,
+                    service: appointments[index].service,
+                    staff: appointments[index].staffName,
+                    salon: appointments[index].salonName,
+                  );
+                },
+              ),
     );
   }
 }

@@ -1,4 +1,4 @@
-name: base_project
+name: timoraa
 description: "A Base Flutter Project Setup."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -57,6 +57,7 @@ dependencies:
   permission_handler: ^11.4.0
   shared_preferences: ^2.5.2
   sms_autofill: ^2.4.1
+  http: ^1.4.0
 
 dev_dependencies:
   flutter_test:

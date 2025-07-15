@@ -1,16 +1,19 @@
 import 'dart:async' show StreamController;
-import 'dart:convert' show JsonEncoder;
+import 'dart:convert' show JsonEncoder, jsonDecode;
 import 'dart:developer' show log;
+import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart' show debugPrint, kDebugMode;
 
 // ignore: depend_on_referenced_packages
 import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
+import 'package:http/http.dart' as http;
 
 import '../../core/models/api/api_model.dart';
 import '../../core/models/api/exceptions.dart';
 import '../../core/widgets/dialog/custom_dialog.dart';
+import '../../modules/auth/model/repo/country_info_model.dart';
 import '../constants/apis.dart';
 import '../constants/app_config.dart';
 import '../constants/app_constants.dart';
@@ -85,6 +88,8 @@ final class APIController {
         'Cookie': appState.sessionId,
         'tz': appState.timeZone,
         "role": appState.userRole,
+        "country": appState.countryCode.value,
+        "ipAddress": appState.ipAddress.value,
         if (appState.userId.isNotEmpty) "user-id": appState.userId,
       };
       if (method == APIMethod.get) {
@@ -472,5 +477,30 @@ final class APIController {
         break;
     }
     return errorRes;
+  }
+
+  String getCountryCodeFromDeviceLocale() {
+    final locale = ui.PlatformDispatcher.instance.locale;
+    return locale.countryCode ?? 'US';
+  }
+
+  Future<CountryInfo> getUserLocationInfo() async {
+    try {
+      final response = await http.get(Uri.parse('https://ipinfo.io/json'));
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return CountryInfo.fromJson(data);
+      } else {
+        return CountryInfo(
+          countryCode: getCountryCodeFromDeviceLocale(),
+          ipAddress: '0.0.0.0',
+        );
+      }
+    } catch (e) {
+      return CountryInfo(
+        countryCode: getCountryCodeFromDeviceLocale(),
+        ipAddress: '0.0.0.0',
+      );
+    }
   }
 }

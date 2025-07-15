@@ -1,8 +1,10 @@
-import 'package:base_project/app/modules/dashboard/view/home/home_screen.dart';
-import 'package:base_project/app/utils/constants/color_constants.dart';
+import 'package:timoraa/app/modules/dashboard/view/home/home_screen.dart';
+import 'package:timoraa/app/modules/dashboard/view/search/search_screen.dart';
+import 'package:timoraa/app/utils/constants/color_constants.dart';
 import 'package:flutter/material.dart';
 
 import '../../../utils/constants/asset_constants.dart';
+import 'account/account_screen.dart';
 import 'appointment/appointment_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -70,23 +72,5 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ],
       ),
     );
-  }
-}
-
-class SearchPage extends StatelessWidget {
-  const SearchPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(child: Text("Search for Services or Stylists"));
-  }
-}
-
-class AccountPage extends StatelessWidget {
-  const AccountPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(child: Text("Manage Your Profile"));
   }
 }
