@@ -1,6 +1,6 @@
 class APIS {
   /// LOCAL
-  static const String baseUrlLocal = '';
+  static const String baseUrlLocal = 'http://api.timoraa.com/';
 
   /// DO NOT Change following url without approval
   /// Development
@@ -16,5 +16,6 @@ class APIS {
   static const String loginAPI = '${version}api/login',
       todo = 'to_do',
       logout = '${version}api/logout',
+      home = '${baseUrlLocal}data/api/device/GetHomePageDetails',
       sendOtp = '${version}api/send/otp';
 }

@@ -1,9 +1,11 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:timoraa/app/modules/dashboard/view/home/home_screen.dart';
 import 'package:timoraa/app/modules/dashboard/view/search/search_screen.dart';
 import 'package:timoraa/app/utils/constants/color_constants.dart';
 import 'package:flutter/material.dart';
 
 import '../../../utils/constants/asset_constants.dart';
+import '../view_model/home/home_bloc.dart';
 import 'account/account_screen.dart';
 import 'appointment/appointment_screen.dart';
 
@@ -17,11 +19,11 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   int _selectedIndex = 0;
 
-  final List<Widget> _pages = const [
-    HomeScreen(),
-    SearchPage(),
-    AppointmentScreen(),
-    AccountPage(),
+  final List<Widget> _pages = [
+    BlocProvider(create: (context) => HomeBloc(), child: const HomeScreen()),
+    const SearchPage(),
+    const AppointmentScreen(),
+    const AccountPage(),
   ];
 
   void _onItemTapped(int index) {

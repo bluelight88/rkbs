@@ -322,26 +322,26 @@ final class APIController {
       return ApiResponseModel(null, error, false);
     }
     if (response.statusCode == 200) {
-      (responseData['result']['status']['success'])
+      (responseData['status'] == 'success')
           ? apiResponse = ApiResponseModel(
-            responseData['result']['result'],
+            responseData['obj'],
             null,
-            responseData['result']['status']['success'],
+            responseData['status'] == 'success',
             message:
-                responseData['result']['status']['error_message'] ??
+                responseData['errorMessage'] ??
                 appState.localization.somethingWentWrong,
           )
           : apiResponse = ApiResponseModel(
             responseData,
             ErrorModel(
               appState.localization.error,
-              responseData['result']['status']['error_message'] ??
+              responseData['errorMessage'] ??
                   appState.localization.somethingWentWrong,
-              responseData['result']['status']['error_code'],
+              responseData['error_code'],
             ),
-            responseData['result']['status']['success'],
+            responseData['status'] == 'success',
             message:
-                responseData['result']['status']['error_message'] ??
+                responseData['errorMessage'] ??
                 appState.localization.somethingWentWrong,
           );
     } else if (response.statusCode == 401) {
@@ -365,7 +365,7 @@ final class APIController {
       if (response.data.isNotEmpty) {
         error = ErrorModel(
           appState.localization.error,
-          responseData['result']['status']['error_message'] ??
+          responseData['result']['status']['errorMessage'] ??
               appState.localization.somethingWentWrong,
           responseData['result']['status']['error_code'] ?? 401,
         );
