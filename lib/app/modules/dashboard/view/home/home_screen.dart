@@ -121,19 +121,40 @@ class _HomeScreenState extends State<HomeScreen> {
                         children: [
                           ClipRRect(
                             borderRadius: BorderRadius.circular(50),
-                            child: Image.asset(
-                              AssetConstants.onBoardingImage,
-                              height: 70,
-                              width: 70,
-                              fit: BoxFit.cover,
-                            ),
+                            child:
+                                state
+                                        .homeResponseModel
+                                        .business[index]
+                                        .businesstypeLogoMobile
+                                        .startsWith("https")
+                                    ? Image.network(
+                                      state
+                                          .homeResponseModel
+                                          .business[index]
+                                          .businesstypeLogoMobile,
+                                      height: 70,
+                                      width: 70,
+                                      fit: BoxFit.cover,
+                                    )
+                                    : Image.asset(
+                                      AssetConstants.backgroundImage,
+                                      height: 70,
+                                      width: 70,
+                                      fit: BoxFit.cover,
+                                    ),
                           ),
                           const Gap(10),
-                          Text("Hair Salon", style: TextStyle()),
+                          Text(
+                            state
+                                .homeResponseModel
+                                .business[index]
+                                .businesstypeName,
+                            style: TextStyle(),
+                          ),
                         ],
                       );
                     },
-                    itemCount: 4,
+                    itemCount: state.homeResponseModel.business.length,
                   ),
                 ),
               ],

@@ -379,6 +379,7 @@ final class APIController {
         apiResponse = ApiResponseModel(null, error, false);
       }
     }
+    print(apiResponse.data);
     return apiResponse;
   }
 

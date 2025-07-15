@@ -26,7 +26,7 @@ class HomeResponseModel {
     ),
   );
 
-  Map toJson() => {
+  Map<String,dynamic> toJson() => {
     'business': business.map((e) => e.toJson()).toList(),
     'offer': offer.map((e) => e.toJson()).toList(),
     'recommended': recommended.map((e) => e.toJson()).toList(),
@@ -56,7 +56,7 @@ class BusinessType {
     ),
   );
 
-  Map toJson() => {
+  Map<String,dynamic> toJson() => {
     'businesstype_id': businesstypeId,
     'businesstype_name': businesstypeName,
     'businesstype_logo_mobile': businesstypeLogoMobile,
@@ -113,7 +113,7 @@ class Provider {
     imageUrl: UtilMethods.instance.stringValueParser(json['image_url']),
   );
 
-  Map toJson() => {
+  Map<String,dynamic> toJson() => {
     'provider_id': providerId,
     'provider_name': providerName,
     'provider_comapy_name': providerCompanyName,
