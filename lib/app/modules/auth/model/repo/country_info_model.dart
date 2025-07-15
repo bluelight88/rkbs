@@ -2,10 +2,7 @@ class CountryInfo {
   final String countryCode;
   final String ipAddress;
 
-  CountryInfo({
-    required this.countryCode,
-    required this.ipAddress,
-  });
+  CountryInfo({required this.countryCode, required this.ipAddress});
 
   factory CountryInfo.fromJson(Map<String, dynamic> json) {
     return CountryInfo(
@@ -15,10 +12,7 @@ class CountryInfo {
   }
 
   Map<String, String> toMap() {
-    return {
-      'countryCode': countryCode,
-      'ipAddress': ipAddress,
-    };
+    return {'countryCode': countryCode, 'ipAddress': ipAddress};
   }
 
   @override
