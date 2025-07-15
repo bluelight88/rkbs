@@ -1,4 +1,3 @@
-
 import '../../../utils/services/util_methods.dart';
 
 class HomeResponseModel {
@@ -13,12 +12,18 @@ class HomeResponseModel {
   });
 
   factory HomeResponseModel.fromJson(Map json) => HomeResponseModel(
-    business: UtilMethods.instance
-        .listValueParser(json['business'], BusinessType.fromJson),
-    offer:
-    UtilMethods.instance.listValueParser(json['offer'], Provider.fromJson),
-    recommended: UtilMethods.instance
-        .listValueParser(json['recommended'], Provider.fromJson),
+    business: UtilMethods.instance.listValueParser(
+      json['business'],
+      BusinessType.fromJson,
+    ),
+    offer: UtilMethods.instance.listValueParser(
+      json['offer'],
+      Provider.fromJson,
+    ),
+    recommended: UtilMethods.instance.listValueParser(
+      json['recommended'],
+      Provider.fromJson,
+    ),
   );
 
   Map toJson() => {
@@ -40,12 +45,15 @@ class BusinessType {
   });
 
   factory BusinessType.fromJson(Map json) => BusinessType(
-    businesstypeId:
-    UtilMethods.instance.intValueParser(json['businesstype_id']),
-    businesstypeName:
-    UtilMethods.instance.stringValueParser(json['businesstype_name']),
-    businesstypeLogoMobile: UtilMethods.instance
-        .stringValueParser(json['businesstype_logo_mobile']),
+    businesstypeId: UtilMethods.instance.intValueParser(
+      json['businesstype_id'],
+    ),
+    businesstypeName: UtilMethods.instance.stringValueParser(
+      json['businesstype_name'],
+    ),
+    businesstypeLogoMobile: UtilMethods.instance.stringValueParser(
+      json['businesstype_logo_mobile'],
+    ),
   );
 
   Map toJson() => {
@@ -82,22 +90,26 @@ class Provider {
 
   factory Provider.fromJson(Map json) => Provider(
     providerId: UtilMethods.instance.intValueParser(json['provider_id']),
-    providerName:
-    UtilMethods.instance.stringValueParser(json['provider_name']),
-    providerCompanyName: UtilMethods.instance
-        .stringValueParser(json['provider_comapy_name']),
-    providerEmail:
-    UtilMethods.instance.stringValueParser(json['provider_email']),
-    providerContactNo: UtilMethods.instance
-        .stringValueParser(json['provider_contact_no']),
-    providerAddressline1: UtilMethods.instance
-        .stringValueParser(json['provider_addressline1']),
-    providerPostcode: UtilMethods.instance
-        .stringValueParser(json['provider_postcode']),
-    providerCity:
-    UtilMethods.instance.stringValueParser(json['provider_city']),
-    providerCountry:
-    UtilMethods.instance.stringValueParser(json['providere_country']),
+    providerName: UtilMethods.instance.stringValueParser(json['provider_name']),
+    providerCompanyName: UtilMethods.instance.stringValueParser(
+      json['provider_comapy_name'],
+    ),
+    providerEmail: UtilMethods.instance.stringValueParser(
+      json['provider_email'],
+    ),
+    providerContactNo: UtilMethods.instance.stringValueParser(
+      json['provider_contact_no'],
+    ),
+    providerAddressline1: UtilMethods.instance.stringValueParser(
+      json['provider_addressline1'],
+    ),
+    providerPostcode: UtilMethods.instance.stringValueParser(
+      json['provider_postcode'],
+    ),
+    providerCity: UtilMethods.instance.stringValueParser(json['provider_city']),
+    providerCountry: UtilMethods.instance.stringValueParser(
+      json['providere_country'],
+    ),
     imageUrl: UtilMethods.instance.stringValueParser(json['image_url']),
   );
 
