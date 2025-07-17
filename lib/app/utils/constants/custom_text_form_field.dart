@@ -9,11 +9,13 @@ final class SearchTextFormField extends StatefulWidget {
   final TextEditingController controller;
   final void Function(String val) onChanged;
   final String labelText;
+  final bool enable;
 
   const SearchTextFormField({
     required this.controller,
     required this.labelText,
     required this.onChanged,
+    this.enable = false,
     super.key,
   });
 
@@ -75,6 +77,7 @@ final class _SearchTextFormFieldState extends State<SearchTextFormField> {
       fontFamily: "HelveticaNeueLTArabic",
     ),
     validator: null,
+    enabled: widget.enable,
     onTapOutside: (event) => FocusScope.of(context).unfocus(),
     onChanged: (value) => streamController.add(value),
     onSaved: (val) => widget.controller.text = val!,

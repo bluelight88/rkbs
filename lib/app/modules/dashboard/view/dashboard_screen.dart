@@ -1,51 +1,45 @@
+import 'package:flutter/material.dart';
+import 'package:animations/animations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:timoraa/app/modules/dashboard/view/home/home_screen.dart';
 import 'package:timoraa/app/modules/dashboard/view/search/search_screen.dart';
+import 'package:timoraa/app/modules/dashboard/view/appointment/appointment_screen.dart';
+import 'package:timoraa/app/modules/dashboard/view/account/account_screen.dart';
+import 'package:timoraa/app/utils/services/app_state.dart';
 import 'package:timoraa/app/utils/constants/color_constants.dart';
-import 'package:flutter/material.dart';
 
 import '../../../utils/constants/asset_constants.dart';
-import '../../../utils/services/app_state.dart';
 import '../view_model/home/home_bloc.dart';
-import 'account/account_screen.dart';
-import 'appointment/appointment_screen.dart';
 
-class DashboardScreen extends StatefulWidget {
+class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
 
   @override
-  State<DashboardScreen> createState() => _DashboardScreenState();
-}
-
-class _DashboardScreenState extends State<DashboardScreen> {
-  final List<Widget> _pages = [
-    BlocProvider(create: (context) => HomeBloc(), child: const HomeScreen()),
-    const SearchPage(),
-    const AppointmentScreen(),
-    const AccountPage(),
-  ];
-
-  void _onItemTapped(int index) {
-    appState.appPageIndex.value = index;
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder(
+    final TextEditingController searchController = TextEditingController();
+
+    return ValueListenableBuilder<int>(
       valueListenable: appState.appPageIndex,
-      builder: (context, value, child) {
+      builder: (context, index, _) {
         return Scaffold(
-          backgroundColor: ColorConstants.whiteColor,
-          body: SafeArea(child: _pages[appState.appPageIndex.value]),
-          bottomNavigationBar: BottomNavigationBar(
-            currentIndex: appState.appPageIndex.value,
-            selectedIconTheme: IconThemeData(
-              size: 25,
-              color: ColorConstants.primaryColor,
+          body: SafeArea(
+            child: PageTransitionSwitcher(
+              duration: const Duration(milliseconds: 400),
+              reverse: false,
+              transitionBuilder:
+                  (child, animation, secondaryAnimation) =>
+                      SharedAxisTransition(
+                        animation: animation,
+                        secondaryAnimation: secondaryAnimation,
+                        transitionType: SharedAxisTransitionType.horizontal,
+                        child: child,
+                      ),
+              child: _buildPage(index, searchController, key: ValueKey(index)),
             ),
-            selectedItemColor: ColorConstants.primaryColor,
-            unselectedItemColor: ColorConstants.searchFieldTextColor,
-            onTap: _onItemTapped,
+          ),
+          bottomNavigationBar: BottomNavigationBar(
+            currentIndex: index,
+            onTap: (i) => appState.appPageIndex.value = i,
             items: [
               const BottomNavigationBarItem(
                 icon: Icon(Icons.home_filled, size: 25),
@@ -76,5 +70,27 @@ class _DashboardScreenState extends State<DashboardScreen> {
         );
       },
     );
+  }
+
+  Widget _buildPage(
+    int index,
+    TextEditingController searchController, {
+    Key? key,
+  }) {
+    switch (index) {
+      case 0:
+        return BlocProvider<HomeBloc>(
+          create: (_) => HomeBloc()..add(GetHomeRecord()),
+          child: HomeScreen(searchController: searchController),
+        );
+      case 1:
+        return SearchPage(searchController: searchController);
+      case 2:
+        return const AppointmentScreen();
+      case 3:
+        return const AccountPage();
+      default:
+        return const SizedBox();
+    }
   }
 }

@@ -13,15 +13,15 @@ import 'package:timoraa/app/utils/services/app_state.dart';
 import '../../../../utils/constants/color_constants.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final TextEditingController searchController;
+
+  const HomeScreen({super.key, required this.searchController});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final TextEditingController searchController = TextEditingController();
-
   @override
   void initState() {
     _getHomeData();
@@ -98,10 +98,17 @@ class _HomeScreenState extends State<HomeScreen> {
                   const Gap(20),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: SearchTextFormField(
-                      controller: searchController,
-                      labelText: "What Are You Looking For?",
-                      onChanged: (value) {},
+                    child: InkWell(
+                      onTap: () => appState.appPageIndex.value = 1,
+                      child: IgnorePointer(
+                        ignoring: true,
+                        child: SearchTextFormField(
+                          controller: widget.searchController,
+                          labelText: "What Are You Looking For?",
+                          enable: false,
+                          onChanged: (_) {},
+                        ),
+                      ),
                     ),
                   ),
                   const Gap(20),

@@ -59,6 +59,7 @@ dependencies:
   sms_autofill: ^2.4.1
   http: ^1.4.0
   pretty_dio_logger: ^1.4.0
+  animations: ^2.0.11
 
 dev_dependencies:
   flutter_test:
