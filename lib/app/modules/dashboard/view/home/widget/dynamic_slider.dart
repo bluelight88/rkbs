@@ -74,7 +74,7 @@ class _DynamicSliderState extends State<DynamicSlider> {
                               filterQuality: FilterQuality.medium,
                             )
                             : Image.asset(
-                              AssetConstants.backgroundImage,
+                              AssetConstants.icBackgroundImage,
                               height: MediaQuery.of(context).size.height * 0.2,
                               width: MediaQuery.of(context).size.width * 0.80,
                               fit: BoxFit.cover,
@@ -119,7 +119,7 @@ class _DynamicSliderState extends State<DynamicSlider> {
                           padding: const EdgeInsets.only(left: 10),
                           child: Row(
                             children: [
-                              Image.asset(AssetConstants.location),
+                              Image.asset(AssetConstants.icLocation),
                               const Gap(10),
                               Text(
                                 secondaryText,

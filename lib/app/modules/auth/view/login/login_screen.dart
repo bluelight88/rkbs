@@ -39,7 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
               BlendMode.darken,
             ),
             child: Image.asset(
-              AssetConstants.backgroundImage,
+              AssetConstants.icBackgroundImage,
               fit: BoxFit.fitWidth,
               height: MediaQuery.of(context).size.height * 0.3,
               width: MediaQuery.of(context).size.width,

@@ -17,7 +17,7 @@ class OnBoardingScreen extends StatelessWidget {
       body: Stack(
         children: [
           Image.asset(
-            AssetConstants.splashScreen,
+            AssetConstants.icSplashScreen,
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height * 0.99,
             fit: BoxFit.fitHeight,

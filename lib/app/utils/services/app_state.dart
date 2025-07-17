@@ -84,6 +84,7 @@ final class AppState {
 
   ValueNotifier<String> countryCode = ValueNotifier<String>("UK");
   ValueNotifier<String> ipAddress = ValueNotifier<String>("");
+  ValueNotifier<int> appPageIndex = ValueNotifier<int>(0);
 
   /// Method to set initial Values
   Future<void> setInitialValues() async {

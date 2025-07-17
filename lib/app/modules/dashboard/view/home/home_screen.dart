@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:timoraa/app/core/widgets/custom/center_loader_widget.dart';
 import 'package:timoraa/app/core/widgets/custom/center_message_widget.dart';
@@ -7,6 +8,7 @@ import 'package:timoraa/app/utils/constants/asset_constants.dart';
 import 'package:timoraa/app/utils/constants/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:timoraa/app/utils/services/app_state.dart';
 
 import '../../../../utils/constants/color_constants.dart';
 
@@ -47,9 +49,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         RichText(
-                          text: const TextSpan(
+                          text: TextSpan(
                             children: [
-                              TextSpan(
+                              const TextSpan(
                                 text: "Hello ",
                                 style: TextStyle(
                                   color: ColorConstants.primaryColor,
@@ -59,13 +61,18 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                               TextSpan(
                                 text: "USER \n",
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: ColorConstants.primaryColor,
                                   fontWeight: FontWeight.w600,
                                   fontSize: 20,
                                 ),
+                                recognizer:
+                                    TapGestureRecognizer()
+                                      ..onTap = () {
+                                        appState.appPageIndex.value = 3;
+                                      },
                               ),
-                              TextSpan(
+                              const TextSpan(
                                 text: "Welcome to Saloon",
                                 style: TextStyle(
                                   color: ColorConstants.primaryColor,
@@ -79,7 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ClipRRect(
                           borderRadius: BorderRadius.circular(30),
                           child: Image.asset(
-                            AssetConstants.onBoardingImage,
+                            AssetConstants.icBoardingImage,
                             height: 50,
                             width: 50,
                             fit: BoxFit.cover,
@@ -146,7 +153,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           fit: BoxFit.cover,
                                         )
                                         : Image.asset(
-                                          AssetConstants.backgroundImage,
+                                          AssetConstants.icBackgroundImage,
                                           height: 70,
                                           width: 70,
                                           fit: BoxFit.cover,

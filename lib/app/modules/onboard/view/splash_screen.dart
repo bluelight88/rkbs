@@ -38,7 +38,7 @@ final class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       backgroundColor: ColorConstants.primaryColor,
       body: Image.asset(
-        AssetConstants.splashScreen,
+        AssetConstants.icSplashScreen,
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
       ),
