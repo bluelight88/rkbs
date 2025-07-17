@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:timoraa/app/core/widgets/custom/center_loader_widget.dart';
 import 'package:timoraa/app/core/widgets/custom/center_message_widget.dart';
+import 'package:timoraa/app/modules/dashboard/view/home/widget/dynamic_slider.dart';
 import 'package:timoraa/app/modules/dashboard/view_model/home/home_bloc.dart';
 import 'package:timoraa/app/utils/constants/asset_constants.dart';
 import 'package:timoraa/app/utils/constants/custom_text_form_field.dart';
@@ -35,129 +36,178 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: (context, state) {
         if (state is HomeSuccess) {
           return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    RichText(
-                      text: const TextSpan(
-                        children: [
-                          TextSpan(
-                            text: "Hello ",
-                            style: TextStyle(
-                              color: ColorConstants.primaryColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
-                            ),
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            child: SingleChildScrollView(
+              physics: AlwaysScrollableScrollPhysics(),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        RichText(
+                          text: const TextSpan(
+                            children: [
+                              TextSpan(
+                                text: "Hello ",
+                                style: TextStyle(
+                                  color: ColorConstants.primaryColor,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                ),
+                              ),
+                              TextSpan(
+                                text: "USER \n",
+                                style: TextStyle(
+                                  color: ColorConstants.primaryColor,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 20,
+                                ),
+                              ),
+                              TextSpan(
+                                text: "Welcome to Saloon",
+                                style: TextStyle(
+                                  color: ColorConstants.primaryColor,
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ],
                           ),
-                          TextSpan(
-                            text: "USER \n",
-                            style: TextStyle(
-                              color: ColorConstants.primaryColor,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 20,
-                            ),
+                        ),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(30),
+                          child: Image.asset(
+                            AssetConstants.onBoardingImage,
+                            height: 50,
+                            width: 50,
+                            fit: BoxFit.cover,
                           ),
-                          TextSpan(
-                            text: "Welcome to Saloon",
-                            style: TextStyle(
-                              color: ColorConstants.primaryColor,
-                              fontWeight: FontWeight.normal,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(30),
-                      child: Image.asset(
-                        AssetConstants.onBoardingImage,
-                        height: 50,
-                        width: 50,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ],
-                ),
-                const Gap(20),
-                SearchTextFormField(
-                  controller: searchController,
-                  labelText: "What Are You Looking For?",
-                  onChanged: (value) {},
-                ),
-                const Gap(20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Select Category",
-                      style: TextStyle(
-                        color: ColorConstants.primaryColor,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 16,
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        // todo: see all integration
-                      },
-                      child: Text("See All"),
-                    ),
-                  ],
-                ),
-                const Gap(10),
-                SizedBox(
-                  height: 100,
-                  child: ListView.separated(
-                    scrollDirection: Axis.horizontal,
-                    separatorBuilder: (context, index) {
-                      return Gap(20);
-                    },
-                    itemBuilder: (context, index) {
-                      return Column(
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(50),
-                            child:
-                                state
-                                        .homeResponseModel
-                                        .business[index]
-                                        .businesstypeLogoMobile
-                                        .startsWith("https")
-                                    ? Image.network(
-                                      state
-                                          .homeResponseModel
-                                          .business[index]
-                                          .businesstypeLogoMobile,
-                                      height: 70,
-                                      width: 70,
-                                      fit: BoxFit.cover,
-                                    )
-                                    : Image.asset(
-                                      AssetConstants.backgroundImage,
-                                      height: 70,
-                                      width: 70,
-                                      fit: BoxFit.cover,
-                                    ),
-                          ),
-                          const Gap(10),
-                          Text(
-                            state
-                                .homeResponseModel
-                                .business[index]
-                                .businesstypeName,
-                            style: TextStyle(),
-                          ),
-                        ],
-                      );
-                    },
-                    itemCount: state.homeResponseModel.business.length,
                   ),
-                ),
-              ],
+                  const Gap(20),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: SearchTextFormField(
+                      controller: searchController,
+                      labelText: "What Are You Looking For?",
+                      onChanged: (value) {},
+                    ),
+                  ),
+                  const Gap(20),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Select Category",
+                          style: TextStyle(
+                            color: ColorConstants.primaryColor,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 16,
+                          ),
+                        ),
+                        InkWell(onTap: () {}, child: Text("See All")),
+                      ],
+                    ),
+                  ),
+                  const Gap(10),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: SizedBox(
+                      height: 100,
+                      child: ListView.separated(
+                        scrollDirection: Axis.horizontal,
+                        separatorBuilder: (context, index) {
+                          return Gap(20);
+                        },
+                        itemBuilder: (context, index) {
+                          return Column(
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(50),
+                                child:
+                                    state
+                                            .homeResponseModel
+                                            .business[index]
+                                            .businesstypeLogoMobile
+                                            .startsWith("https")
+                                        ? Image.network(
+                                          state
+                                              .homeResponseModel
+                                              .business[index]
+                                              .businesstypeLogoMobile,
+                                          height: 70,
+                                          width: 70,
+                                          fit: BoxFit.cover,
+                                        )
+                                        : Image.asset(
+                                          AssetConstants.backgroundImage,
+                                          height: 70,
+                                          width: 70,
+                                          fit: BoxFit.cover,
+                                        ),
+                              ),
+                              const Gap(10),
+                              Text(
+                                state
+                                    .homeResponseModel
+                                    .business[index]
+                                    .businesstypeName,
+                                style: TextStyle(),
+                              ),
+                            ],
+                          );
+                        },
+                        itemCount: state.homeResponseModel.business.length,
+                      ),
+                    ),
+                  ),
+                  const Gap(10),
+                  const Gap(10),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.27,
+                    width: MediaQuery.of(context).size.width,
+                    child: DynamicSlider(
+                      title: "Special Offers",
+                      items: state.homeResponseModel.offer,
+                      imageUrlGetter: (offer) => offer.imageUrl,
+                      primaryTextGetter: (offer) => offer.providerName,
+                      secondaryTextGetter:
+                          (offer) =>
+                              "${offer.providerAddressline1}, ${offer.providerCity}",
+                      badgeText: (badge) => "Subscribe Now",
+                    ),
+                  ),
+                  const Gap(10),
+                  Divider(
+                    height: 2,
+                    color: ColorConstants.searchFieldTextColor,
+                    endIndent: 20,
+                    indent: 20,
+                  ),
+                  const Gap(10),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.27,
+                    width: MediaQuery.of(context).size.width,
+                    child: DynamicSlider(
+                      title: "Barber Near You",
+                      items: state.homeResponseModel.recommended,
+                      imageUrlGetter: (recommended) => recommended.imageUrl,
+                      primaryTextGetter:
+                          (recommended) => recommended.providerName,
+                      secondaryTextGetter:
+                          (recommended) =>
+                              "${recommended.providerAddressline1}, ${recommended.providerCity}",
+                      badgeText:(badge) => "4.9 | 8993 Reviews",
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
         }

@@ -58,6 +58,7 @@ dependencies:
   shared_preferences: ^2.5.2
   sms_autofill: ^2.4.1
   http: ^1.4.0
+  pretty_dio_logger: ^1.4.0
 
 dev_dependencies:
   flutter_test:

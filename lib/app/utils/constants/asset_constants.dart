@@ -9,5 +9,7 @@ class AssetConstants {
       onBoardingImage = "assets/png/on_boarding_image.png",
           // dashboard icons
           calender =
-          "assets/png/dashboard/ic_calender.png";
+          "assets/png/dashboard/ic_calender.png",
+          location =
+          "assets/png/ic_location.png";
 }

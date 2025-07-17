@@ -1,26 +1,20 @@
 import 'dart:async' show StreamController;
-import 'dart:convert' show JsonEncoder, jsonDecode;
-import 'dart:developer' show log;
-import 'dart:ui' as ui;
-
-import 'package:flutter/foundation.dart' show debugPrint, kDebugMode;
 
 // ignore: depend_on_referenced_packages
 import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
-import 'package:http/http.dart' as http;
+import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
+import '/app/utils/manager/get_it_manager.dart';
 import '../../core/models/api/api_model.dart';
 import '../../core/models/api/exceptions.dart';
 import '../../core/widgets/dialog/custom_dialog.dart';
-import '../../modules/auth/model/repo/country_info_model.dart';
 import '../constants/apis.dart';
 import '../constants/app_config.dart';
 import '../constants/app_constants.dart';
 import '../constants/route_name.dart';
 import '../extensions/navigation_extension.dart';
 import '../services/app_state.dart';
-import '/app/utils/manager/get_it_manager.dart';
 import 'navigation_manager.dart';
 import 'storage_manager.dart';
 
@@ -28,36 +22,6 @@ enum APIMethod { post, get, delete, put, patch }
 
 final class APIController {
   static final Dio _dio = Dio();
-
-  void _addInterceptors() {
-    const String apiTag = "API :";
-    final InterceptorsWrapper mInterceptorsWrapper = InterceptorsWrapper(
-      onRequest: (options, handler) {
-        debugPrint("$apiTag headers ${options.headers}");
-        debugPrint("$apiTag Method ${options.method}");
-        debugPrint("$apiTag Request ${options.baseUrl + options.path}");
-        debugPrint(
-          "$apiTag Request Parameters ${options.method == "GET" ? options.queryParameters : options.data}",
-        );
-        return handler.next(options);
-      },
-      onResponse: (response, handler) {
-        debugPrint("Response Code ${response.statusCode}");
-        final prettyString = const JsonEncoder.withIndent(
-          '  ',
-        ).convert(response.data);
-        debugPrint("Response is :");
-        log(prettyString.toString());
-        return handler.next(response);
-      },
-      onError: (error, handler) {
-        debugPrint("$apiTag Error ${error.error}", wrapWidth: 1024);
-        debugPrint("$apiTag Error ${error.response}", wrapWidth: 1024);
-        return handler.next(error);
-      },
-    );
-    _dio.interceptors.add(mInterceptorsWrapper);
-  }
 
   void prepareRequest() {
     BaseOptions dioOptions = BaseOptions(
@@ -68,7 +32,19 @@ final class APIController {
       },
     );
     _dio.options = dioOptions;
-    if (kDebugMode) _addInterceptors();
+    _dio.interceptors.add(
+      PrettyDioLogger(
+        compact: false,
+        request: true,
+        requestBody: true,
+        requestHeader: true,
+        responseBody: true,
+        responseHeader: true,
+        filter: (options, args) {
+          return !args.hasUint8ListData;
+        },
+      ),
+    );
   }
 
   /// Method to make normal Requests
@@ -88,10 +64,17 @@ final class APIController {
         'Cookie': appState.sessionId,
         'tz': appState.timeZone,
         "role": appState.userRole,
-        "country": appState.countryCode.value,
-        "ipAddress": appState.ipAddress.value,
         if (appState.userId.isNotEmpty) "user-id": appState.userId,
+        if (appState.countryCode.value.isNotEmpty)
+          "country-code": appState.countryCode.value,
+        if (appState.ipAddress.value.isNotEmpty)
+          "ip-address": appState.ipAddress.value,
       };
+      // debugPrint("📤 REQUEST:");
+      // debugPrint("➡️ METHOD: ${method.name.toUpperCase()}");
+      // debugPrint("➡️ URL: $url");
+      // debugPrint("➡️ HEADERS: $headerOptions");
+      // debugPrint("➡️ PARAMS: $params");
       if (method == APIMethod.get) {
         response = await _dio.get(
           url,
@@ -211,6 +194,10 @@ final class APIController {
             'tz': appState.timeZone,
             "role": appState.userRole,
             if (appState.userId.isNotEmpty) "user-id": appState.userId,
+            if (appState.countryCode.value.isNotEmpty)
+              "country-code": appState.countryCode.value,
+            if (appState.ipAddress.value.isNotEmpty)
+              "ip-address": appState.ipAddress.value,
           },
         ),
       );
@@ -279,6 +266,16 @@ final class APIController {
     String? session = response.headers['set-cookie']?.firstWhereOrNull(
       (element) => element.startsWith(AppConstants.sessionId),
     );
+    // debugPrint("📥 RESPONSE HANDLER");
+    // debugPrint("⬅️ Status Code: ${response.statusCode}");
+    // debugPrint("⬅️ Headers: ${response.headers}");
+    // if (response.data is Map) {
+    //   debugPrint("⬅️ Body:");
+    //   UtilMethods().logPrettyJson(response.data as Map);
+    // } else {
+    //   debugPrint("⬅️ Body:");
+    //   UtilMethods().logFullText(response.data.toString());
+    // }
     if (session != null) {
       await getIt<StorageManager>().saveData(
         AppConstants.sessionId,
@@ -379,7 +376,6 @@ final class APIController {
         apiResponse = ApiResponseModel(null, error, false);
       }
     }
-    print(apiResponse.data);
     return apiResponse;
   }
 
@@ -478,30 +474,5 @@ final class APIController {
         break;
     }
     return errorRes;
-  }
-
-  String getCountryCodeFromDeviceLocale() {
-    final locale = ui.PlatformDispatcher.instance.locale;
-    return locale.countryCode ?? 'US';
-  }
-
-  Future<CountryInfo> getUserLocationInfo() async {
-    try {
-      final response = await http.get(Uri.parse('https://ipinfo.io/json'));
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        return CountryInfo.fromJson(data);
-      } else {
-        return CountryInfo(
-          countryCode: getCountryCodeFromDeviceLocale(),
-          ipAddress: '0.0.0.0',
-        );
-      }
-    } catch (e) {
-      return CountryInfo(
-        countryCode: getCountryCodeFromDeviceLocale(),
-        ipAddress: '0.0.0.0',
-      );
-    }
   }
 }

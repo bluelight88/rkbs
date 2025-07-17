@@ -44,7 +44,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           color: ColorConstants.primaryColor,
         ),
         selectedItemColor: ColorConstants.primaryColor,
-        unselectedItemColor: ColorConstants.textFieldIconColor,
+        unselectedItemColor: ColorConstants.searchFieldTextColor,
         onTap: _onItemTapped,
         items: [
           const BottomNavigationBarItem(
@@ -61,7 +61,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               color:
                   _selectedIndex == 2
                       ? ColorConstants.primaryColor
-                      : ColorConstants.textFieldIconColor,
+                      : ColorConstants.searchFieldTextColor,
               height: 25,
               width: 25,
             ),

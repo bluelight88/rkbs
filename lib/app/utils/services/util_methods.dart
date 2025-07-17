@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
@@ -461,5 +462,22 @@ final class UtilMethods {
       address:
           "${place.street}, ${place.subLocality} ${place.locality} ${place.administrativeArea} ${place.country}",
     );
+  }
+
+  void logPrettyJson(Map data) {
+    const JsonEncoder encoder = JsonEncoder.withIndent('  ');
+    final prettyJson = encoder.convert(data);
+    logFullText(prettyJson);
+  }
+
+  void logFullText(String text) {
+    const int chunkSize = 800;
+    for (var i = 0; i < text.length; i += chunkSize) {
+      final chunk = text.substring(
+        i,
+        i + chunkSize > text.length ? text.length : i + chunkSize,
+      );
+      debugPrint(chunk);
+    }
   }
 }

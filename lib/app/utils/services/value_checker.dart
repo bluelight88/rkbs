@@ -1,3 +1,9 @@
+import 'dart:convert';
+import 'dart:ui' as ui;
+
+import 'package:http/http.dart' as http;
+
+import '../../modules/auth/model/repo/country_info_model.dart';
 import 'app_state.dart';
 
 final class ValueChecker {
@@ -63,4 +69,30 @@ final class ValueChecker {
     }
     return null;
   }
+
+  String getCountryCodeFromDeviceLocale() {
+    final locale = ui.PlatformDispatcher.instance.locale;
+    return locale.countryCode ?? 'US';
+  }
+
+  Future<CountryInfo> getUserLocationInfo() async {
+    try {
+      final response = await http.get(Uri.parse('https://ipinfo.io/json'));
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return CountryInfo.fromJson(data);
+      } else {
+        return CountryInfo(
+          countryCode: getCountryCodeFromDeviceLocale(),
+          ipAddress: '0.0.0.0',
+        );
+      }
+    } catch (e) {
+      return CountryInfo(
+        countryCode: getCountryCodeFromDeviceLocale(),
+        ipAddress: '0.0.0.0',
+      );
+    }
+  }
+
 }
