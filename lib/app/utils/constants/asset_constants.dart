@@ -10,6 +10,5 @@ class AssetConstants {
           // dashboard icons
           calender =
           "assets/png/dashboard/ic_calender.png",
-          location =
-          "assets/png/ic_location.png";
+      location = "assets/png/ic_location.png";
 }

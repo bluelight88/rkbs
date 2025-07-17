@@ -203,7 +203,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       secondaryTextGetter:
                           (recommended) =>
                               "${recommended.providerAddressline1}, ${recommended.providerCity}",
-                      badgeText:(badge) => "4.9 | 8993 Reviews",
+                      badgeText: (badge) => "4.9 | 8993 Reviews",
                     ),
                   ),
                 ],
