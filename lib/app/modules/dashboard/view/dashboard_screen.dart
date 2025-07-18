@@ -5,6 +5,7 @@ import 'package:timoraa/app/modules/dashboard/view/home/home_screen.dart';
 import 'package:timoraa/app/modules/dashboard/view/search/search_screen.dart';
 import 'package:timoraa/app/modules/dashboard/view/appointment/appointment_screen.dart';
 import 'package:timoraa/app/modules/dashboard/view/account/account_screen.dart';
+import 'package:timoraa/app/modules/dashboard/view_model/search/search_bloc.dart';
 import 'package:timoraa/app/utils/services/app_state.dart';
 import 'package:timoraa/app/utils/constants/color_constants.dart';
 
@@ -88,7 +89,7 @@ class DashboardScreen extends StatelessWidget {
         );
       case 1:
         return BlocProvider(
-          create: (context) => HomeBloc()..add(GetHomeRecord()),
+          create: (context) => SearchBloc()..add(GetSearchRecord()),
           child: SearchPage(searchController: searchController),
         );
       case 2:

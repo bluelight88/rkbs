@@ -6,7 +6,7 @@ import 'package:timoraa/app/utils/constants/custom_text_form_field.dart';
 import '../../../../core/widgets/custom/center_loader_widget.dart';
 import '../../../../core/widgets/custom/center_message_widget.dart';
 import '../../../../utils/constants/color_constants.dart';
-import '../../view_model/home/home_bloc.dart';
+import '../../view_model/search/search_bloc.dart';
 import '../home/widget/dynamic_slider.dart';
 
 class SearchPage extends StatefulWidget {
@@ -19,15 +19,15 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  void _getHomeData() {
-    context.read<HomeBloc>().add(GetHomeRecord());
+  void _getSearchData() {
+    context.read<SearchBloc>().add(GetSearchRecord());
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<HomeBloc, HomeState>(
+    return BlocBuilder<SearchBloc, SearchState>(
       builder: (context, state) {
-        if (state is HomeSuccess) {
+        if (state is SearchSuccess) {
           return Container(
             color: ColorConstants.whiteColor,
             child: Column(
@@ -82,7 +82,7 @@ class _SearchPageState extends State<SearchPage> {
                       title: "Barber Near You",
                       showTileDot: false,
                       scrollDirection: Axis.horizontal,
-                      items: state.homeResponseModel.recommended,
+                      items: state.searchResponseModel.recommended,
                       imageUrlGetter: (recommended) => recommended.imageUrl,
                       primaryTextGetter:
                           (recommended) => recommended.providerName,
@@ -97,8 +97,8 @@ class _SearchPageState extends State<SearchPage> {
             ),
           );
         }
-        if (state is HomeFailure) {
-          return FailureWidget(state.message, onRefresh: _getHomeData);
+        if (state is SearchFailure) {
+          return FailureWidget(state.message, onRefresh: _getSearchData);
         }
         return LoadingWidget();
       },

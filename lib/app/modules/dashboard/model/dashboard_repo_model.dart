@@ -26,4 +26,22 @@ final class DashBoardRepo {
       return UnknownDataFailure(e);
     }
   }
+
+  Future<DataState> getSearchData(Map<String, dynamic> params) async {
+    try {
+      final response = await getIt<APIController>().request(
+        APIS.home,
+        APIMethod.get,
+        param: params,
+      );
+      final homeResponse = HomeResponseModel.fromJson(
+        response.data is String ? jsonDecode(response.data) : response.data,
+      );
+      return DataSuccess(homeResponse);
+    } on ErrorException catch (e) {
+      return DataFailure(e.error);
+    } catch (e) {
+      return UnknownDataFailure(e);
+    }
+  }
 }
