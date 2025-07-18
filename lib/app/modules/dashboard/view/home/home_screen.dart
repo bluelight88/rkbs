@@ -22,13 +22,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  @override
-  void initState() {
-    _getHomeData();
-    super.initState();
-  }
-
-  _getHomeData() {
+  void _getHomeData() {
     context.read<HomeBloc>().add(GetHomeRecord());
   }
 
@@ -184,10 +178,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   const Gap(10),
                   const Gap(10),
                   SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.27,
+                    height: MediaQuery.of(context).size.height * 0.3,
                     width: MediaQuery.of(context).size.width,
                     child: DynamicSlider(
                       title: "Special Offers",
+
+                      scrollDirection: Axis.horizontal,
                       items: state.homeResponseModel.offer,
                       imageUrlGetter: (offer) => offer.imageUrl,
                       primaryTextGetter: (offer) => offer.providerName,
@@ -206,10 +202,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   const Gap(10),
                   SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.27,
+                    height: MediaQuery.of(context).size.height * 0.3,
                     width: MediaQuery.of(context).size.width,
                     child: DynamicSlider(
                       title: "Barber Near You",
+                      scrollDirection: Axis.horizontal,
                       items: state.homeResponseModel.recommended,
                       imageUrlGetter: (recommended) => recommended.imageUrl,
                       primaryTextGetter:

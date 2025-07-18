@@ -7,6 +7,8 @@ import '../../../../../utils/constants/color_constants.dart';
 class DynamicSlider extends StatefulWidget {
   final List<dynamic> items;
   final String? title;
+  final Axis scrollDirection;
+  final bool showTileDot;
   final String Function(dynamic item) imageUrlGetter;
   final String Function(dynamic item) primaryTextGetter;
   final String Function(dynamic item) secondaryTextGetter;
@@ -16,6 +18,8 @@ class DynamicSlider extends StatefulWidget {
     super.key,
     required this.items,
     this.title,
+    this.showTileDot = true,
+    required this.scrollDirection,
     required this.imageUrlGetter,
     required this.primaryTextGetter,
     required this.secondaryTextGetter,
@@ -51,6 +55,7 @@ class _DynamicSliderState extends State<DynamicSlider> {
           child: PageView.builder(
             controller: _pageController,
             physics: const BouncingScrollPhysics(),
+            scrollDirection: widget.scrollDirection,
             itemCount: visibleItemCount,
             onPageChanged: (index) => setState(() => _currentIndex = index),
             itemBuilder: (context, index) {
@@ -140,35 +145,36 @@ class _DynamicSliderState extends State<DynamicSlider> {
           ),
         ),
         const SizedBox(height: 10),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate(
-            widget.items.length,
-            (index) => Container(
-              margin: const EdgeInsets.symmetric(horizontal: 4),
-              padding: const EdgeInsets.all(2),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: ColorConstants.primaryColor,
-                  width: 1,
-                ),
-              ),
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
-                width: _currentIndex == index ? 10 : 6,
-                height: _currentIndex == index ? 10 : 6,
+        if (widget.showTileDot)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(
+              widget.items.length,
+              (index) => Container(
+                margin: const EdgeInsets.symmetric(horizontal: 4),
+                padding: const EdgeInsets.all(2),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color:
-                      _currentIndex == index
-                          ? ColorConstants.primaryColor
-                          : ColorConstants.whiteColor,
+                  border: Border.all(
+                    color: ColorConstants.primaryColor,
+                    width: 1,
+                  ),
+                ),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  width: _currentIndex == index ? 10 : 6,
+                  height: _currentIndex == index ? 10 : 6,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color:
+                        _currentIndex == index
+                            ? ColorConstants.primaryColor
+                            : ColorConstants.whiteColor,
+                  ),
                 ),
               ),
             ),
           ),
-        ),
       ],
     );
   }

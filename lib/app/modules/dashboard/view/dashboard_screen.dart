@@ -22,6 +22,7 @@ class DashboardScreen extends StatelessWidget {
       valueListenable: appState.appPageIndex,
       builder: (context, index, _) {
         return Scaffold(
+          backgroundColor: ColorConstants.whiteColor,
           body: SafeArea(
             child: PageTransitionSwitcher(
               duration: const Duration(milliseconds: 400),
@@ -39,6 +40,8 @@ class DashboardScreen extends StatelessWidget {
           ),
           bottomNavigationBar: BottomNavigationBar(
             currentIndex: index,
+            backgroundColor: ColorConstants.whiteColor,
+            elevation: 0,
             onTap: (i) => appState.appPageIndex.value = i,
             items: [
               const BottomNavigationBarItem(
@@ -84,7 +87,10 @@ class DashboardScreen extends StatelessWidget {
           child: HomeScreen(searchController: searchController),
         );
       case 1:
-        return SearchPage(searchController: searchController);
+        return BlocProvider(
+          create: (context) => HomeBloc()..add(GetHomeRecord()),
+          child: SearchPage(searchController: searchController),
+        );
       case 2:
         return const AppointmentScreen();
       case 3:
