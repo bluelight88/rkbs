@@ -40,8 +40,8 @@ final class _SearchTextFormFieldState extends State<SearchTextFormField> {
     decoration: InputDecoration(
       labelText: widget.labelText,
       labelStyle: const TextStyle(
-        fontSize: 13,
-        fontFamily: "HelveticaNeueLTArabic",
+        fontSize: 15,
+        fontFamily: "PlusJakartaSans",
         color: ColorConstants.primaryColor,
       ),
       floatingLabelBehavior: FloatingLabelBehavior.never,
@@ -74,7 +74,7 @@ final class _SearchTextFormFieldState extends State<SearchTextFormField> {
     style: const TextStyle(
       fontWeight: FontWeight.normal,
       color: ColorConstants.primaryColor,
-      fontFamily: "HelveticaNeueLTArabic",
+      fontFamily: "PlusJakartaSans",
     ),
     validator: null,
     enabled: widget.enable,

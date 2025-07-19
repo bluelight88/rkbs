@@ -31,7 +31,7 @@ final class CustomAppBar extends StatelessWidget
         fontSize: 18,
         fontWeight: FontWeight.w800,
         color: ColorConstants.primaryColor,
-        fontFamily: "HelveticaNeueLTArabic",
+        fontFamily: "PlusJakartaSans",
       ),
     ),
     centerTitle: isCenter,

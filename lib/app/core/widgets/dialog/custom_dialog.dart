@@ -158,11 +158,11 @@ final class CustomDialog {
   }) => AlertDialog.adaptive(
     title: Text(
       appState.localization.appName,
-      style: const TextStyle(fontFamily: "HelveticaNeueLTArabic"),
+      style: const TextStyle(fontFamily: "PlusJakartaSans"),
     ),
     content: Text(
       message,
-      style: const TextStyle(fontFamily: "HelveticaNeueLTArabic"),
+      style: const TextStyle(fontFamily: "PlusJakartaSans"),
     ),
     actions: _showMaterialActions(
       context,
@@ -192,7 +192,7 @@ final class CustomDialog {
     content: Text(message, textAlign: TextAlign.center),
     contentTextStyle: const TextStyle(
       fontSize: 16,
-      fontFamily: "HelveticaNeueLTArabic",
+      fontFamily: "PlusJakartaSans",
       color: ColorConstants.primaryColor,
     ),
     actions: _showDesignedMaterialActions(
@@ -224,7 +224,7 @@ final class CustomDialog {
         isShowOk
             ? appState.localization.ok
             : yesText ?? appState.localization.yes,
-        style: const TextStyle(fontFamily: "HelveticaNeueLTArabic"),
+        style: const TextStyle(fontFamily: "PlusJakartaSans"),
       ),
       onPressed: () async {
         if (onYes != null && callMethodBeforePop) await onYes();
@@ -236,7 +236,7 @@ final class CustomDialog {
       TextButton(
         child: Text(
           noText ?? appState.localization.no,
-          style: const TextStyle(fontFamily: "HelveticaNeueLTArabic"),
+          style: const TextStyle(fontFamily: "PlusJakartaSans"),
         ),
         onPressed: () async {
           if (onNo != null && callMethodBeforePop) await onNo();
@@ -267,7 +267,7 @@ final class CustomDialog {
                 isShowOk
                     ? appState.localization.ok
                     : yesText ?? appState.localization.yes,
-                style: const TextStyle(fontFamily: "HelveticaNeueLTArabic"),
+                style: const TextStyle(fontFamily: "PlusJakartaSans"),
               ),
               onPressed: () async {
                 if (onYes != null && callMethodBeforePop) await onYes();
@@ -282,7 +282,7 @@ final class CustomDialog {
               child: AppOutlinedButton(
                 Text(
                   noText ?? appState.localization.no,
-                  style: const TextStyle(fontFamily: "HelveticaNeueLTArabic"),
+                  style: const TextStyle(fontFamily: "PlusJakartaSans"),
                 ),
                 onPressed: () async {
                   if (onNo != null && callMethodBeforePop) await onNo();
@@ -327,7 +327,7 @@ final class CustomDialog {
             child: AlertDialog.adaptive(
               title: Text(
                 appState.localization.appName,
-                style: const TextStyle(fontFamily: "HelveticaNeueLTArabic"),
+                style: const TextStyle(fontFamily: "PlusJakartaSans"),
               ),
               content: StreamBuilder(
                 stream: progressStream,
@@ -346,7 +346,7 @@ final class CustomDialog {
                                   Text(
                                     'Downloading... ${snapshot.data!.floor()}%',
                                     style: const TextStyle(
-                                      fontFamily: "HelveticaNeueLTArabic",
+                                      fontFamily: "PlusJakartaSans",
                                     ),
                                   ),
                                 ],

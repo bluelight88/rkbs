@@ -4,6 +4,7 @@ final class ColorConstants {
   static const Color primaryOldColor = Colors.black,
       primaryColor = Colors.black,
       lightPrimaryColor = Color(0xff2b2a2a),
+      lightTextColor = Color(0xff020202),
       secondaryColor = Color(0xfff4f2f8),
       primaryBrightColor = Color(0xff876bec),
       scaffoldBgColor = Color(0xFFe9eef4),

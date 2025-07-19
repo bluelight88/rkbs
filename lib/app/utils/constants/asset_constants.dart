@@ -1,7 +1,7 @@
 class AssetConstants {
   static const String appLogo = "";
 
-  static const String fontHelvetica = '';
+  static const String fontPlusJakartaSans = 'PlusJakartaSans';
 
   /// add your font style here
   static const String icSplashScreen = "assets/png/splash_screen.png",

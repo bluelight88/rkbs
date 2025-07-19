@@ -11,7 +11,7 @@ final class CustomTheme {
     );
     return ThemeData(
       useMaterial3: false,
-      fontFamily: AssetConstants.fontHelvetica,
+      fontFamily: AssetConstants.fontPlusJakartaSans,
       scaffoldBackgroundColor: ColorConstants.scaffoldBgColor,
       primaryColor: ColorConstants.primaryColor,
       colorScheme: const ColorScheme.light(
@@ -31,7 +31,7 @@ final class CustomTheme {
         elevation: 1,
         titleTextStyle: TextStyle(
           color: ColorConstants.primaryColor,
-          fontFamily: AssetConstants.fontHelvetica,
+          fontFamily: AssetConstants.fontPlusJakartaSans,
           height: 1,
           fontSize: 15,
         ),
@@ -55,7 +55,7 @@ final class CustomTheme {
         hintStyle: const TextStyle(
           color: Color(0xFF848484),
           height: 1,
-          fontFamily: AssetConstants.fontHelvetica,
+          fontFamily: AssetConstants.fontPlusJakartaSans,
           fontWeight: FontWeight.normal,
           fontSize: 12,
         ),
@@ -103,32 +103,32 @@ final class CustomTheme {
         // headline 1
         displayLarge: Typography.whiteMountainView.displayMedium?.copyWith(
           height: 1,
-          fontFamily: AssetConstants.fontHelvetica,
+          fontFamily: AssetConstants.fontPlusJakartaSans,
         ),
         // headline 2
         displayMedium: Typography.whiteMountainView.displayMedium?.copyWith(
           height: 1,
-          fontFamily: AssetConstants.fontHelvetica,
+          fontFamily: AssetConstants.fontPlusJakartaSans,
         ),
         // headline 3
         displaySmall: Typography.whiteMountainView.displayMedium?.copyWith(
           height: 1,
-          fontFamily: AssetConstants.fontHelvetica,
+          fontFamily: AssetConstants.fontPlusJakartaSans,
         ),
         // headline 4
         headlineMedium: Typography.whiteMountainView.displayMedium?.copyWith(
           height: 1,
-          fontFamily: AssetConstants.fontHelvetica,
+          fontFamily: AssetConstants.fontPlusJakartaSans,
         ),
         // headline 5
         headlineSmall: Typography.whiteMountainView.displayMedium?.copyWith(
           height: 1,
-          fontFamily: AssetConstants.fontHelvetica,
+          fontFamily: AssetConstants.fontPlusJakartaSans,
         ),
         // headline 6
         titleLarge: Typography.whiteMountainView.displayMedium?.copyWith(
           height: 1,
-          fontFamily: AssetConstants.fontHelvetica,
+          fontFamily: AssetConstants.fontPlusJakartaSans,
         ),
         // displayMedium: Typography.whiteMountainView.displayMedium?.copyWith(
         //   color: ColorConstants.primaryColor,
@@ -176,7 +176,7 @@ final class CustomTheme {
         bodyMedium: Typography.whiteMountainView.bodyMedium?.copyWith(
           height: 1,
           color: ColorConstants.primaryColor,
-          fontFamily: AssetConstants.fontHelvetica,
+          fontFamily: AssetConstants.fontPlusJakartaSans,
         ),
         // Body Small fonts - for Small common texts
         // bodySmall: Typography.whiteMountainView.bodySmall?.copyWith(
@@ -213,7 +213,7 @@ final class CustomTheme {
         titleTextStyle: Typography.whiteMountainView.displayLarge?.copyWith(
           color: Colors.black,
           fontSize: 18,
-          fontFamily: AssetConstants.fontHelvetica,
+          fontFamily: AssetConstants.fontPlusJakartaSans,
         ),
       ),
       datePickerTheme: const DatePickerThemeData(
@@ -230,6 +230,6 @@ final class CustomTheme {
   static ThemeData darkTheme() => ThemeData(
     colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
     useMaterial3: true,
-    fontFamily: AssetConstants.fontHelvetica,
+    fontFamily: AssetConstants.fontPlusJakartaSans,
   );
 }

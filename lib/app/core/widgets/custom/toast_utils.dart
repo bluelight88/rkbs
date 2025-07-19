@@ -37,7 +37,7 @@ final class ToastUtils {
                         style: const TextStyle(
                           color: Colors.white,
                           height: 1,
-                          fontFamily: AssetConstants.fontHelvetica,
+                          fontFamily: AssetConstants.fontPlusJakartaSans,
                         ),
                       ),
                     ),
@@ -82,7 +82,7 @@ final class ToastUtils {
                           style: const TextStyle(
                             color: Colors.white,
                             height: 1,
-                            fontFamily: AssetConstants.fontHelvetica,
+                            fontFamily: AssetConstants.fontPlusJakartaSans,
                           ),
                         ),
                       ),
@@ -132,7 +132,7 @@ final class ToastUtils {
                           style: const TextStyle(
                             color: Colors.white,
                             height: 1,
-                            fontFamily: AssetConstants.fontHelvetica,
+                            fontFamily: AssetConstants.fontPlusJakartaSans,
                           ),
                         ),
                       ),

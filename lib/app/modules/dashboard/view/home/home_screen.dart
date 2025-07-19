@@ -49,8 +49,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 text: "Hello ",
                                 style: TextStyle(
                                   color: ColorConstants.primaryColor,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14,
+                                  fontFamily: "PlusJakartaSans",
+                                  fontSize: 15,
                                 ),
                               ),
                               TextSpan(
@@ -58,7 +58,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 style: const TextStyle(
                                   color: ColorConstants.primaryColor,
                                   fontWeight: FontWeight.w600,
-                                  fontSize: 20,
+                                  fontFamily: "PlusJakartaSans",
+                                  fontSize: 22,
                                 ),
                                 recognizer:
                                     TapGestureRecognizer()
@@ -71,7 +72,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 style: TextStyle(
                                   color: ColorConstants.primaryColor,
                                   fontWeight: FontWeight.normal,
-                                  fontSize: 14,
+                                  fontFamily: "PlusJakartaSans",
+                                  fontSize: 15,
                                 ),
                               ),
                             ],
@@ -114,12 +116,29 @@ class _HomeScreenState extends State<HomeScreen> {
                         Text(
                           "Select Category",
                           style: TextStyle(
+                            fontFamily: "PlusJakartaSans",
                             color: ColorConstants.primaryColor,
                             fontWeight: FontWeight.w600,
-                            fontSize: 16,
+                            fontSize: 18,
                           ),
                         ),
-                        InkWell(onTap: () {}, child: Text("See All")),
+                        InkWell(
+                          onTap: () {
+                            // todo: show all other element of list
+                          },
+                          child: Opacity(
+                            opacity: 0.5,
+                            child: Text(
+                              "See All",
+                              style: TextStyle(
+                                color: ColorConstants.primaryColor,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: "PlusJakartaSans",
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -138,27 +157,36 @@ class _HomeScreenState extends State<HomeScreen> {
                             children: [
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(50),
-                                child:
-                                    state
-                                            .homeResponseModel
-                                            .business[index]
-                                            .businesstypeLogoMobile
-                                            .startsWith("https")
-                                        ? Image.network(
-                                          state
+                                child: Container(
+                                  height: 62,
+                                  width: 62,
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 15,
+                                    vertical: 15,
+                                  ),
+                                  color: ColorConstants.primaryColor,
+                                  child:
+                                      state
                                               .homeResponseModel
                                               .business[index]
-                                              .businesstypeLogoMobile,
-                                          height: 70,
-                                          width: 70,
-                                          fit: BoxFit.cover,
-                                        )
-                                        : Image.asset(
-                                          AssetConstants.icBackgroundImage,
-                                          height: 70,
-                                          width: 70,
-                                          fit: BoxFit.cover,
-                                        ),
+                                              .businesstypeLogoMobile
+                                              .startsWith("https")
+                                          ? Image.network(
+                                            state
+                                                .homeResponseModel
+                                                .business[index]
+                                                .businesstypeLogoMobile,
+                                            height: 32,
+                                            width: 32,
+                                            fit: BoxFit.fitHeight,
+                                          )
+                                          : Image.asset(
+                                            AssetConstants.icBackgroundImage,
+                                            height: 70,
+                                            width: 70,
+                                            fit: BoxFit.cover,
+                                          ),
+                                ),
                               ),
                               const Gap(10),
                               Text(
@@ -166,7 +194,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                     .homeResponseModel
                                     .business[index]
                                     .businesstypeName,
-                                style: TextStyle(),
+                                style: TextStyle(
+                                  fontFamily: "PlusJakartaSans",
+                                  color: ColorConstants.lightPrimaryColor,
+                                  fontSize: 15,
+                                ),
                               ),
                             ],
                           );
@@ -182,7 +214,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     width: MediaQuery.of(context).size.width,
                     child: DynamicSlider(
                       title: "Special Offers",
-
                       scrollDirection: Axis.horizontal,
                       items: state.homeResponseModel.offer,
                       imageUrlGetter: (offer) => offer.imageUrl,

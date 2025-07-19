@@ -36,8 +36,9 @@ class _DynamicSliderState extends State<DynamicSlider> {
 
   @override
   Widget build(BuildContext context) {
-    final int visibleItemCount =
-        widget.items.length > 3 ? 3 : widget.items.length;
+    final int visibleItemCount = widget.items.length;
+    // todo: uncomment when checked with data
+    // widget.items.length > 3 ? 3 : widget.items.length;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -45,9 +46,35 @@ class _DynamicSliderState extends State<DynamicSlider> {
         if (widget.title != null)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            child: Text(
-              widget.title!,
-              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  widget.title!,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontFamily: "PlusJakartaSans",
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    // todo: show all other element of list
+                  },
+                  child: Opacity(
+                    opacity: 0.5,
+                    child: Text(
+                      "See All",
+                      style: TextStyle(
+                        color: ColorConstants.primaryColor,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: "PlusJakartaSans",
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         SizedBox(
@@ -104,6 +131,8 @@ class _DynamicSliderState extends State<DynamicSlider> {
                             badgeText,
                             style: TextStyle(
                               fontSize: 11,
+                              fontWeight: FontWeight.w600,
+                              fontFamily: "PlusJakartaSans",
                               color: ColorConstants.primaryColor,
                             ),
                           ),
@@ -114,7 +143,9 @@ class _DynamicSliderState extends State<DynamicSlider> {
                           child: Text(
                             primaryText,
                             style: const TextStyle(
-                              fontSize: 11,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                              fontFamily: "PlusJakartaSans",
                               color: ColorConstants.whiteColor,
                             ),
                           ),
@@ -129,7 +160,9 @@ class _DynamicSliderState extends State<DynamicSlider> {
                               Text(
                                 secondaryText,
                                 style: const TextStyle(
-                                  fontSize: 11,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w400,
+                                  fontFamily: "PlusJakartaSans",
                                   color: ColorConstants.whiteColor,
                                 ),
                               ),

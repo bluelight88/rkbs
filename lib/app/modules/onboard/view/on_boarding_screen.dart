@@ -33,8 +33,9 @@ class OnBoardingScreen extends StatelessWidget {
                     "Find the perfect stylist at your door Steps",
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 24,
+                      fontWeight: FontWeight.w200,
+                      fontSize: 23,
+                      fontFamily: "PlusJakartaSans",
                       color: ColorConstants.whiteColor,
                     ),
                   ),
@@ -48,7 +49,8 @@ class OnBoardingScreen extends StatelessWidget {
                     "Get Started",
                     style: TextStyle(
                       color: ColorConstants.primaryColor,
-                      fontSize: 16,
+                      fontSize: 17,
+                      fontFamily: "PlusJakartaSans",
                       fontWeight: FontWeight.w600,
                     ),
                   ),
