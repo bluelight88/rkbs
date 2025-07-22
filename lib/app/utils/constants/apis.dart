@@ -17,5 +17,6 @@ class APIS {
       todo = 'to_do',
       logout = '${version}api/logout',
       home = '${baseUrlLocal}data/api/device/GetHomePageDetails',
+      providerDetail = '${baseUrlLocal}data/api/device/GetProviderDetails',
       sendOtp = '${version}api/send/otp';
 }

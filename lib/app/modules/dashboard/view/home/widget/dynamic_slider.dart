@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:timoraa/app/utils/constants/route_name.dart';
+import 'package:timoraa/app/utils/extensions/navigation_extension.dart';
 
 import '../../../../../utils/constants/asset_constants.dart';
 import '../../../../../utils/constants/color_constants.dart';
+import '../../../model/home_data_model.dart';
 
 class DynamicSlider extends StatefulWidget {
-  final List<dynamic> items;
+  final List<Provider> items;
   final String? title;
   final Axis scrollDirection;
   final bool showTileDot;
@@ -92,87 +95,100 @@ class _DynamicSliderState extends State<DynamicSlider> {
               final secondaryText = widget.secondaryTextGetter(item);
               final badgeText = widget.badgeText(item);
 
-              return Stack(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child:
-                        imageUrl.startsWith("https")
-                            ? Image.network(
-                              imageUrl,
-                              height: MediaQuery.of(context).size.height * 0.2,
-                              width: MediaQuery.of(context).size.width * 0.80,
-                              fit: BoxFit.fill,
-                              filterQuality: FilterQuality.medium,
-                            )
-                            : Image.asset(
-                              AssetConstants.icBackgroundImage,
-                              height: MediaQuery.of(context).size.height * 0.2,
-                              width: MediaQuery.of(context).size.width * 0.80,
-                              fit: BoxFit.cover,
-                            ),
-                  ),
-                  Positioned(
-                    top: 10,
-                    left: 10,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 5,
-                            vertical: 3,
-                          ),
-                          decoration: BoxDecoration(
-                            color: ColorConstants.whiteColor,
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: Text(
-                            badgeText,
-                            style: TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.w600,
-                              fontFamily: "PlusJakartaSans",
-                              color: ColorConstants.primaryColor,
-                            ),
-                          ),
-                        ),
-                        const Gap(110),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 10),
-                          child: Text(
-                            primaryText,
-                            style: const TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600,
-                              fontFamily: "PlusJakartaSans",
-                              color: ColorConstants.whiteColor,
-                            ),
-                          ),
-                        ),
-                        const Gap(5),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 10),
-                          child: Row(
-                            children: [
-                              Image.asset(AssetConstants.icLocation),
-                              const Gap(10),
-                              Text(
-                                secondaryText,
-                                style: const TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w400,
-                                  fontFamily: "PlusJakartaSans",
-                                  color: ColorConstants.whiteColor,
-                                ),
+              return InkWell(
+                onTap: () {
+                  context.pushNamed(
+                    RouteName.providerDetailScreen,
+                    args: {
+                      "providerId": widget.items[index].providerId,
+                      "title": widget.items[index].providerName,
+                    },
+                  );
+                },
+                child: Stack(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child:
+                          imageUrl.startsWith("https")
+                              ? Image.network(
+                                imageUrl,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.2,
+                                width: MediaQuery.of(context).size.width * 0.80,
+                                fit: BoxFit.fill,
+                                filterQuality: FilterQuality.medium,
+                              )
+                              : Image.asset(
+                                AssetConstants.icBackgroundImage,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.2,
+                                width: MediaQuery.of(context).size.width * 0.80,
+                                fit: BoxFit.cover,
                               ),
-                            ],
-                          ),
-                        ),
-                      ],
                     ),
-                  ),
-                ],
+                    Positioned(
+                      top: 10,
+                      left: 10,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 5,
+                              vertical: 3,
+                            ),
+                            decoration: BoxDecoration(
+                              color: ColorConstants.whiteColor,
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Text(
+                              badgeText,
+                              style: TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: "PlusJakartaSans",
+                                color: ColorConstants.primaryColor,
+                              ),
+                            ),
+                          ),
+                          const Gap(110),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: Text(
+                              primaryText,
+                              style: const TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: "PlusJakartaSans",
+                                color: ColorConstants.whiteColor,
+                              ),
+                            ),
+                          ),
+                          const Gap(5),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: Row(
+                              children: [
+                                Image.asset(AssetConstants.icLocation),
+                                const Gap(10),
+                                Text(
+                                  secondaryText,
+                                  style: const TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w400,
+                                    fontFamily: "PlusJakartaSans",
+                                    color: ColorConstants.whiteColor,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               );
             },
           ),

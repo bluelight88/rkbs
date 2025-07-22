@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:timoraa/app/utils/constants/color_constants.dart';
 
 import '../../../core/widgets/app_bar/custom_app_bar.dart';
 import '../../../utils/services/app_state.dart';
@@ -12,6 +13,8 @@ final class UnderDevelopmentScreen extends StatelessWidget {
     appBar: CustomAppBar(
       appState.localization.underDevelopment,
       showLeading: showLeading,
+      titleColor: ColorConstants.primaryColor,
+      color: Colors.white,
     ),
     body: Center(child: Text(appState.localization.comingSoon)),
   );

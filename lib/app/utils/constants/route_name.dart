@@ -3,10 +3,7 @@ class RouteName {
   static const String splashScreen = "/",
       underDevelopmentScreen = "underDevelopmentScreen",
       onBoardingScreen = 'onBoardingScreen',
-          // Auth
-          authScreen =
-          "loginScreen",
-          // Dashboard
-          dashboardScreen =
-          'dashboardScreen';
+      authScreen = "loginScreen",
+      dashboardScreen = 'dashboardScreen',
+      providerDetailScreen = 'providerDetailScreen';
 }

@@ -58,7 +58,7 @@ final class APIController {
     late ApiResponseModel apiResponse;
     late ErrorModel error;
     late Response response;
-    final Map<String, dynamic> params = {"params": param};
+    final Map<String, dynamic> params = param;
     try {
       final Map<String, dynamic> headerOptions = {
         'Cookie': appState.sessionId,

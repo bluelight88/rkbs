@@ -2,6 +2,8 @@ import 'package:timoraa/app/modules/dashboard/view/dashboard_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:timoraa/app/modules/provider_detail/view/provider_detail_screen.dart';
+import 'package:timoraa/app/modules/provider_detail/view_model/provider_detail/provider_detail_bloc.dart';
 import '../../modules/auth/view/login/login_screen.dart';
 import '../../modules/auth/view_model/login/login_bloc.dart';
 import '../../modules/onboard/view/on_boarding_screen.dart';
@@ -34,18 +36,20 @@ final class NavigationManager {
   }) {
     Widget routeScreen = const UnderDevelopmentScreen();
     routeScreen = switch (routeName) {
-      // ************** OnBoard module starts **************
       RouteName.splashScreen => const SplashScreen(),
-      // ************** OnBoard module ends **************
-      // ************** Authentication module starts **************
       RouteName.authScreen => MultiBlocProvider(
         providers: [BlocProvider(create: (context) => LoginBloc())],
         child: const LoginScreen(),
       ),
       RouteName.onBoardingScreen => const OnBoardingScreen(),
-      // DashBoard
       RouteName.dashboardScreen => const DashboardScreen(),
-      // ************** Authentication module ends **************
+      RouteName.providerDetailScreen => BlocProvider(
+        create: (context) => ProviderDetailBloc(),
+        child: ProviderDetailScreen(
+          providerId: args["providerId"],
+          title: args["title"],
+        ),
+      ),
       _ => UnderDevelopmentScreen(showLeading: args['showLeading'] ?? true),
     };
     return routeScreen;

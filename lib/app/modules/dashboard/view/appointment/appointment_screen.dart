@@ -1,3 +1,4 @@
+import 'package:timoraa/app/core/widgets/app_bar/custom_app_bar.dart';
 import 'package:timoraa/app/modules/dashboard/view/appointment/widget/appointment_card.dart';
 import 'package:timoraa/app/utils/constants/asset_constants.dart';
 import 'package:timoraa/app/utils/constants/color_constants.dart';
@@ -60,13 +61,10 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorConstants.whiteColor,
-      appBar: AppBar(
-        elevation: 0,
-        title: Text(
-          "Appointments",
-          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
-        ),
+      appBar: CustomAppBar(
+        "Appointments",
+        titleColor: ColorConstants.primaryColor,
+        color: Colors.white,
       ),
       body:
           appState.userId.isEmpty
