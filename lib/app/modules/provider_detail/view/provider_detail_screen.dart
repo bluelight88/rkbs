@@ -4,10 +4,13 @@ import 'package:gap/gap.dart';
 import 'package:timoraa/app/core/widgets/app_bar/custom_app_bar.dart';
 import 'package:timoraa/app/core/widgets/custom/center_loader_widget.dart';
 import 'package:timoraa/app/core/widgets/custom/center_message_widget.dart';
+import 'package:timoraa/app/modules/provider_detail/view/menus/detail_tab.dart';
 import 'package:timoraa/app/modules/provider_detail/view_model/provider_detail/provider_detail_bloc.dart';
 import 'package:timoraa/app/utils/constants/color_constants.dart';
 
 import '../../../utils/constants/asset_constants.dart';
+import 'menus/review_tab.dart';
+import 'menus/service_tab.dart';
 
 class ProviderDetailScreen extends StatefulWidget {
   final String title;
@@ -25,11 +28,11 @@ class ProviderDetailScreen extends StatefulWidget {
 
 class _ProviderDetailScreenState extends State<ProviderDetailScreen> {
   final ValueNotifier<int> selectedIndex = ValueNotifier<int>(0);
-  final List<String> tabs = ["Details","Service", "Review", "Portfolio"];
+  final List<String> tabs = ["Details", "Service", "Review", "Portfolio"];
   final List<Widget> tabScreens = [
-    Center(child: Text("Details Screen", style: TextStyle(fontSize: 20))),
-    Center(child: Text("Service Screen", style: TextStyle(fontSize: 20))),
-    Center(child: Text("Review Screen", style: TextStyle(fontSize: 20))),
+    DetailTab(),
+    ServiceTab(),
+    ReviewTab(),
     Center(child: Text("Portfolio Screen", style: TextStyle(fontSize: 20))),
   ];
 
@@ -81,7 +84,7 @@ class _ProviderDetailScreenState extends State<ProviderDetailScreen> {
                     top: 250,
                     child: Container(
                       width: MediaQuery.of(context).size.width,
-                      padding: EdgeInsets.only(left: 20, top: 20),
+                      padding: EdgeInsets.only(left: 20, top: 20, right: 20),
                       decoration: BoxDecoration(
                         color: ColorConstants.whiteColor,
                         borderRadius: BorderRadius.only(
@@ -143,8 +146,10 @@ class _ProviderDetailScreenState extends State<ProviderDetailScreen> {
                                           decoration: BoxDecoration(
                                             color:
                                                 isSelected
-                                                    ? Colors.black
-                                                    : Colors.white,
+                                                    ? ColorConstants
+                                                        .primaryColor
+                                                    : ColorConstants
+                                                        .greyBackGround,
                                             borderRadius: BorderRadius.circular(
                                               8,
                                             ),
@@ -154,11 +159,12 @@ class _ProviderDetailScreenState extends State<ProviderDetailScreen> {
                                             style: TextStyle(
                                               color:
                                                   isSelected
-                                                      ? Colors.white
-                                                      : Colors.black,
+                                                      ? ColorConstants
+                                                          .whiteColor
+                                                      : ColorConstants
+                                                          .primaryColor,
                                               fontSize: 16,
                                               fontFamily: "PlusJakartaSans",
-                                              fontWeight: FontWeight.w600,
                                             ),
                                           ),
                                         ),

@@ -45,20 +45,34 @@ final class AppElevatedButton extends StatelessWidget {
     this.borderRadius = 10,
   });
 
+  //
+  // @override
+  // ElevatedButton build(BuildContext context) => ElevatedButton(
+  //   onPressed: onPressed,
+  //   style: ElevatedButton.styleFrom(
+  //     maximumSize: Size(width, height),
+  //     minimumSize: Size(width, height),
+  //     side: BorderSide(color: backgroundColor),
+  //     backgroundColor: backgroundColor,
+  //     foregroundColor: foregroundColor,
+  //     shape: RoundedRectangleBorder(
+  //       borderRadius: BorderRadius.circular(borderRadius),
+  //     ),
+  //   ),
+  //   child: child,
+  // );
   @override
-  ElevatedButton build(BuildContext context) => ElevatedButton(
-    onPressed: onPressed,
-    style: ElevatedButton.styleFrom(
-      maximumSize: Size(width, height),
-      minimumSize: Size(width, height),
-      side: BorderSide(color: backgroundColor),
-      backgroundColor: backgroundColor,
-      foregroundColor: foregroundColor,
-      shape: RoundedRectangleBorder(
+  InkWell build(BuildContext context) => InkWell(
+    onTap: onPressed,
+    child: Container(
+      height: height,
+      width: width,
+      decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(borderRadius),
+        color: backgroundColor,
       ),
+      child: Center(child: child),
     ),
-    child: child,
   );
 }
 

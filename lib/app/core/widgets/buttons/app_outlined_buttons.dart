@@ -42,7 +42,7 @@ final class AppOutlinedButton extends StatelessWidget {
     this.child, {
     required this.onPressed,
     super.key,
-    this.outlineColor = ColorConstants.redColor,
+    this.outlineColor = ColorConstants.primaryColor,
     this.width = double.infinity,
     this.height = 35,
     this.borderRadius = 5,
@@ -59,7 +59,7 @@ final class AppOutlinedButton extends StatelessWidget {
       ),
       side: BorderSide(color: outlineColor),
       foregroundColor: outlineColor,
-      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
     ),
     child: child,
   );
