@@ -10,6 +10,7 @@ final class ColorConstants {
       scaffoldBgColor = Color(0xFFe9eef4),
       shadowColor = Color(0xffD6D6D6),
       textFieldIconColor = Color(0xFFA5A5A5),
+      greyText = Color(0xFF4D4D4D),
       greyBackGround = Color(0xFFEDEDED),
       greyBackGround2 = Color(0xFFDBD9D9),
       whiteColor = Colors.white,

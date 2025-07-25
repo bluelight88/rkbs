@@ -237,7 +237,7 @@ class _ProviderDetailScreenState extends State<ProviderDetailScreen> {
   List<Widget> _buildTabContent(int index) {
     switch (index) {
       case 0:
-        return [const SliverToBoxAdapter(child: DetailTab())];
+        return [SliverToBoxAdapter(child: DetailTab())];
       case 1:
         return [const SliverToBoxAdapter(child: ServiceTab())];
       case 2:
