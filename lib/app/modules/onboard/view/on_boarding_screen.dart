@@ -20,7 +20,7 @@ class OnBoardingScreen extends StatelessWidget {
             AssetConstants.icSplashScreen,
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height * 0.99,
-            fit: BoxFit.fitHeight,
+            fit: BoxFit.fill,
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,

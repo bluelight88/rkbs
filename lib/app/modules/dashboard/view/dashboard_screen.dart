@@ -25,6 +25,7 @@ class DashboardScreen extends StatelessWidget {
         return Scaffold(
           backgroundColor: ColorConstants.whiteColor,
           body: SafeArea(
+            top: false,
             child: PageTransitionSwitcher(
               duration: const Duration(milliseconds: 400),
               reverse: false,

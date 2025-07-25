@@ -39,6 +39,7 @@ final class _SplashScreenState extends State<SplashScreen> {
       backgroundColor: ColorConstants.primaryColor,
       body: Image.asset(
         AssetConstants.icSplashScreen,
+        fit: BoxFit.fill,
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
       ),

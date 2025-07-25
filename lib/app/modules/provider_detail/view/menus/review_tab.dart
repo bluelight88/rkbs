@@ -4,7 +4,7 @@ import 'package:timoraa/app/core/widgets/buttons/app_outlined_buttons.dart';
 import 'package:timoraa/app/utils/constants/color_constants.dart';
 
 class ReviewTab extends StatefulWidget {
-  ReviewTab({super.key});
+  const ReviewTab({super.key});
 
   @override
   State<ReviewTab> createState() => _ReviewTabState();
