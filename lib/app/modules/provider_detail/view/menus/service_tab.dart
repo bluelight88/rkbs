@@ -12,8 +12,9 @@ class ServiceTab extends StatelessWidget {
   Widget build(BuildContext context) {
     final searchController = TextEditingController();
 
-    return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.6,
+    return Container(
+      decoration: BoxDecoration(color: ColorConstants.whiteColor),
+      padding: EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         children: [
           SearchTextFormField(
@@ -23,7 +24,7 @@ class ServiceTab extends StatelessWidget {
           ),
           const Gap(10),
           AppElevatedButton(
-            Text(
+            const Text(
               "Venue Health & Safety Rules",
               style: TextStyle(
                 color: Colors.white,
@@ -35,71 +36,71 @@ class ServiceTab extends StatelessWidget {
             onPressed: () {},
           ),
           const Gap(10),
-          Expanded(
-            child: ListView.separated(
-              padding: const EdgeInsets.only(bottom: 70),
-              itemCount: 10,
-              separatorBuilder: (_, __) => const Gap(50),
-              itemBuilder: (context, index) {
-                return ServiceCards(
-                  title: "Hair Cuts",
-                  subTitle: "Hair Cuts",
-                  onTap: () {},
-                  bottomChild: const Center(
-                    child: Text(
-                      "Book Now",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: "PlusJakartaSans",
-                        fontSize: 14,
-                      ),
+          ListView.separated(
+            padding: const EdgeInsets.only(bottom: 70),
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: 10,
+            separatorBuilder: (_, __) => const Gap(50),
+            itemBuilder: (context, index) {
+              return ServiceCards(
+                title: "Hair Cuts",
+                subTitle: "Hair Cuts",
+                onTap: () {},
+                bottomChild: const Center(
+                  child: Text(
+                    "Book Now",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontFamily: "PlusJakartaSans",
+                      fontSize: 14,
                     ),
                   ),
-                  middleChild: Flexible(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "200",
-                          maxLines: 1,
-                          style: TextStyle(
-                            color: ColorConstants.primaryColor,
-                            fontFamily: "PlusJakartaSans",
-                            fontWeight: FontWeight.w600,
-                            fontSize: 14,
-                          ),
+                ),
+                middleChild: Flexible(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "200",
+                        maxLines: 1,
+                        style: TextStyle(
+                          color: ColorConstants.primaryColor,
+                          fontFamily: "PlusJakartaSans",
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14,
                         ),
-                        const Gap(5),
-                        Text(
-                          "30 Min",
-                          maxLines: 1,
-                          style: TextStyle(
-                            color: ColorConstants.primaryColor,
-                            fontFamily: "PlusJakartaSans",
-                            fontWeight: FontWeight.w400,
-                            fontSize: 13,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  child: AppElevatedButton(
-                    Text(
-                      "Subscribe",
-                      style: TextStyle(
-                        color: ColorConstants.whiteColor,
-                        fontFamily: "PlusJakartaSans",
-                        fontWeight: FontWeight.w400,
-                        fontSize: 14,
                       ),
-                    ),
-                    onPressed: () {},
-                    height: 30,
-                    width: MediaQuery.of(context).size.width * 0.25,
+                      const Gap(5),
+                      Text(
+                        "30 Min",
+                        maxLines: 1,
+                        style: TextStyle(
+                          color: ColorConstants.primaryColor,
+                          fontFamily: "PlusJakartaSans",
+                          fontWeight: FontWeight.w400,
+                          fontSize: 13,
+                        ),
+                      ),
+                    ],
                   ),
-                );
-              },
-            ),
+                ),
+                child: AppElevatedButton(
+                  const Text(
+                    "Subscribe",
+                    style: TextStyle(
+                      color: ColorConstants.whiteColor,
+                      fontFamily: "PlusJakartaSans",
+                      fontWeight: FontWeight.w400,
+                      fontSize: 14,
+                    ),
+                  ),
+                  onPressed: () {},
+                  height: 30,
+                  width: MediaQuery.of(context).size.width * 0.25,
+                ),
+              );
+            },
           ),
         ],
       ),
