@@ -11,5 +11,8 @@ class AssetConstants {
           icCalender =
           "assets/png/dashboard/ic_calender.png",
       icLocation = "assets/png/ic_location.png",
+      icLike = "assets/png/ic_like.png",
+      icDownload = "assets/png/ic_download.png",
+      icComment = "assets/png/ic_comment.png",
       icAppointmentCalender = "assets/png/ic_appointment_calender.png";
 }

@@ -4,6 +4,7 @@ import 'package:gap/gap.dart';
 import 'package:timoraa/app/core/widgets/custom/center_loader_widget.dart';
 import 'package:timoraa/app/core/widgets/custom/center_message_widget.dart';
 import 'package:timoraa/app/modules/provider_detail/view/menus/detail_tab.dart';
+import 'package:timoraa/app/modules/provider_detail/view/menus/protfolio_tab.dart';
 import 'package:timoraa/app/modules/provider_detail/view/menus/review_tab.dart';
 import 'package:timoraa/app/modules/provider_detail/view/menus/service_tab.dart';
 import 'package:timoraa/app/modules/provider_detail/view_model/provider_detail/provider_detail_bloc.dart';
@@ -243,16 +244,7 @@ class _ProviderDetailScreenState extends State<ProviderDetailScreen> {
       case 2:
         return [const ReviewTab()];
       case 3:
-        return [
-          const SliverToBoxAdapter(
-            child: Center(
-              child: Padding(
-                padding: EdgeInsets.only(top: 20),
-                child: Text("Portfolio Screen", style: TextStyle(fontSize: 20)),
-              ),
-            ),
-          ),
-        ];
+        return [const SliverToBoxAdapter(child: PortfolioTab())];
       default:
         return [const SliverToBoxAdapter(child: SizedBox.shrink())];
     }
