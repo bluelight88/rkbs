@@ -5,6 +5,7 @@ import 'package:timoraa/app/core/widgets/buttons/app_elevated_button.dart';
 import 'package:timoraa/app/modules/provider_detail/model/provider_detail_model.dart';
 import 'package:timoraa/app/utils/constants/asset_constants.dart';
 import 'package:timoraa/app/utils/constants/color_constants.dart';
+import 'package:timoraa/app/utils/extensions/app_extension.dart';
 
 import '../../../../utils/services/util_methods.dart';
 
@@ -203,7 +204,9 @@ class DetailTab extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               itemBuilder: (context, index) {
                 return InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    providerDetailModel.socialMedia[index].link.launchUrl();
+                  },
                   child: Container(
                     height: 60,
                     width: 70,
