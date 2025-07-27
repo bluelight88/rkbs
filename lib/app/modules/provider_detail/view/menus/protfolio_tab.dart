@@ -3,8 +3,11 @@ import 'package:gap/gap.dart';
 import 'package:timoraa/app/utils/constants/asset_constants.dart';
 import 'package:timoraa/app/utils/constants/color_constants.dart';
 
+import '../../model/provider_detail_model.dart';
+
 class PortfolioTab extends StatelessWidget {
-  const PortfolioTab({super.key});
+  final ProviderDetailModel providerDetailModel;
+  const PortfolioTab({required this.providerDetailModel, super.key});
 
   @override
   Widget build(BuildContext context) {

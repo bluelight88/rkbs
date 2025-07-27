@@ -5,8 +5,11 @@ import 'package:timoraa/app/modules/provider_detail/view/menus/widgets/service_c
 import 'package:timoraa/app/utils/constants/color_constants.dart';
 import 'package:timoraa/app/utils/constants/custom_text_form_field.dart';
 
+import '../../model/provider_detail_model.dart';
+
 class ServiceTab extends StatelessWidget {
-  const ServiceTab({super.key});
+  final ProviderDetailModel providerDetailModel;
+  const ServiceTab({required this.providerDetailModel, super.key});
 
   @override
   Widget build(BuildContext context) {

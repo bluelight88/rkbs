@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:html/parser.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -479,5 +480,10 @@ final class UtilMethods {
       );
       debugPrint(chunk);
     }
+  }
+
+  String cleanHtmlString(String input) {
+    final document = parse(input); // from package:html/parser.dart
+    return parse(document.body?.text).documentElement?.text ?? '';
   }
 }

@@ -1,23 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:intl/intl.dart';
 import 'package:timoraa/app/core/widgets/buttons/app_elevated_button.dart';
+import 'package:timoraa/app/modules/provider_detail/model/provider_detail_model.dart';
 import 'package:timoraa/app/utils/constants/asset_constants.dart';
 import 'package:timoraa/app/utils/constants/color_constants.dart';
 
+import '../../../../utils/services/util_methods.dart';
+
 class DetailTab extends StatelessWidget {
-  DetailTab({super.key});
+  final ProviderDetailModel providerDetailModel;
+
+  DetailTab({required this.providerDetailModel, super.key});
 
   final ValueNotifier<bool> showFullWeek = ValueNotifier<bool>(false);
-
-  final Map<String, String> weeklySchedule = {
-    'Sunday': '9:00 AM - 3:00 PM',
-    'Monday': '9:00 AM - 3:00 PM',
-    'Tuesday': '9:00 AM - 3:00 PM',
-    'Wednesday': '9:00 AM - 3:00 PM',
-    'Thursday': '9:00 AM - 3:00 PM',
-    'Friday': '9:00 AM - 3:00 PM',
-    'Saturday': '9:00 AM - 3:00 PM',
-  };
 
   @override
   Widget build(BuildContext context) {
@@ -37,10 +33,10 @@ class DetailTab extends StatelessWidget {
             ),
           ),
           const Gap(10),
-          const Text(
-            "Neque porro quisquam est qui dolorem ipsum quia dolor sit"
-            " amet, consectetur, adipisci velit...3.7 high street, HA87EJ"
-            " Edgware 3.7 high street, HA87EJ, Edgware",
+          Text(
+            UtilMethods.instance.cleanHtmlString(
+              providerDetailModel.providerInfo,
+            ),
             style: TextStyle(fontSize: 14, fontFamily: "PlusJakartaSans"),
           ),
 
@@ -79,8 +75,8 @@ class DetailTab extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        "User Name",
+                      Text(
+                        providerDetailModel.staff[index].staffName,
                         style: TextStyle(
                           fontSize: 16,
                           fontFamily: "PlusJakartaSans",
@@ -88,48 +84,69 @@ class DetailTab extends StatelessWidget {
                         ),
                       ),
                       const Gap(5),
-                      Text(
-                        "0100 010 0101",
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: ColorConstants.greyText,
-                          fontFamily: "PlusJakartaSans",
-                          fontWeight: FontWeight.w600,
+                      if (providerDetailModel
+                          .staff[index]
+                          .staffPhone
+                          .isNotEmpty)
+                        Text(
+                          providerDetailModel.staff[index].staffPhone,
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: ColorConstants.greyText,
+                            fontFamily: "PlusJakartaSans",
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
-                      ),
                     ],
                   ),
                   const Spacer(),
-                  AppElevatedButton(
-                    const Text(
-                      "Call Now",
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.white,
-                        fontFamily: "PlusJakartaSans",
+                  if (providerDetailModel.staff[index].staffPhone.isNotEmpty)
+                    AppElevatedButton(
+                      const Text(
+                        "Call Now",
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.white,
+                          fontFamily: "PlusJakartaSans",
+                        ),
                       ),
+                      width: MediaQuery.of(context).size.width * 0.2,
+                      height: 30,
+                      onPressed: () {},
                     ),
-                    width: MediaQuery.of(context).size.width * 0.2,
-                    height: 30,
-                    onPressed: () {},
-                  ),
                 ],
               );
             },
             separatorBuilder: (context, index) => const Gap(10),
-            itemCount: 3,
+            itemCount: providerDetailModel.staff.length,
           ),
           const Gap(20),
           ValueListenableBuilder<bool>(
             valueListenable: showFullWeek,
             builder: (context, isExpanded, _) {
+              final String todayKey = DateFormat('EEEE').format(DateTime.now());
+
+              final WorkingDay todayWorkingDay = providerDetailModel.workingDays
+                  .firstWhere(
+                    (day) =>
+                        day.title.trim().toLowerCase() ==
+                        todayKey.toLowerCase(),
+                    orElse:
+                        () => WorkingDay(
+                          title: todayKey,
+                          description: "No appointment for today",
+                          logo: '',
+                          link: '',
+                        ),
+                  );
+
               return Column(
                 children: [
                   if (!isExpanded)
-                    _buildScheduleCard("Today", "9:00 AM - 3:00 PM")
+                    _buildScheduleCard("Today", todayWorkingDay.description)
                   else
-                    ...weeklySchedule.entries.map(
-                      (e) => _buildScheduleCard(e.key, e.value),
+                    ...providerDetailModel.workingDays.map(
+                      (e) => _buildScheduleCard(e.title, e.description),
                     ),
                   const Gap(10),
                   GestureDetector(
@@ -169,7 +186,8 @@ class DetailTab extends StatelessWidget {
               );
             },
           ),
-          const Gap(20),  const Gap(20),
+          const Gap(20),
+          const Gap(20),
           const Text(
             "Social Media & Share",
             style: TextStyle(
@@ -188,17 +206,25 @@ class DetailTab extends StatelessWidget {
                   onTap: () {},
                   child: Container(
                     height: 60,
-                    width: 65,
+                    width: 70,
+                    padding: EdgeInsets.all(10),
                     decoration: BoxDecoration(
                       color: ColorConstants.greyBackGround2,
                       borderRadius: const BorderRadius.all(Radius.circular(20)),
                     ),
-                    child: const Icon(Icons.social_distance, size: 40),
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
+                      child: Image.network(
+                        // todo: change below url
+                        // providerDetailModel.socialMedia[index].logo,
+                        "https://fastly.picsum.photos/id/322/200/200.jpg?hmac=h5_-NQtnn86YBEwVT2_4zcSeuxpCnMAdriBcZchtfas",
+                      ),
+                    ),
                   ),
                 );
               },
-              separatorBuilder: (context, index) => const Gap(20),
-              itemCount: 5,
+              separatorBuilder: (context, index) => const Gap(15),
+              itemCount: providerDetailModel.socialMedia.length,
             ),
           ),
           const Gap(20),
@@ -218,10 +244,16 @@ class DetailTab extends StatelessWidget {
             itemBuilder: (context, index) {
               return Row(
                 children: [
-                  const Icon(Icons.social_distance, size: 25),
+                  Image.network(
+                    // todo: change below url
+                    // providerDetailModel.amenities[index].logo,
+                    "https://fastly.picsum.photos/id/322/200/200.jpg?hmac=h5_-NQtnn86YBEwVT2_4zcSeuxpCnMAdriBcZchtfas",
+                    height: 25,
+                    width: 25,
+                  ),
                   const Gap(10),
-                  const Text(
-                    "data",
+                  Text(
+                    providerDetailModel.amenities[index].title,
                     style: TextStyle(
                       fontSize: 14,
                       fontFamily: "PlusJakartaSans",
@@ -231,8 +263,9 @@ class DetailTab extends StatelessWidget {
               );
             },
             separatorBuilder: (context, index) => const Gap(10),
-            itemCount: 10,
+            itemCount: providerDetailModel.amenities.length,
           ),
+          const Gap(10),
         ],
       ),
     );

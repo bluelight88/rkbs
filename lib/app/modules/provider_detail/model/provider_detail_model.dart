@@ -59,26 +59,59 @@ class ProviderDetailModel {
   factory ProviderDetailModel.fromJson(Map json) => ProviderDetailModel(
     providerId: UtilMethods.instance.intValueParser(json['provider_id']),
     providerName: UtilMethods.instance.stringValueParser(json['provider_name']),
-    providerCompanyName: UtilMethods.instance.stringValueParser(json['provider_comapy_name']),
-    providerEmail: UtilMethods.instance.stringValueParser(json['provider_email']),
-    providerContactNo: UtilMethods.instance.stringValueParser(json['provider_contact_no']),
-    providerAddressline1: UtilMethods.instance.emptyStringValueParser(json['provider_addressline1']),
-    providerAddressline2: UtilMethods.instance.emptyStringValueParser(json['provider_addressline2']),
-    providerAddressline3: UtilMethods.instance.emptyStringValueParser(json['provider_addressline3']),
-    providerPostcode: UtilMethods.instance.stringValueParser(json['provider_postcode']),
-    providerCounty: UtilMethods.instance.stringValueParser(json['provider_county']),
+    providerCompanyName: UtilMethods.instance.stringValueParser(
+      json['provider_comapy_name'],
+    ),
+    providerEmail: UtilMethods.instance.stringValueParser(
+      json['provider_email'],
+    ),
+    providerContactNo: UtilMethods.instance.stringValueParser(
+      json['provider_contact_no'],
+    ),
+    providerAddressline1: UtilMethods.instance.emptyStringValueParser(
+      json['provider_addressline1'],
+    ),
+    providerAddressline2: UtilMethods.instance.emptyStringValueParser(
+      json['provider_addressline2'],
+    ),
+    providerAddressline3: UtilMethods.instance.emptyStringValueParser(
+      json['provider_addressline3'],
+    ),
+    providerPostcode: UtilMethods.instance.stringValueParser(
+      json['provider_postcode'],
+    ),
+    providerCounty: UtilMethods.instance.stringValueParser(
+      json['provider_county'],
+    ),
     providerCity: UtilMethods.instance.stringValueParser(json['provider_city']),
-    providerCountry: UtilMethods.instance.stringValueParser(json['providere_country']),
+    providerCountry: UtilMethods.instance.stringValueParser(
+      json['providere_country'],
+    ),
     createdDatetime: DateTime.parse(json['created_datetime']),
     providerActive: json['provider_active'] ?? false,
     imageUrl: UtilMethods.instance.stringValueParser(json['image_url']),
     providerInfo: UtilMethods.instance.stringValueParser(json['provider_info']),
-    businessTypes: UtilMethods.instance.listValueParser(json['BusinessTypes'], BusinessType.fromJson),
+    businessTypes: UtilMethods.instance.listValueParser(
+      json['BusinessTypes'],
+      BusinessType.fromJson,
+    ),
     staff: UtilMethods.instance.listValueParser(json['Staff'], Staff.fromJson),
-    services: UtilMethods.instance.listValueParser(json['Services'], Service.fromJson),
-    socialMedia: UtilMethods.instance.listValueParser(json['social_media'], SocialMedia.fromJson),
-    amenities: UtilMethods.instance.listValueParser(json['amenities'], Amenity.fromJson),
-    workingDays: UtilMethods.instance.listValueParser(json['working_days'], WorkingDay.fromJson),
+    services: UtilMethods.instance.listValueParser(
+      json['Services'],
+      Service.fromJson,
+    ),
+    socialMedia: UtilMethods.instance.listValueParser(
+      json['social_media'],
+      SocialMedia.fromJson,
+    ),
+    amenities: UtilMethods.instance.listValueParser(
+      json['amenities'],
+      Amenity.fromJson,
+    ),
+    workingDays: UtilMethods.instance.listValueParser(
+      json['working_days'],
+      WorkingDay.fromJson,
+    ),
   );
 
   Map<String, dynamic> toJson() => {
@@ -123,11 +156,21 @@ class BusinessType {
   });
 
   factory BusinessType.fromJson(Map json) => BusinessType(
-    businesstypeId: UtilMethods.instance.intValueParser(json['businesstype_id']),
-    businesstypeCode: UtilMethods.instance.stringValueParser(json['businesstype_code']),
-    businesstypeDescription: UtilMethods.instance.stringValueParser(json['businesstype_description']),
-    businesstypeLogo: UtilMethods.instance.stringValueParser(json['businesstype_logo']),
-    businesstypeLogoMobile: UtilMethods.instance.stringValueParser(json['businesstype_logo_mobile']),
+    businesstypeId: UtilMethods.instance.intValueParser(
+      json['businesstype_id'],
+    ),
+    businesstypeCode: UtilMethods.instance.stringValueParser(
+      json['businesstype_code'],
+    ),
+    businesstypeDescription: UtilMethods.instance.stringValueParser(
+      json['businesstype_description'],
+    ),
+    businesstypeLogo: UtilMethods.instance.stringValueParser(
+      json['businesstype_logo'],
+    ),
+    businesstypeLogoMobile: UtilMethods.instance.stringValueParser(
+      json['businesstype_logo_mobile'],
+    ),
   );
 
   Map<String, dynamic> toJson() => {
@@ -183,8 +226,13 @@ class Service {
   factory Service.fromJson(Map json) => Service(
     servicesId: UtilMethods.instance.intValueParser(json['services_id']),
     servicesCode: UtilMethods.instance.stringValueParser(json['services_code']),
-    servicesDescription: UtilMethods.instance.stringValueParser(json['services_description']),
-    servicesCost: UtilMethods.instance.listValueParser(json['ServicesCost'], ServiceCost.fromJson),
+    servicesDescription: UtilMethods.instance.stringValueParser(
+      json['services_description'],
+    ),
+    servicesCost: UtilMethods.instance.listValueParser(
+      json['ServicesCost'],
+      ServiceCost.fromJson,
+    ),
   );
 
   Map<String, dynamic> toJson() => {
@@ -211,11 +259,17 @@ class ServiceCost {
   });
 
   factory ServiceCost.fromJson(Map json) => ServiceCost(
-    servicesCostId: UtilMethods.instance.intValueParser(json['services_cost_id']),
+    servicesCostId: UtilMethods.instance.intValueParser(
+      json['services_cost_id'],
+    ),
     servicesId: UtilMethods.instance.intValueParser(json['services_id']),
     cost: UtilMethods.instance.doubleValueParser(json['cost']),
-    servicesDurationUnit: UtilMethods.instance.intValueParser(json['services_duration_unit']),
-    servicesDuration: UtilMethods.instance.intValueParser(json['services_duration']),
+    servicesDurationUnit: UtilMethods.instance.intValueParser(
+      json['services_duration_unit'],
+    ),
+    servicesDuration: UtilMethods.instance.intValueParser(
+      json['services_duration'],
+    ),
   );
 
   Map<String, dynamic> toJson() => {

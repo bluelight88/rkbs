@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:timoraa/app/core/widgets/custom/center_loader_widget.dart';
 import 'package:timoraa/app/core/widgets/custom/center_message_widget.dart';
+import 'package:timoraa/app/modules/provider_detail/model/provider_detail_model.dart';
 import 'package:timoraa/app/modules/provider_detail/view/menus/detail_tab.dart';
 import 'package:timoraa/app/modules/provider_detail/view/menus/protfolio_tab.dart';
 import 'package:timoraa/app/modules/provider_detail/view/menus/review_tab.dart';
@@ -194,7 +195,7 @@ class _ProviderDetailScreenState extends State<ProviderDetailScreen> {
                         ),
                       ),
                     ),
-                    ..._buildTabContent(index),
+                    ..._buildTabContent(index, state.providerDetailModel),
                   ],
                 );
               },
@@ -235,16 +236,31 @@ class _ProviderDetailScreenState extends State<ProviderDetailScreen> {
     );
   }
 
-  List<Widget> _buildTabContent(int index) {
+  List<Widget> _buildTabContent(
+    int index,
+    ProviderDetailModel providerDetailModel,
+  ) {
     switch (index) {
       case 0:
-        return [SliverToBoxAdapter(child: DetailTab())];
+        return [
+          SliverToBoxAdapter(
+            child: DetailTab(providerDetailModel: providerDetailModel),
+          ),
+        ];
       case 1:
-        return [const SliverToBoxAdapter(child: ServiceTab())];
+        return [
+          SliverToBoxAdapter(
+            child: ServiceTab(providerDetailModel: providerDetailModel),
+          ),
+        ];
       case 2:
-        return [const ReviewTab()];
+        return [ReviewTab(providerDetailModel: providerDetailModel)];
       case 3:
-        return [const SliverToBoxAdapter(child: PortfolioTab())];
+        return [
+          SliverToBoxAdapter(
+            child: PortfolioTab(providerDetailModel: providerDetailModel),
+          ),
+        ];
       default:
         return [const SliverToBoxAdapter(child: SizedBox.shrink())];
     }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 import '../constants/app_constants.dart';
 
@@ -18,6 +19,17 @@ extension StringExtension on String {
       RegExp(r' '),
       onNonMatch: (str) => str.toString().capitalize(),
     );
+  }
+
+  Future launchUrl({
+    final LaunchMode launchMode = LaunchMode.externalApplication,
+  }) async {
+    try {
+      if (isEmpty) return;
+      await launchUrlString(this, mode: launchMode);
+    } catch (e, stack) {
+      debugPrint("Error found in StringExtension.launchUrl => $e, $stack");
+    }
   }
 }
 
