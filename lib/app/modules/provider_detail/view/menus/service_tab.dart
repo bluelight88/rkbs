@@ -4,109 +4,165 @@ import 'package:timoraa/app/core/widgets/buttons/app_elevated_button.dart';
 import 'package:timoraa/app/modules/provider_detail/view/menus/widgets/service_cards.dart';
 import 'package:timoraa/app/utils/constants/color_constants.dart';
 import 'package:timoraa/app/utils/constants/custom_text_form_field.dart';
+import 'package:timoraa/app/utils/constants/route_name.dart';
+import 'package:timoraa/app/utils/extensions/navigation_extension.dart';
 
 import '../../model/provider_detail_model.dart';
 
-class ServiceTab extends StatelessWidget {
+class ServiceTab extends StatefulWidget {
   final ProviderDetailModel providerDetailModel;
+
   const ServiceTab({required this.providerDetailModel, super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final searchController = TextEditingController();
+  State<ServiceTab> createState() => _ServiceTabState();
+}
 
+class _ServiceTabState extends State<ServiceTab> {
+  late TextEditingController searchController;
+  List<Service> filteredServices = [];
+
+  @override
+  void initState() {
+    super.initState();
+    searchController = TextEditingController();
+    filteredServices = widget.providerDetailModel.services;
+  }
+
+  void _onSearchChanged(String value) {
+    setState(() {
+      filteredServices =
+          widget.providerDetailModel.services.where((service) {
+            final title = service.servicesCode.toLowerCase();
+            final description = service.servicesDescription.toLowerCase();
+            final query = value.toLowerCase();
+            return title.contains(query) || description.contains(query);
+          }).toList();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(color: ColorConstants.whiteColor),
-      padding: EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
-        children: [
-          SearchTextFormField(
-            controller: searchController,
-            labelText: "labelText",
-            onChanged: (val) {},
-          ),
-          const Gap(10),
-          AppElevatedButton(
-            const Text(
-              "Venue Health & Safety Rules",
-              style: TextStyle(
-                color: Colors.white,
-                fontFamily: "PlusJakartaSans",
-                fontSize: 14,
-              ),
+      color: ColorConstants.whiteColor,
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.only(bottom: 70),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SearchTextFormField(
+              controller: searchController,
+              labelText: "Search Services",
+              onChanged: _onSearchChanged,
+              enable: true,
             ),
-            height: 40,
-            onPressed: () {},
-          ),
-          const Gap(10),
-          ListView.separated(
-            padding: const EdgeInsets.only(bottom: 70),
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: 10,
-            separatorBuilder: (_, __) => const Gap(50),
-            itemBuilder: (context, index) {
-              return ServiceCards(
-                title: "Hair Cuts",
-                subTitle: "Hair Cuts",
-                onTap: () {},
-                bottomChild: const Center(
+            const Gap(10),
+            AppElevatedButton(
+              const Text(
+                "Venue Health & Safety Rules",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontFamily: "PlusJakartaSans",
+                  fontSize: 14,
+                ),
+              ),
+              height: 40,
+              onPressed: () {},
+            ),
+            const Gap(10),
+            if (filteredServices.isEmpty)
+              const Padding(
+                padding: EdgeInsets.only(top: 40),
+                child: Center(
                   child: Text(
-                    "Book Now",
+                    "No services found.",
                     style: TextStyle(
-                      color: Colors.white,
+                      fontSize: 16,
                       fontFamily: "PlusJakartaSans",
-                      fontSize: 14,
                     ),
                   ),
                 ),
-                middleChild: Flexible(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "200",
-                        maxLines: 1,
+              )
+            else
+              ListView.separated(
+                physics: const NeverScrollableScrollPhysics(),
+                // because already inside scroll view
+                shrinkWrap: true,
+                itemCount: filteredServices.length,
+                separatorBuilder: (_, __) => const Gap(50),
+                itemBuilder: (context, index) {
+                  final service = filteredServices[index];
+                  return ServiceCards(
+                    title: service.servicesCode,
+                    subTitle: service.servicesDescription,
+                    onTap: () {},
+                    bottomChild: const Center(
+                      child: Text(
+                        "Book Now",
                         style: TextStyle(
-                          color: ColorConstants.primaryColor,
+                          color: Colors.white,
                           fontFamily: "PlusJakartaSans",
-                          fontWeight: FontWeight.w600,
                           fontSize: 14,
                         ),
                       ),
-                      const Gap(5),
-                      Text(
-                        "30 Min",
-                        maxLines: 1,
+                    ),
+                    middleChild: Flexible(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "\$${service.servicesCost[0].cost}",
+                            maxLines: 1,
+                            style: TextStyle(
+                              color: ColorConstants.primaryColor,
+                              fontFamily: "PlusJakartaSans",
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14,
+                            ),
+                          ),
+                          const Gap(5),
+                          Text(
+                            "${service.servicesCost[0].servicesDuration} Mins.",
+                            maxLines: 1,
+                            style: TextStyle(
+                              color: ColorConstants.primaryColor,
+                              fontFamily: "PlusJakartaSans",
+                              fontWeight: FontWeight.w400,
+                              fontSize: 13,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    child: AppElevatedButton(
+                      const Text(
+                        "Subscribe",
                         style: TextStyle(
-                          color: ColorConstants.primaryColor,
+                          color: ColorConstants.whiteColor,
                           fontFamily: "PlusJakartaSans",
                           fontWeight: FontWeight.w400,
-                          fontSize: 13,
+                          fontSize: 14,
                         ),
                       ),
-                    ],
-                  ),
-                ),
-                child: AppElevatedButton(
-                  const Text(
-                    "Subscribe",
-                    style: TextStyle(
-                      color: ColorConstants.whiteColor,
-                      fontFamily: "PlusJakartaSans",
-                      fontWeight: FontWeight.w400,
-                      fontSize: 14,
+                      onPressed: () {
+                        context.pushNamed(RouteName.packageViewScreen);
+                      },
+                      height: 30,
+                      width: MediaQuery.of(context).size.width * 0.25,
                     ),
-                  ),
-                  onPressed: () {},
-                  height: 30,
-                  width: MediaQuery.of(context).size.width * 0.25,
-                ),
-              );
-            },
-          ),
-        ],
+                  );
+                },
+              ),
+          ],
+        ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
   }
 }

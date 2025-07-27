@@ -249,7 +249,8 @@ class _ProviderDetailScreenState extends State<ProviderDetailScreen> {
         ];
       case 1:
         return [
-          SliverToBoxAdapter(
+          SliverFillRemaining(
+            hasScrollBody: true,
             child: ServiceTab(providerDetailModel: providerDetailModel),
           ),
         ];
@@ -273,10 +274,10 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   _SliverAppBarDelegate({required this.child});
 
   @override
-  double get minExtent => 160;
+  double get minExtent => 130;
 
   @override
-  double get maxExtent => 160;
+  double get maxExtent => 130;
 
   @override
   Widget build(

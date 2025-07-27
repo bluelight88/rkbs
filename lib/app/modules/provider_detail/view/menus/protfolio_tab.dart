@@ -7,15 +7,17 @@ import '../../model/provider_detail_model.dart';
 
 class PortfolioTab extends StatelessWidget {
   final ProviderDetailModel providerDetailModel;
+
   const PortfolioTab({required this.providerDetailModel, super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       color: ColorConstants.whiteColor,
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
       child: ListView.separated(
         shrinkWrap: true,
+        padding: EdgeInsets.zero,
         physics: const NeverScrollableScrollPhysics(),
         itemCount: 10,
         separatorBuilder: (context, index) => const SizedBox(height: 10),

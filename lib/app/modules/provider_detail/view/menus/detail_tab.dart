@@ -24,7 +24,6 @@ class DetailTab extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Gap(10),
           const Text(
             "About Us",
             style: TextStyle(

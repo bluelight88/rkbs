@@ -2,6 +2,7 @@ import 'package:timoraa/app/modules/dashboard/view/dashboard_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:timoraa/app/modules/provider_detail/view/package/package_view.dart';
 import 'package:timoraa/app/modules/provider_detail/view/provider_detail_screen.dart';
 import 'package:timoraa/app/modules/provider_detail/view_model/provider_detail/provider_detail_bloc.dart';
 import '../../modules/auth/view/login/login_screen.dart';
@@ -50,6 +51,7 @@ final class NavigationManager {
           title: args["title"],
         ),
       ),
+      RouteName.packageViewScreen => const PackageViewScreen(),
       _ => UnderDevelopmentScreen(showLeading: args['showLeading'] ?? true),
     };
     return routeScreen;
