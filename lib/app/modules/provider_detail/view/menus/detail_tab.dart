@@ -50,6 +50,7 @@ class DetailTab extends StatelessWidget {
               fontWeight: FontWeight.w600,
             ),
           ),
+          const Gap(10),
           ListView.separated(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
@@ -188,49 +189,60 @@ class DetailTab extends StatelessWidget {
             },
           ),
           const Gap(20),
-          const Gap(20),
-          const Text(
-            "Social Media & Share",
-            style: TextStyle(
-              fontSize: 18,
-              fontFamily: "PlusJakartaSans",
-              fontWeight: FontWeight.w600,
+          if (providerDetailModel.socialMedia.any((e) => e.link.isNotEmpty))
+            const Text(
+              "Social Media & Share",
+              style: TextStyle(
+                fontSize: 18,
+                fontFamily: "PlusJakartaSans",
+                fontWeight: FontWeight.w600,
+              ),
             ),
-          ),
-          const Gap(10),
-          SizedBox(
-            height: 70,
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (context, index) {
-                return InkWell(
-                  onTap: () {
-                    providerDetailModel.socialMedia[index].link.launchUrl();
-                  },
-                  child: Container(
-                    height: 60,
-                    width: 70,
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: ColorConstants.greyBackGround2,
-                      borderRadius: const BorderRadius.all(Radius.circular(20)),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: const BorderRadius.all(Radius.circular(10)),
-                      child: Image.network(
-                        // todo: change below url
-                        // providerDetailModel.socialMedia[index].logo,
-                        "https://fastly.picsum.photos/id/322/200/200.jpg?hmac=h5_-NQtnn86YBEwVT2_4zcSeuxpCnMAdriBcZchtfas",
-                      ),
-                    ),
-                  ),
-                );
-              },
-              separatorBuilder: (context, index) => const Gap(15),
-              itemCount: providerDetailModel.socialMedia.length,
+
+          if (providerDetailModel.socialMedia.any((e) => e.link.isNotEmpty))
+            const Gap(10),
+          if (providerDetailModel.socialMedia.any((e) => e.link.isNotEmpty))
+            SizedBox(
+              height: 70,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (context, index) {
+                  return providerDetailModel.socialMedia[index].link.isEmpty
+                      ? SizedBox.shrink()
+                      : InkWell(
+                        onTap: () {
+                          providerDetailModel.socialMedia[index].link
+                              .launchUrl();
+                        },
+                        child: Container(
+                          height: 60,
+                          width: 70,
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: ColorConstants.greyBackGround2,
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(20),
+                            ),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(10),
+                            ),
+                            child: Image.network(
+                              // todo: change below url
+                              // providerDetailModel.socialMedia[index].logo,
+                              "https://fastly.picsum.photos/id/322/200/200.jpg?hmac=h5_-NQtnn86YBEwVT2_4zcSeuxpCnMAdriBcZchtfas",
+                            ),
+                          ),
+                        ),
+                      );
+                },
+                separatorBuilder: (context, index) => const Gap(15),
+                itemCount: providerDetailModel.socialMedia.length,
+              ),
             ),
-          ),
-          const Gap(20),
+          if (providerDetailModel.socialMedia.any((e) => e.link.isNotEmpty))
+            const Gap(20),
           const Text(
             "Venue Amenities",
             style: TextStyle(
@@ -268,7 +280,7 @@ class DetailTab extends StatelessWidget {
             separatorBuilder: (context, index) => const Gap(10),
             itemCount: providerDetailModel.amenities.length,
           ),
-          const Gap(10),
+          const Gap(20),
         ],
       ),
     );
