@@ -23,9 +23,13 @@ class ProviderDetailModel {
   final DateTime createdDatetime;
   final bool providerActive;
   final String imageUrl;
+  final String providerInfo;
   final List<BusinessType> businessTypes;
   final List<Staff> staff;
   final List<Service> services;
+  final List<SocialMedia> socialMedia;
+  final List<Amenity> amenities;
+  final List<WorkingDay> workingDays;
 
   ProviderDetailModel({
     required this.providerId,
@@ -43,54 +47,38 @@ class ProviderDetailModel {
     required this.createdDatetime,
     required this.providerActive,
     required this.imageUrl,
+    required this.providerInfo,
     required this.businessTypes,
     required this.staff,
     required this.services,
+    required this.socialMedia,
+    required this.amenities,
+    required this.workingDays,
   });
 
   factory ProviderDetailModel.fromJson(Map json) => ProviderDetailModel(
     providerId: UtilMethods.instance.intValueParser(json['provider_id']),
     providerName: UtilMethods.instance.stringValueParser(json['provider_name']),
-    providerCompanyName: UtilMethods.instance.stringValueParser(
-      json['provider_comapy_name'],
-    ),
-    providerEmail: UtilMethods.instance.stringValueParser(
-      json['provider_email'],
-    ),
-    providerContactNo: UtilMethods.instance.stringValueParser(
-      json['provider_contact_no'],
-    ),
-    providerAddressline1: UtilMethods.instance.emptyStringValueParser(
-      json['provider_addressline1'],
-    ),
-    providerAddressline2: UtilMethods.instance.emptyStringValueParser(
-      json['provider_addressline2'],
-    ),
-    providerAddressline3: UtilMethods.instance.emptyStringValueParser(
-      json['provider_addressline3'],
-    ),
-    providerPostcode: UtilMethods.instance.stringValueParser(
-      json['provider_postcode'],
-    ),
-    providerCounty: UtilMethods.instance.stringValueParser(
-      json['provider_county'],
-    ),
+    providerCompanyName: UtilMethods.instance.stringValueParser(json['provider_comapy_name']),
+    providerEmail: UtilMethods.instance.stringValueParser(json['provider_email']),
+    providerContactNo: UtilMethods.instance.stringValueParser(json['provider_contact_no']),
+    providerAddressline1: UtilMethods.instance.emptyStringValueParser(json['provider_addressline1']),
+    providerAddressline2: UtilMethods.instance.emptyStringValueParser(json['provider_addressline2']),
+    providerAddressline3: UtilMethods.instance.emptyStringValueParser(json['provider_addressline3']),
+    providerPostcode: UtilMethods.instance.stringValueParser(json['provider_postcode']),
+    providerCounty: UtilMethods.instance.stringValueParser(json['provider_county']),
     providerCity: UtilMethods.instance.stringValueParser(json['provider_city']),
-    providerCountry: UtilMethods.instance.stringValueParser(
-      json['providere_country'],
-    ),
+    providerCountry: UtilMethods.instance.stringValueParser(json['providere_country']),
     createdDatetime: DateTime.parse(json['created_datetime']),
     providerActive: json['provider_active'] ?? false,
     imageUrl: UtilMethods.instance.stringValueParser(json['image_url']),
-    businessTypes: UtilMethods.instance.listValueParser(
-      json['BusinessTypes'],
-      BusinessType.fromJson,
-    ),
+    providerInfo: UtilMethods.instance.stringValueParser(json['provider_info']),
+    businessTypes: UtilMethods.instance.listValueParser(json['BusinessTypes'], BusinessType.fromJson),
     staff: UtilMethods.instance.listValueParser(json['Staff'], Staff.fromJson),
-    services: UtilMethods.instance.listValueParser(
-      json['Services'],
-      Service.fromJson,
-    ),
+    services: UtilMethods.instance.listValueParser(json['Services'], Service.fromJson),
+    socialMedia: UtilMethods.instance.listValueParser(json['social_media'], SocialMedia.fromJson),
+    amenities: UtilMethods.instance.listValueParser(json['amenities'], Amenity.fromJson),
+    workingDays: UtilMethods.instance.listValueParser(json['working_days'], WorkingDay.fromJson),
   );
 
   Map<String, dynamic> toJson() => {
@@ -109,9 +97,45 @@ class ProviderDetailModel {
     'created_datetime': createdDatetime.toIso8601String(),
     'provider_active': providerActive,
     'image_url': imageUrl,
+    'provider_info': providerInfo,
     'BusinessTypes': businessTypes.map((x) => x.toJson()).toList(),
     'Staff': staff.map((x) => x.toJson()).toList(),
     'Services': services.map((x) => x.toJson()).toList(),
+    'social_media': socialMedia.map((x) => x.toJson()).toList(),
+    'amenities': amenities.map((x) => x.toJson()).toList(),
+    'working_days': workingDays.map((x) => x.toJson()).toList(),
+  };
+}
+
+class BusinessType {
+  final int businesstypeId;
+  final String businesstypeCode;
+  final String businesstypeDescription;
+  final String businesstypeLogo;
+  final String businesstypeLogoMobile;
+
+  BusinessType({
+    required this.businesstypeId,
+    required this.businesstypeCode,
+    required this.businesstypeDescription,
+    required this.businesstypeLogo,
+    required this.businesstypeLogoMobile,
+  });
+
+  factory BusinessType.fromJson(Map json) => BusinessType(
+    businesstypeId: UtilMethods.instance.intValueParser(json['businesstype_id']),
+    businesstypeCode: UtilMethods.instance.stringValueParser(json['businesstype_code']),
+    businesstypeDescription: UtilMethods.instance.stringValueParser(json['businesstype_description']),
+    businesstypeLogo: UtilMethods.instance.stringValueParser(json['businesstype_logo']),
+    businesstypeLogoMobile: UtilMethods.instance.stringValueParser(json['businesstype_logo_mobile']),
+  );
+
+  Map<String, dynamic> toJson() => {
+    'businesstype_id': businesstypeId,
+    'businesstype_code': businesstypeCode,
+    'businesstype_description': businesstypeDescription,
+    'businesstype_logo': businesstypeLogo,
+    'businesstype_logo_mobile': businesstypeLogoMobile,
   };
 }
 
@@ -147,7 +171,7 @@ class Service {
   final int servicesId;
   final String servicesCode;
   final String servicesDescription;
-  final List<ServicesCost> servicesCost;
+  final List<ServiceCost> servicesCost;
 
   Service({
     required this.servicesId,
@@ -159,13 +183,8 @@ class Service {
   factory Service.fromJson(Map json) => Service(
     servicesId: UtilMethods.instance.intValueParser(json['services_id']),
     servicesCode: UtilMethods.instance.stringValueParser(json['services_code']),
-    servicesDescription: UtilMethods.instance.stringValueParser(
-      json['services_description'],
-    ),
-    servicesCost: UtilMethods.instance.listValueParser(
-      json['ServicesCost'],
-      ServicesCost.fromJson,
-    ),
+    servicesDescription: UtilMethods.instance.stringValueParser(json['services_description']),
+    servicesCost: UtilMethods.instance.listValueParser(json['ServicesCost'], ServiceCost.fromJson),
   );
 
   Map<String, dynamic> toJson() => {
@@ -176,14 +195,14 @@ class Service {
   };
 }
 
-class ServicesCost {
+class ServiceCost {
   final int servicesCostId;
   final int servicesId;
   final double cost;
   final int servicesDurationUnit;
   final int servicesDuration;
 
-  ServicesCost({
+  ServiceCost({
     required this.servicesCostId,
     required this.servicesId,
     required this.cost,
@@ -191,18 +210,12 @@ class ServicesCost {
     required this.servicesDuration,
   });
 
-  factory ServicesCost.fromJson(Map json) => ServicesCost(
-    servicesCostId: UtilMethods.instance.intValueParser(
-      json['services_cost_id'],
-    ),
+  factory ServiceCost.fromJson(Map json) => ServiceCost(
+    servicesCostId: UtilMethods.instance.intValueParser(json['services_cost_id']),
     servicesId: UtilMethods.instance.intValueParser(json['services_id']),
     cost: UtilMethods.instance.doubleValueParser(json['cost']),
-    servicesDurationUnit: UtilMethods.instance.intValueParser(
-      json['services_duration_unit'],
-    ),
-    servicesDuration: UtilMethods.instance.intValueParser(
-      json['services_duration'],
-    ),
+    servicesDurationUnit: UtilMethods.instance.intValueParser(json['services_duration_unit']),
+    servicesDuration: UtilMethods.instance.intValueParser(json['services_duration']),
   );
 
   Map<String, dynamic> toJson() => {
@@ -214,44 +227,86 @@ class ServicesCost {
   };
 }
 
-class BusinessType {
-  final int businesstypeId;
-  final String businesstypeCode;
-  final String businesstypeDescription;
-  final String businesstypeLogo;
-  final String businesstypeLogoMobile;
+class SocialMedia {
+  final String title;
+  final String description;
+  final String logo;
+  final String link;
 
-  BusinessType({
-    required this.businesstypeId,
-    required this.businesstypeCode,
-    required this.businesstypeDescription,
-    required this.businesstypeLogo,
-    required this.businesstypeLogoMobile,
+  SocialMedia({
+    required this.title,
+    required this.description,
+    required this.logo,
+    required this.link,
   });
 
-  factory BusinessType.fromJson(Map json) => BusinessType(
-    businesstypeId: UtilMethods.instance.intValueParser(
-      json['businesstype_id'],
-    ),
-    businesstypeCode: UtilMethods.instance.stringValueParser(
-      json['businesstype_code'],
-    ),
-    businesstypeDescription: UtilMethods.instance.stringValueParser(
-      json['businesstype_description'],
-    ),
-    businesstypeLogo: UtilMethods.instance.stringValueParser(
-      json['businesstype_logo'],
-    ),
-    businesstypeLogoMobile: UtilMethods.instance.stringValueParser(
-      json['businesstype_logo_mobile'],
-    ),
+  factory SocialMedia.fromJson(Map json) => SocialMedia(
+    title: UtilMethods.instance.stringValueParser(json['title']),
+    description: UtilMethods.instance.stringValueParser(json['description']),
+    logo: UtilMethods.instance.stringValueParser(json['logo']),
+    link: UtilMethods.instance.stringValueParser(json['link']),
   );
 
   Map<String, dynamic> toJson() => {
-    'businesstype_id': businesstypeId,
-    'businesstype_code': businesstypeCode,
-    'businesstype_description': businesstypeDescription,
-    'businesstype_logo': businesstypeLogo,
-    'businesstype_logo_mobile': businesstypeLogoMobile,
+    'title': title,
+    'description': description,
+    'logo': logo,
+    'link': link,
+  };
+}
+
+class Amenity {
+  final String title;
+  final String description;
+  final String logo;
+  final String link;
+
+  Amenity({
+    required this.title,
+    required this.description,
+    required this.logo,
+    required this.link,
+  });
+
+  factory Amenity.fromJson(Map json) => Amenity(
+    title: UtilMethods.instance.stringValueParser(json['title']),
+    description: UtilMethods.instance.stringValueParser(json['description']),
+    logo: UtilMethods.instance.stringValueParser(json['logo']),
+    link: UtilMethods.instance.stringValueParser(json['link']),
+  );
+
+  Map<String, dynamic> toJson() => {
+    'title': title,
+    'description': description,
+    'logo': logo,
+    'link': link,
+  };
+}
+
+class WorkingDay {
+  final String title;
+  final String description;
+  final String logo;
+  final String link;
+
+  WorkingDay({
+    required this.title,
+    required this.description,
+    required this.logo,
+    required this.link,
+  });
+
+  factory WorkingDay.fromJson(Map json) => WorkingDay(
+    title: UtilMethods.instance.stringValueParser(json['title']),
+    description: UtilMethods.instance.stringValueParser(json['description']),
+    logo: UtilMethods.instance.stringValueParser(json['logo']),
+    link: UtilMethods.instance.stringValueParser(json['link']),
+  );
+
+  Map<String, dynamic> toJson() => {
+    'title': title,
+    'description': description,
+    'logo': logo,
+    'link': link,
   };
 }
