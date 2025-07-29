@@ -32,7 +32,7 @@ class _SearchPageState extends State<SearchPage> {
             color: ColorConstants.whiteColor,
             child: Column(
               children: [
-                const Gap(20),
+                const Gap(30),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: SearchTextFormField(

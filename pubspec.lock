@@ -113,6 +113,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.19.1"
+  color_palette_generator:
+    dependency: "direct main"
+    description:
+      name: color_palette_generator
+      sha256: bb9107f33a63eee34205eb59535c5d68e6ac611f03dcae37b269de6014bff644
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.1"
   cross_file:
     dependency: transitive
     description:
@@ -704,6 +712,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.1.5"
+  resource_portable:
+    dependency: transitive
+    description:
+      name: resource_portable
+      sha256: "8ffa33b0769645e26d82c8f4e79adde3dd34b9e0bba981166d4e3798f39cffd9"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.2"
   rxdart:
     dependency: transitive
     description:
@@ -869,6 +885,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.1"
+  swiss_knife:
+    dependency: transitive
+    description:
+      name: swiss_knife
+      sha256: "5ef0331fe0edd4cc85fdcd1a9815e9ce4844fd0347ad7d5aa72cf032d57936cc"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.2.3"
   synchronized:
     dependency: transitive
     description:

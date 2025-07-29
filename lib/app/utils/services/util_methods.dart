@@ -10,6 +10,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:interval_time_picker/interval_time_picker.dart' as itp;
 import 'package:interval_time_picker/models/visible_step.dart';
 import 'package:intl/intl.dart';
+import 'package:timoraa/app/utils/constants/color_constants.dart';
 
 import '../../core/models/app_location_model.dart';
 import '../../core/widgets/cupertino_date_picker/cupertino_date_picker_dialog.dart';
@@ -440,8 +441,8 @@ final class UtilMethods {
         statusBarBrightness: Brightness.light,
         statusBarColor: color,
         systemNavigationBarColor: color,
-        statusBarIconBrightness: Brightness.dark,
-        systemNavigationBarIconBrightness: Brightness.light,
+        statusBarIconBrightness: color == ColorConstants.whiteColor ? Brightness.light : Brightness.dark,
+        systemNavigationBarIconBrightness: color == ColorConstants.whiteColor ? Brightness.dark : Brightness.light,
       ),
     );
   }

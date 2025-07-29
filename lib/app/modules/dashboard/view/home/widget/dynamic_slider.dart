@@ -5,6 +5,7 @@ import 'package:timoraa/app/utils/extensions/navigation_extension.dart';
 
 import '../../../../../utils/constants/asset_constants.dart';
 import '../../../../../utils/constants/color_constants.dart';
+import '../../../../../utils/services/util_methods.dart';
 import '../../../model/home_data_model.dart';
 
 class DynamicSlider extends StatefulWidget {
@@ -103,7 +104,9 @@ class _DynamicSliderState extends State<DynamicSlider> {
                       "providerId": widget.items[index].providerId,
                       "title": widget.items[index].providerName,
                     },
-                  );
+                  ).then((value) {
+                    UtilMethods().changeSystemColor(ColorConstants.whiteColor);
+                  },);
                 },
                 child: Stack(
                   children: [

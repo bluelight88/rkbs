@@ -7,6 +7,7 @@ import 'package:timoraa/app/utils/constants/asset_constants.dart';
 import 'package:timoraa/app/utils/constants/color_constants.dart';
 import 'package:timoraa/app/utils/extensions/app_extension.dart';
 
+import '../../../../utils/constants/expandable_text.dart';
 import '../../../../utils/services/util_methods.dart';
 
 class DetailTab extends StatelessWidget {
@@ -33,11 +34,11 @@ class DetailTab extends StatelessWidget {
             ),
           ),
           const Gap(10),
-          Text(
-            UtilMethods.instance.cleanHtmlString(
+          ExpandableText(
+            text: UtilMethods.instance.cleanHtmlString(
               providerDetailModel.providerInfo,
             ),
-            style: TextStyle(fontSize: 14, fontFamily: "PlusJakartaSans"),
+            style: TextStyle(fontSize: 14, fontFamily: "PlusJakartaSans", color: ColorConstants.primaryColor),
           ),
 
           const Gap(20),
@@ -73,10 +74,7 @@ class DetailTab extends StatelessWidget {
                     ),
                   ),
                   const Gap(10),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
+                  Text(
                         providerDetailModel.staff[index].staffName,
                         style: TextStyle(
                           fontSize: 16,
@@ -84,22 +82,6 @@ class DetailTab extends StatelessWidget {
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                      const Gap(5),
-                      if (providerDetailModel
-                          .staff[index]
-                          .staffPhone
-                          .isNotEmpty)
-                        Text(
-                          providerDetailModel.staff[index].staffPhone,
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: ColorConstants.greyText,
-                            fontFamily: "PlusJakartaSans",
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                    ],
-                  ),
                   const Spacer(),
                   if (providerDetailModel.staff[index].staffPhone.isNotEmpty)
                     AppElevatedButton(

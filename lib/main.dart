@@ -2,6 +2,9 @@ import 'dart:async' show runZonedGuarded;
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
+import 'package:flutter/services.dart';
+import 'package:timoraa/app/utils/constants/color_constants.dart';
+import 'package:timoraa/app/utils/services/util_methods.dart';
 
 // import 'package:firebase_core/firebase_core.dart';
 
@@ -13,7 +16,8 @@ import 'app/utils/manager/get_it_manager.dart';
 import 'dart:io'
     show HttpClient, HttpOverrides, SecurityContext, X509Certificate;
 
-import 'package:flutter/material.dart' show WidgetsFlutterBinding, runApp;
+import 'package:flutter/material.dart'
+    show WidgetsFlutterBinding, runApp, Colors;
 
 void main() {
   /// DO NOT Change Environment without approval
@@ -25,6 +29,7 @@ void mainDelegate() async {
   runZonedGuarded<void>(() async {
     HttpOverrides.global = MyHttpOverrides();
     WidgetsFlutterBinding.ensureInitialized();
+    UtilMethods().changeSystemColor(ColorConstants.primaryColor);
 
     /// uncomment once integrated firebase
     // await Firebase.initializeApp();
