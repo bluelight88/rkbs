@@ -11,7 +11,6 @@ import 'package:timoraa/app/utils/services/app_state.dart';
 import 'package:timoraa/app/utils/constants/color_constants.dart';
 
 import '../../../utils/constants/asset_constants.dart';
-import '../../../utils/services/util_methods.dart';
 import '../view_model/home/home_bloc.dart';
 
 class DashboardScreen extends StatefulWidget {

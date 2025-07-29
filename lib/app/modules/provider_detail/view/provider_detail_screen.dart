@@ -88,19 +88,19 @@ class _ProviderDetailScreenState extends State<ProviderDetailScreen> {
                             children: [
                               Image.network(
                                 state.providerDetailModel.imageUrl,
-                                fit: BoxFit.cover,
+                                fit: BoxFit.fill,
                                 width: double.infinity,
                               ),
                               Container(
                                 width: double.infinity,
-                                height: 100, // Enough to cover status + appbar area
                                 decoration: const BoxDecoration(
                                   gradient: LinearGradient(
                                     begin: Alignment.topCenter,
                                     end: Alignment.bottomCenter,
                                     colors: [
-                                      ColorConstants.primaryColor,  // Dark enough for contrast
+                                      ColorConstants.primaryColor,
                                       Colors.transparent,
+                                      Color(0xff393737),
                                     ],
                                   ),
                                 ),
