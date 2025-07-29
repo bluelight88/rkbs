@@ -22,7 +22,6 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen>
     with WidgetsBindingObserver {
-
   @override
   Widget build(BuildContext context) {
     final TextEditingController searchController = TextEditingController();
@@ -32,24 +31,31 @@ class _DashboardScreenState extends State<DashboardScreen>
       builder: (context, index, _) {
         return AnnotatedRegion<SystemUiOverlayStyle>(
           value: const SystemUiOverlayStyle(
-            statusBarColor: Colors.black,
+            statusBarColor: Colors.white,
             statusBarIconBrightness: Brightness.dark,
             statusBarBrightness: Brightness.light,
           ),
           child: Scaffold(
             backgroundColor: ColorConstants.whiteColor,
-            body: PageTransitionSwitcher(
-              duration: const Duration(milliseconds: 400),
-              reverse: false,
-              transitionBuilder:
-                  (child, animation, secondaryAnimation) =>
-                      SharedAxisTransition(
-                        animation: animation,
-                        secondaryAnimation: secondaryAnimation,
-                        transitionType: SharedAxisTransitionType.horizontal,
-                        child: child,
-                      ),
-              child: _buildPage(index, searchController, key: ValueKey(index)),
+            body: SafeArea(
+              top: true,
+              child: PageTransitionSwitcher(
+                duration: const Duration(milliseconds: 400),
+                reverse: false,
+                transitionBuilder:
+                    (child, animation, secondaryAnimation) =>
+                        SharedAxisTransition(
+                          animation: animation,
+                          secondaryAnimation: secondaryAnimation,
+                          transitionType: SharedAxisTransitionType.horizontal,
+                          child: child,
+                        ),
+                child: _buildPage(
+                  index,
+                  searchController,
+                  key: ValueKey(index),
+                ),
+              ),
             ),
             bottomNavigationBar: BottomNavigationBar(
               currentIndex: index,

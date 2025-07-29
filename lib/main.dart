@@ -26,7 +26,6 @@ void mainDelegate() async {
   runZonedGuarded<void>(() async {
     HttpOverrides.global = MyHttpOverrides();
     WidgetsFlutterBinding.ensureInitialized();
-    UtilMethods().changeSystemColor(ColorConstants.primaryColor);
 
     /// uncomment once integrated firebase
     // await Firebase.initializeApp();

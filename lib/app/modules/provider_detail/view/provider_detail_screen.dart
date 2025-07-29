@@ -93,14 +93,14 @@ class _ProviderDetailScreenState extends State<ProviderDetailScreen> {
                               ),
                               Container(
                                 width: double.infinity,
-                                decoration: const BoxDecoration(
+                                decoration: BoxDecoration(
                                   gradient: LinearGradient(
                                     begin: Alignment.topCenter,
                                     end: Alignment.bottomCenter,
                                     colors: [
-                                      ColorConstants.primaryColor,
+                                      Colors.black.withValues(alpha: 0.7),
                                       Colors.transparent,
-                                      Color(0xff393737),
+                                      Colors.black.withValues(alpha: 0.6),
                                     ],
                                   ),
                                 ),

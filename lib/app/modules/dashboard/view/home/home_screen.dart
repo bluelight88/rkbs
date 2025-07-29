@@ -32,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: (context, state) {
         if (state is HomeSuccess) {
           return Padding(
-            padding: const EdgeInsets.only(top: 30),
+            padding: const EdgeInsets.symmetric(vertical: 10),
             child: SingleChildScrollView(
               physics: AlwaysScrollableScrollPhysics(),
               child: Column(
