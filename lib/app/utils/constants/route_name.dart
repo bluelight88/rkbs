@@ -6,5 +6,6 @@ class RouteName {
       authScreen = "loginScreen",
       dashboardScreen = 'dashboardScreen',
       packageViewScreen = 'packageViewScreen',
-      providerDetailScreen = 'providerDetailScreen';
+      providerDetailScreen = 'providerDetailScreen',
+      bookingScreen = 'bookingScreen';
 }

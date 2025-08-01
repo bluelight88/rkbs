@@ -48,9 +48,7 @@ class _ServiceTabState extends State<ServiceTab> {
       color: ColorConstants.whiteColor,
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       child: ConstrainedBox(
-        constraints: BoxConstraints(
-          minHeight: screenHeight * 0.6, // Adjust to push white to bottom
-        ),
+        constraints: BoxConstraints(minHeight: screenHeight * 0.6),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -89,20 +87,33 @@ class _ServiceTabState extends State<ServiceTab> {
               shrinkWrap: true,
               padding: EdgeInsets.zero,
               itemCount: filteredServices.length,
-              separatorBuilder: (_, __) => const Gap(50),
+              separatorBuilder: (_, __) => const Gap(10),
               itemBuilder: (context, index) {
                 final service = filteredServices[index];
                 return ServiceCards(
                   title: service.servicesCode,
                   subTitle: service.servicesDescription,
-                  onTap: () {},
-                  bottomChild: const Center(
-                    child: Text(
-                      "Book Now",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: "PlusJakartaSans",
-                        fontSize: 14,
+                  onTap: () {
+                    context.pushNamed(RouteName.bookingScreen);
+                  },
+                  bottomChild: Container(
+                    height: 40,
+                    padding: EdgeInsets.only(top: 10),
+                    decoration: const BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(10),
+                        bottomRight: Radius.circular(10),
+                      ),
+                    ),
+                    child: const Center(
+                      child: Text(
+                        "Book Now",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: "PlusJakartaSans",
+                          fontSize: 14,
+                        ),
                       ),
                     ),
                   ),

@@ -24,28 +24,39 @@ class PackageViewScreen extends StatelessWidget {
             title: "Service",
             subTitle: "Services Description",
             onTap: () {},
-            bottomChild: Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "12 Month",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: "PlusJakartaSans",
-                      fontSize: 14,
+            bottomChild: Container(
+              height: 40,
+              padding: EdgeInsets.only(top: 10),
+              decoration: const BoxDecoration(
+                color: Colors.black,
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(10),
+                  bottomRight: Radius.circular(10),
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.only(left: 20, right: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "12 Month",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontFamily: "PlusJakartaSans",
+                        fontSize: 14,
+                      ),
                     ),
-                  ),
-                  Text(
-                    "Book Now",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: "PlusJakartaSans",
-                      fontSize: 14,
+                    Text(
+                      "Book Now",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontFamily: "PlusJakartaSans",
+                        fontSize: 14,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
             middleChild: Flexible(

@@ -10,6 +10,7 @@ import '../../modules/auth/view_model/login/login_bloc.dart';
 import '../../modules/onboard/view/on_boarding_screen.dart';
 import '../../modules/onboard/view/splash_screen.dart';
 import '../../modules/onboard/view/under_development_screen.dart';
+import '../../modules/provider_detail/view/booking/view/booking_screen.dart';
 import '../constants/route_name.dart';
 
 final class NavigationManager {
@@ -44,6 +45,7 @@ final class NavigationManager {
       ),
       RouteName.onBoardingScreen => const OnBoardingScreen(),
       RouteName.dashboardScreen => const DashboardScreen(),
+      RouteName.bookingScreen => const BookAppointmentScreen(),
       RouteName.providerDetailScreen => BlocProvider(
         create: (context) => ProviderDetailBloc(),
         child: ProviderDetailScreen(
