@@ -38,7 +38,11 @@ class DetailTab extends StatelessWidget {
             text: UtilMethods.instance.cleanHtmlString(
               providerDetailModel.providerInfo,
             ),
-            style: TextStyle(fontSize: 14, fontFamily: "PlusJakartaSans", color: ColorConstants.primaryColor),
+            style: TextStyle(
+              fontSize: 14,
+              fontFamily: "PlusJakartaSans",
+              color: ColorConstants.primaryColor,
+            ),
           ),
 
           const Gap(20),
@@ -75,13 +79,13 @@ class DetailTab extends StatelessWidget {
                   ),
                   const Gap(10),
                   Text(
-                        providerDetailModel.staff[index].staffName,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontFamily: "PlusJakartaSans",
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
+                    providerDetailModel.staff[index].staffName,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontFamily: "PlusJakartaSans",
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                   const Spacer(),
                   if (providerDetailModel.staff[index].staffPhone.isNotEmpty)
                     AppElevatedButton(
@@ -210,9 +214,7 @@ class DetailTab extends StatelessWidget {
                               Radius.circular(10),
                             ),
                             child: Image.network(
-                              // todo: change below url
-                              // providerDetailModel.socialMedia[index].logo,
-                              "https://fastly.picsum.photos/id/322/200/200.jpg?hmac=h5_-NQtnn86YBEwVT2_4zcSeuxpCnMAdriBcZchtfas",
+                              providerDetailModel.socialMedia[index].logo,
                             ),
                           ),
                         ),
@@ -241,11 +243,15 @@ class DetailTab extends StatelessWidget {
               return Row(
                 children: [
                   Image.network(
-                    // todo: change below url
-                    // providerDetailModel.amenities[index].logo,
-                    "https://fastly.picsum.photos/id/322/200/200.jpg?hmac=h5_-NQtnn86YBEwVT2_4zcSeuxpCnMAdriBcZchtfas",
+                    providerDetailModel.amenities[index].logo,
                     height: 25,
-                    width: 25,
+                    width: 25, errorBuilder: (context, error, stackTrace) {
+                    return Image.network(
+                      providerDetailModel.amenities[2].logo, // replace with your fallback asset path
+                      height: 25,
+                      width: 25,
+                    );
+                  },
                   ),
                   const Gap(10),
                   Text(

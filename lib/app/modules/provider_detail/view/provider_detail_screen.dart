@@ -31,11 +31,12 @@ class ProviderDetailScreen extends StatefulWidget {
 class _ProviderDetailScreenState extends State<ProviderDetailScreen> {
   final ValueNotifier<int> selectedIndex = ValueNotifier<int>(0);
   final List<String> tabs = ["Service", "Review", "Portfolio", "Details"];
+  final ValueNotifier<bool> isCollapsed = ValueNotifier<bool>(false);
 
   @override
   void initState() {
-    _getProviderDetail();
     super.initState();
+    _getProviderDetail();
   }
 
   void _getProviderDetail() {
@@ -71,148 +72,215 @@ class _ProviderDetailScreenState extends State<ProviderDetailScreen> {
               return ValueListenableBuilder<int>(
                 valueListenable: selectedIndex,
                 builder: (context, index, _) {
-                  return CustomScrollView(
-                    slivers: [
-                      SliverAppBar(
-                        expandedHeight: 200,
-                        pinned: true,
-                        backgroundColor: ColorConstants.primaryColor,
-                        iconTheme: IconThemeData(
-                          color: ColorConstants.whiteColor,
-                        ),
-                        centerTitle: true,
-                        flexibleSpace: FlexibleSpaceBar(
-                          centerTitle: true,
-                          collapseMode: CollapseMode.parallax,
-                          background: Stack(
-                            children: [
-                              Image.network(
-                                state.providerDetailModel.imageUrl,
-                                fit: BoxFit.fill,
-                                width: double.infinity,
-                              ),
-                              Container(
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                    colors: [
-                                      Colors.black.withValues(alpha: 0.7),
-                                      Colors.transparent,
-                                      Colors.black.withValues(alpha: 0.6),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
+                  return NotificationListener<ScrollNotification>(
+                    onNotification: (ScrollNotification notification) {
+                      if (notification.metrics.axis == Axis.vertical) {
+                        final metrics = notification.metrics;
+                        final renderBox =
+                            context.findRenderObject() as RenderBox?;
+                        if (renderBox != null) {
+                          final offset = metrics.pixels;
+                          final collapsedHeight =
+                              kToolbarHeight +
+                              MediaQuery.of(context).padding.top;
+                          final isNowCollapsed =
+                              offset >= (200 - collapsedHeight);
+                          if (isCollapsed.value != isNowCollapsed) {
+                            isCollapsed.value = isNowCollapsed;
+                          }
+                        }
+                      }
+                      return false;
+                    },
+                    child: CustomScrollView(
+                      slivers: [
+                        SliverAppBar(
+                          expandedHeight: 200,
+                          pinned: true,
+                          backgroundColor: ColorConstants.primaryColor,
+                          iconTheme: IconThemeData(
+                            color: ColorConstants.whiteColor,
                           ),
-                        ),
-                      ),
-                      SliverPersistentHeader(
-                        pinned: true,
-                        delegate: _SliverAppBarDelegate(
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            padding: const EdgeInsets.only(
-                              left: 20,
-                              top: 20,
-                              right: 20,
-                              bottom: 10,
-                            ),
-                            decoration: BoxDecoration(
-                              color: ColorConstants.whiteColor,
-                              borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(20),
-                                topRight: Radius.circular(20),
-                              ),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  state.providerDetailModel.providerName,
-                                  style: TextStyle(
-                                    color: ColorConstants.primaryColor,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w600,
-                                    fontFamily: "PlusJakartaSans",
-                                  ),
-                                ),
-                                const SizedBox(height: 10),
-                                Row(
-                                  children: [
-                                    Image.asset(
-                                      AssetConstants.icLocation,
-                                      color: ColorConstants.primaryColor,
-                                    ),
-                                    const Gap(10),
-                                    Expanded(
-                                      child: Text(
-                                        addressString,
-                                        style: TextStyle(
-                                          color: ColorConstants.primaryColor,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500,
-                                          fontFamily: "PlusJakartaSans",
-                                        ),
+                          centerTitle: true,
+                          flexibleSpace: FlexibleSpaceBar(
+                            centerTitle: true,
+                            title: ValueListenableBuilder<bool>(
+                              valueListenable: isCollapsed,
+                              builder: (context, collapsed, _) {
+                                return collapsed
+                                    ? Text(
+                                      state.providerDetailModel.providerName,
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white,
+                                        fontFamily: "PlusJakartaSans",
                                       ),
-                                    ),
-                                  ],
+                                    )
+                                    : const SizedBox.shrink();
+                              },
+                            ),
+                            collapseMode: CollapseMode.parallax,
+                            background: Stack(
+                              fit: StackFit.expand,
+                              children: [
+                                Image.network(
+                                  state.providerDetailModel.imageUrl,
+                                  fit: BoxFit.cover,
+                                  width: double.infinity,
                                 ),
-                                const SizedBox(height: 10),
-                                SingleChildScrollView(
-                                  scrollDirection: Axis.horizontal,
-                                  child: Row(
-                                    children: List.generate(tabs.length, (i) {
-                                      final bool isSelected = index == i;
-                                      return Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 6.0,
-                                        ),
-                                        child: GestureDetector(
-                                          onTap: () => selectedIndex.value = i,
-                                          child: Container(
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 16,
-                                              vertical: 8,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              color:
-                                                  isSelected
-                                                      ? ColorConstants
-                                                          .primaryColor
-                                                      : ColorConstants
-                                                          .greyBackGround,
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                            ),
-                                            child: Text(
-                                              tabs[i],
-                                              style: TextStyle(
-                                                color:
-                                                    isSelected
-                                                        ? ColorConstants
-                                                            .whiteColor
-                                                        : ColorConstants
-                                                            .primaryColor,
-                                                fontSize: 16,
-                                                fontFamily: "PlusJakartaSans",
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      );
-                                    }),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                      colors: [
+                                        Colors.black.withValues(alpha: 0.8),
+                                        Colors.transparent,
+                                        Colors.black.withValues(alpha: 0.7),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ],
                             ),
                           ),
                         ),
-                      ),
-                      ..._buildTabContent(index, state.providerDetailModel),
-                    ],
+                        SliverPersistentHeader(
+                          pinned: true,
+                          delegate: _SliverAppBarDelegate(
+                            child: Container(
+                              width: MediaQuery.of(context).size.width,
+                              padding: const EdgeInsets.only(
+                                left: 20,
+                                top: 20,
+                                right: 20,
+                                bottom: 10,
+                              ),
+                              decoration: BoxDecoration(
+                                color: ColorConstants.whiteColor,
+                                borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(20),
+                                  topRight: Radius.circular(20),
+                                ),
+                              ),
+                              child: ValueListenableBuilder(
+                                valueListenable: isCollapsed,
+                                builder: (context, value, child) {
+                                  return Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          if (!value)
+                                            Text(
+                                              state
+                                                  .providerDetailModel
+                                                  .providerName,
+                                              style: TextStyle(
+                                                color:
+                                                    ColorConstants.primaryColor,
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w600,
+                                                fontFamily: "PlusJakartaSans",
+                                              ),
+                                            ),
+                                          if (!value)
+                                            const SizedBox(height: 10),
+                                          Row(
+                                            children: [
+                                              Image.asset(
+                                                AssetConstants.icLocation,
+                                                color:
+                                                    ColorConstants.primaryColor,
+                                              ),
+                                              const Gap(10),
+                                              Expanded(
+                                                child: Text(
+                                                  addressString,
+                                                  style: TextStyle(
+                                                    color:
+                                                        ColorConstants
+                                                            .primaryColor,
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w500,
+                                                    fontFamily:
+                                                        "PlusJakartaSans",
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 10),
+                                        ],
+                                      ),
+                                      SingleChildScrollView(
+                                        scrollDirection: Axis.horizontal,
+                                        child: Row(
+                                          children: List.generate(tabs.length, (
+                                            i,
+                                          ) {
+                                            final bool isSelected = index == i;
+                                            return Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                    horizontal: 6.0,
+                                                  ),
+                                              child: GestureDetector(
+                                                onTap:
+                                                    () =>
+                                                        selectedIndex.value = i,
+                                                child: Container(
+                                                  padding:
+                                                      const EdgeInsets.symmetric(
+                                                        horizontal: 16,
+                                                        vertical: 8,
+                                                      ),
+                                                  decoration: BoxDecoration(
+                                                    color:
+                                                        isSelected
+                                                            ? ColorConstants
+                                                                .primaryColor
+                                                            : ColorConstants
+                                                                .greyBackGround,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          8,
+                                                        ),
+                                                  ),
+                                                  child: Text(
+                                                    tabs[i],
+                                                    style: TextStyle(
+                                                      color:
+                                                          isSelected
+                                                              ? ColorConstants
+                                                                  .whiteColor
+                                                              : ColorConstants
+                                                                  .primaryColor,
+                                                      fontSize: 16,
+                                                      fontFamily:
+                                                          "PlusJakartaSans",
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            );
+                                          }),
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+                        ..._buildTabContent(index, state.providerDetailModel),
+                      ],
+                    ),
                   );
                 },
               );
@@ -260,10 +328,26 @@ class _ProviderDetailScreenState extends State<ProviderDetailScreen> {
     switch (index) {
       case 0:
         return [
-          SliverFillRemaining(
-            hasScrollBody: true,
-            child: ServiceTab(providerDetailModel: providerDetailModel),
-          ),
+          providerDetailModel.services.isEmpty
+              ? SliverToBoxAdapter(
+                child: Container(
+                  color: ColorConstants.whiteColor,
+                  height: MediaQuery.of(context).size.height * 0.6,
+                  child: const Center(
+                    child: Text(
+                      "No services found.",
+                      style: TextStyle(
+                        color: ColorConstants.primaryColor,
+                        fontSize: 16,
+                        fontFamily: "PlusJakartaSans",
+                      ),
+                    ),
+                  ),
+                ),
+              )
+              : SliverToBoxAdapter(
+                child: ServiceTab(providerDetailModel: providerDetailModel),
+              ),
         ];
       case 1:
         return [ReviewTab(providerDetailModel: providerDetailModel)];
@@ -306,7 +390,5 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   }
 
   @override
-  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
-    return true;
-  }
+  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) => true;
 }

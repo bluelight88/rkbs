@@ -43,11 +43,14 @@ class _ServiceTabState extends State<ServiceTab> {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
     return Container(
       color: ColorConstants.whiteColor,
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.only(bottom: 70),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          minHeight: screenHeight * 0.6, // Adjust to push white to bottom
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -71,89 +74,86 @@ class _ServiceTabState extends State<ServiceTab> {
               onPressed: () {},
             ),
             const Gap(10),
-            if (filteredServices.isEmpty)
-              const Padding(
-                padding: EdgeInsets.only(top: 40),
-                child: Center(
-                  child: Text(
-                    "No services found.",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontFamily: "PlusJakartaSans",
+            Text(
+              "Popular Services",
+              style: TextStyle(
+                color: ColorConstants.primaryColor,
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                fontFamily: "PlusJakartaSans",
+              ),
+            ),
+            const Gap(10),
+            ListView.separated(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              padding: EdgeInsets.zero,
+              itemCount: filteredServices.length,
+              separatorBuilder: (_, __) => const Gap(50),
+              itemBuilder: (context, index) {
+                final service = filteredServices[index];
+                return ServiceCards(
+                  title: service.servicesCode,
+                  subTitle: service.servicesDescription,
+                  onTap: () {},
+                  bottomChild: const Center(
+                    child: Text(
+                      "Book Now",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontFamily: "PlusJakartaSans",
+                        fontSize: 14,
+                      ),
                     ),
                   ),
-                ),
-              )
-            else
-              ListView.separated(
-                physics: const NeverScrollableScrollPhysics(),
-                // because already inside scroll view
-                shrinkWrap: true,
-                itemCount: filteredServices.length,
-                separatorBuilder: (_, __) => const Gap(50),
-                itemBuilder: (context, index) {
-                  final service = filteredServices[index];
-                  return ServiceCards(
-                    title: service.servicesCode,
-                    subTitle: service.servicesDescription,
-                    onTap: () {},
-                    bottomChild: const Center(
-                      child: Text(
-                        "Book Now",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: "PlusJakartaSans",
-                          fontSize: 14,
-                        ),
-                      ),
-                    ),
-                    middleChild: Flexible(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "\$${service.servicesCost[0].cost}",
-                            maxLines: 1,
-                            style: TextStyle(
-                              color: ColorConstants.primaryColor,
-                              fontFamily: "PlusJakartaSans",
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14,
-                            ),
+                  middleChild: Flexible(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "\$${service.servicesCost[0].cost}",
+                          maxLines: 1,
+                          style: TextStyle(
+                            color: ColorConstants.primaryColor,
+                            fontFamily: "PlusJakartaSans",
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14,
                           ),
-                          const Gap(5),
-                          Text(
-                            "${service.servicesCost[0].servicesDuration} Mins.",
-                            maxLines: 1,
-                            style: TextStyle(
-                              color: ColorConstants.primaryColor,
-                              fontFamily: "PlusJakartaSans",
-                              fontWeight: FontWeight.w400,
-                              fontSize: 13,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    child: AppElevatedButton(
-                      const Text(
-                        "Subscribe",
-                        style: TextStyle(
-                          color: ColorConstants.whiteColor,
-                          fontFamily: "PlusJakartaSans",
-                          fontWeight: FontWeight.w400,
-                          fontSize: 14,
                         ),
-                      ),
-                      onPressed: () {
-                        context.pushNamed(RouteName.packageViewScreen);
-                      },
-                      height: 30,
-                      width: MediaQuery.of(context).size.width * 0.25,
+                        const Gap(5),
+                        Text(
+                          "${service.servicesCost[0].servicesDuration} Mins.",
+                          maxLines: 1,
+                          style: TextStyle(
+                            color: ColorConstants.primaryColor,
+                            fontFamily: "PlusJakartaSans",
+                            fontWeight: FontWeight.w400,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ],
                     ),
-                  );
-                },
-              ),
+                  ),
+                  child: AppElevatedButton(
+                    const Text(
+                      "Subscribe",
+                      style: TextStyle(
+                        color: ColorConstants.whiteColor,
+                        fontFamily: "PlusJakartaSans",
+                        fontWeight: FontWeight.w400,
+                        fontSize: 14,
+                      ),
+                    ),
+                    onPressed: () {
+                      context.pushNamed(RouteName.packageViewScreen);
+                    },
+                    height: 30,
+                    width: MediaQuery.of(context).size.width * 0.25,
+                  ),
+                );
+              },
+            ),
+            const Gap(70),
           ],
         ),
       ),

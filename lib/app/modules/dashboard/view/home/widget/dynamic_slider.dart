@@ -155,38 +155,38 @@ class _DynamicSliderState extends State<DynamicSlider> {
                               ),
                             ),
                           ),
-                          const Gap(110),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10),
-                            child: Text(
-                              primaryText,
-                              style: const TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600,
-                                fontFamily: "PlusJakartaSans",
-                                color: ColorConstants.whiteColor,
-                              ),
-                            ),
-                          ),
-                          const Gap(5),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10),
-                            child: Row(
-                              children: [
-                                Image.asset(AssetConstants.icLocation),
-                                const Gap(10),
-                                Text(
-                                  secondaryText,
-                                  style: const TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w400,
-                                    fontFamily: "PlusJakartaSans",
-                                    color: ColorConstants.whiteColor,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                          // const Gap(110),
+                          // Padding(
+                          //   padding: const EdgeInsets.only(left: 10),
+                          //   child: Text(
+                          //     primaryText,
+                          //     style: const TextStyle(
+                          //       fontSize: 15,
+                          //       fontWeight: FontWeight.w600,
+                          //       fontFamily: "PlusJakartaSans",
+                          //       color: ColorConstants.whiteColor,
+                          //     ),
+                          //   ),
+                          // ),
+                          // const Gap(5),
+                          // Padding(
+                          //   padding: const EdgeInsets.only(left: 10),
+                          //   child: Row(
+                          //     children: [
+                          //       Image.asset(AssetConstants.icLocation),
+                          //       const Gap(10),
+                          //       Text(
+                          //         secondaryText,
+                          //         style: const TextStyle(
+                          //           fontSize: 15,
+                          //           fontWeight: FontWeight.w400,
+                          //           fontFamily: "PlusJakartaSans",
+                          //           color: ColorConstants.whiteColor,
+                          //         ),
+                          //       ),
+                          //     ],
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),
