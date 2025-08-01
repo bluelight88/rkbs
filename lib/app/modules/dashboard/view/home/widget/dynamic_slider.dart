@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 import 'package:timoraa/app/utils/constants/route_name.dart';
 import 'package:timoraa/app/utils/extensions/navigation_extension.dart';
 
@@ -92,8 +91,6 @@ class _DynamicSliderState extends State<DynamicSlider> {
             itemBuilder: (context, index) {
               final item = widget.items[index];
               final imageUrl = widget.imageUrlGetter(item);
-              final primaryText = widget.primaryTextGetter(item);
-              final secondaryText = widget.secondaryTextGetter(item);
               final badgeText = widget.badgeText(item);
 
               return InkWell(
