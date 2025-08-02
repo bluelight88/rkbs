@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 
 class CustomDatePicker extends StatefulWidget {
@@ -104,6 +105,7 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
+                    const Gap(10),
                     Text(
                       _selectedDate.year.toString(),
                       style: const TextStyle(

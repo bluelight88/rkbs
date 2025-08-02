@@ -45,7 +45,7 @@ final class NavigationManager {
       ),
       RouteName.onBoardingScreen => const OnBoardingScreen(),
       RouteName.dashboardScreen => const DashboardScreen(),
-      RouteName.bookingScreen => const BookAppointmentScreen(),
+      RouteName.bookingScreen => BookAppointmentScreen(),
       RouteName.providerDetailScreen => BlocProvider(
         create: (context) => ProviderDetailBloc(),
         child: ProviderDetailScreen(

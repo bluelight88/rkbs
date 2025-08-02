@@ -1,42 +1,95 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:timoraa/app/core/widgets/buttons/app_elevated_button.dart';
 import 'package:timoraa/app/modules/provider_detail/view/booking/view/widgets/date_picker.dart';
 import 'package:timoraa/app/utils/constants/color_constants.dart';
-
 import '../../../../../utils/constants/asset_constants.dart';
+import 'package:intl/intl.dart';
 
-class BookAppointmentScreen extends StatelessWidget {
+class BookAppointmentScreen extends StatefulWidget {
   const BookAppointmentScreen({super.key});
 
   @override
+  State<BookAppointmentScreen> createState() => _BookAppointmentScreenState();
+}
+
+class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
+  final ValueNotifier<String> selectedSlotInfo = ValueNotifier<String>("");
+  final ValueNotifier<String> selectedTimeSlot = ValueNotifier<String>('');
+  final ValueNotifier<DateTime> selectedDate = ValueNotifier<DateTime>(
+    DateTime.now(),
+  );
+
+  final ValueNotifier<double> totalPrice = ValueNotifier<double>(0.0);
+  final List<Map<String, dynamic>> services = [
+    {
+      'title': 'Hair Cuts',
+      'specialist': 'Kevin Smith',
+      'time': '09:30 AM - 10:00 AM',
+      'price': '\$25.00',
+    },
+    {
+      'title': 'Beard Trim',
+      'specialist': 'John Smith',
+      'time': '10:00 AM - 10:30 AM',
+      'price': '\$15.00',
+    },
+    {
+      'title': 'Hair Wash',
+      'specialist': 'Olive Smith',
+      'time': '10:30 AM - 11:00 AM',
+      'price': '\$10.00',
+    },
+  ];
+
+  @override
+  void initState() {
+    _calculateTotal();
+    super.initState();
+  }
+
+  void _calculateTotal() {
+    final total = services.fold<double>(0.0, (sum, item) {
+      final priceString =
+          item['price'].toString().replaceAll(RegExp(r'[^\d.]'), '').trim();
+      final price = double.tryParse(priceString) ?? 0.0;
+      return sum + price;
+    });
+    totalPrice.value = total;
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final double screenHeight = MediaQuery.of(context).size.height;
+    final double headerHeight =
+        screenHeight * 0.3 > 270 ? 300 : screenHeight * 0.3;
+
     return Scaffold(
       backgroundColor: ColorConstants.whiteColor,
       body: CustomScrollView(
         slivers: [
           SliverPersistentHeader(
             pinned: true,
-            floating: false,
             delegate: _FixedHeaderDelegate(
-              minExtentHeight: MediaQuery.of(context).size.height * 0.4,
-              maxExtentHeight: MediaQuery.of(context).size.height * 0.4,
+              minExtentHeight: headerHeight,
+              maxExtentHeight: headerHeight,
               child: Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Colors.black,
                   borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(20),
                     bottomRight: Radius.circular(20),
                   ),
                 ),
-                padding: const EdgeInsets.only(top: 40, left: 16, right: 16),
+                padding: const EdgeInsets.fromLTRB(16, 48, 16, 16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+                  children: const [
                     Row(
                       children: [
-                        const BackButton(color: Colors.white),
-                        const Spacer(),
-                        const Text(
+                        BackButton(color: Colors.white),
+                        Spacer(),
+                        Text(
                           'Book Appointment',
                           style: TextStyle(
                             color: Colors.white,
@@ -44,9 +97,10 @@ class BookAppointmentScreen extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        const Spacer(flex: 2),
+                        Spacer(flex: 2),
                       ],
                     ),
+                    Gap(16),
                     CustomDatePicker(),
                   ],
                 ),
@@ -55,11 +109,10 @@ class BookAppointmentScreen extends StatelessWidget {
           ),
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Gap(24),
                   const Text(
                     'Time',
                     style: TextStyle(
@@ -72,7 +125,7 @@ class BookAppointmentScreen extends StatelessWidget {
                   const Gap(20),
                   _buildTimeSlots(),
                   const Gap(10),
-                  Divider(height: 1, thickness: 2),
+                  const Divider(height: 1, thickness: 2),
                   const Gap(10),
                   const Text(
                     'Choose Specialist',
@@ -85,45 +138,100 @@ class BookAppointmentScreen extends StatelessWidget {
                   const Gap(20),
                   _buildSpecialists(),
                   const Gap(24),
-                  _buildServiceCard(
-                    'Hair Cuts',
-                    'Kevin Smith',
-                    '09:30 AM - 10:00 AM',
-                    '\$25.00',
-                  ),
-                  const SizedBox(height: 12),
-                  _buildServiceCard(
-                    'Wash & Style',
-                    'Rohan Smith',
-                    '10:30 AM - 11:00 AM',
-                    '\$25.00',
+                  ListView.separated(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    padding: EdgeInsets.zero,
+                    itemCount: services.length,
+                    separatorBuilder: (context, index) => Gap(10),
+                    itemBuilder: (context, index) {
+                      final service = services[index];
+                      return _buildServiceCard(
+                        service['title'],
+                        service['specialist'],
+                        service['time'],
+                        service['price'],
+                      );
+                    },
                   ),
                   const Gap(24),
-                  ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.black,
-                      minimumSize: const Size.fromHeight(48),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                  AppElevatedButton(
+                    const Text(
+                      'Add Another Service',
+                      style: TextStyle(
+                        color: ColorConstants.whiteColor,
+                        fontWeight: FontWeight.w700,
+                        fontFamily: "PlusJakartaSans",
                       ),
                     ),
-                    child: const Text(
-                      'Add Another Service',
-                      style: TextStyle(color: Colors.white),
-                    ),
+                    onPressed: () {
+                      setState(() {
+                        services.add({
+                          'title': 'Beard Trim',
+                          'specialist': 'John Smith',
+                          'time': '10:30 AM - 11:00 AM',
+                          'price': '\$20.00',
+                        });
+                        _calculateTotal();
+                      });
+                    },
                   ),
                   const SizedBox(height: 16),
-                  const Center(
-                    child: Text(
-                      '\$50.00',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                  ValueListenableBuilder<double>(
+                    valueListenable: totalPrice,
+                    builder: (context, value, _) {
+                      return Center(
+                        child: Text(
+                          '\$${value.toStringAsFixed(2)}',
+                          style: const TextStyle(
+                            fontSize: 30,
+                            fontWeight: FontWeight.w800,
+                            fontFamily: "PlusJakartaSans",
+                          ),
+                        ),
+                      );
+                    },
                   ),
-                  const Gap(24),
+                  const Gap(10),
+                  ValueListenableBuilder<String>(
+                    valueListenable: selectedSlotInfo,
+                    builder: (context, value, _) {
+                      return value.isNotEmpty
+                          ? Center(
+                            child: Text(
+                              value,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                letterSpacing: 0,
+                                color: Colors.grey,
+                                fontSize: 14,
+                                fontFamily: "PlusJakartaSans",
+                              ),
+                            ),
+                          )
+                          : SizedBox.shrink();
+                    },
+                  ),
+                  const Gap(10),
+                  ValueListenableBuilder<String>(
+                    valueListenable: selectedSlotInfo,
+                    builder: (context, value, _) {
+                      return value.isNotEmpty
+                          ? AppElevatedButton(
+                            const Text(
+                              'Book Now',
+                              style: TextStyle(
+                                color: ColorConstants.whiteColor,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: "PlusJakartaSans",
+                              ),
+                            ),
+                            onPressed: () {},
+                          )
+                          : SizedBox.shrink();
+                    },
+                  ),
+                  const Gap(40),
                 ],
               ),
             ),
@@ -135,74 +243,113 @@ class BookAppointmentScreen extends StatelessWidget {
 
   Widget _buildTimeSlots() {
     final timeSlots = {
-      'Morning Slot': [
-        '09:30 AM',
-        '10:00 AM',
-        '10:30 AM',
-        '11:00 AM',
-        '11:30 AM',
-      ],
-      'Afternoon Slot': ['12:00 PM', '12:30 PM', '01:00 PM', '01:30 PM'],
-      'Evening Slot': ['04:00 PM', '04:30 PM', '05:00 PM', '05:30 PM'],
+      'Morning Slot': ['09:00 AM', '09:30 AM', '10:00 AM'],
+      'Afternoon Slot': ['12:00 AM', '01:30 AM', '02:30 AM'],
+      'Evening Slot': ['05:00 PM', '05:30 PM', '06:00 PM'],
     };
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children:
           timeSlots.entries.map((entry) {
+            final slotName = entry.key;
+            final slots = entry.value;
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  entry.key,
+                  slotName,
                   style: const TextStyle(
-                    fontWeight: FontWeight.bold,
                     fontSize: 14,
                     fontFamily: "PlusJakartaSans",
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
-                const Gap(10),
-                SizedBox(
-                  height: 35,
-                  child: ListView.separated(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: entry.value.length,
-                    padding: EdgeInsets.zero,
-                    separatorBuilder: (_, __) => const SizedBox(width: 10),
-                    itemBuilder: (context, index) {
-                      final time = entry.value[index];
-                      final isSelected =
-                          time ==
-                          '09:30 AM'; // replace with your selected logic
-
-                      return Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 10,
-                        ),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey.shade300),
-                          color: isSelected ? Colors.black : Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Text(
-                          time,
-                          style: TextStyle(
-                            color: isSelected ? Colors.white : Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 12,
-                            fontFamily: "PlusJakartaSans",
-                          ),
-                        ),
-                      );
-                    },
-                  ),
+                const Gap(8),
+                ValueListenableBuilder<String>(
+                  valueListenable: selectedTimeSlot,
+                  builder: (context, selectedValue, _) {
+                    return Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children:
+                          slots.map((slot) {
+                            final isSelected = selectedValue == slot;
+                            return InkWell(
+                              onTap: () {
+                                final formatted = _getFormattedSlotInfo(
+                                  context,
+                                  selectedDate.value,
+                                  slot,
+                                );
+                                selectedTimeSlot.value = slot;
+                                selectedSlotInfo.value = formatted;
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 10,
+                                ),
+                                decoration: BoxDecoration(
+                                  color:
+                                      isSelected
+                                          ? ColorConstants.primaryColor
+                                          : Colors.grey.shade100,
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(
+                                    color:
+                                        isSelected
+                                            ? ColorConstants.primaryColor
+                                            : Colors.grey.shade300,
+                                    width: 1.5,
+                                  ),
+                                ),
+                                child: Text(
+                                  slot,
+                                  style: TextStyle(
+                                    color:
+                                        isSelected
+                                            ? ColorConstants.whiteColor
+                                            : Colors.black,
+                                    fontWeight: FontWeight.w600,
+                                    fontFamily: "PlusJakartaSans",
+                                  ),
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                    );
+                  },
                 ),
-                const Gap(10),
+                const Gap(16),
               ],
             );
           }).toList(),
     );
+  }
+
+  String _getFormattedSlotInfo(
+    BuildContext context,
+    DateTime date,
+    String startTime,
+  ) {
+    final day = DateFormat('EEE d').format(date);
+
+    final time = TimeOfDay(
+      hour: int.parse(startTime.split(':')[0]),
+      minute: int.parse(startTime.split(':')[1].split(' ')[0]),
+    );
+
+    final isPM = startTime.toLowerCase().contains('pm');
+    final adjustedHour = isPM && time.hour < 12 ? time.hour + 12 : time.hour;
+
+    final correctedTime = TimeOfDay(hour: adjustedHour, minute: time.minute);
+    final newMinute = (correctedTime.minute + 60) % 60;
+    final newHour =
+        (correctedTime.hour + ((correctedTime.minute + 60) ~/ 60)) % 24;
+
+    final endTime = TimeOfDay(hour: newHour, minute: newMinute);
+    return "$day, ${correctedTime.format(context)} - ${endTime.format(context)} - 1 hrs";
   }
 
   Widget _buildSpecialists() {
@@ -223,7 +370,7 @@ class BookAppointmentScreen extends StatelessWidget {
           return Column(
             children: [
               ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(10)),
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
                 child: Image.asset(
                   AssetConstants.icBackgroundImage,
                   height: 54,
@@ -253,48 +400,142 @@ class BookAppointmentScreen extends StatelessWidget {
     String time,
     String price,
   ) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey.shade300),
-        color: Colors.white,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        Container(
+          padding: const EdgeInsets.only(
+            right: 20,
+            left: 10,
+            top: 10,
+            bottom: 10,
+          ),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.grey.shade300),
+            color: Colors.white,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                child: Text(
-                  title,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      title,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontFamily: "PlusJakartaSans",
+                        fontWeight: FontWeight.w600,
+                        color: ColorConstants.primaryColor,
+                      ),
+                    ),
+                  ),
+                  Text(
+                    price,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ],
               ),
-              Text(price, style: const TextStyle(fontWeight: FontWeight.bold)),
-              const SizedBox(width: 8),
-              const Icon(Icons.close, size: 18),
+              const Gap(5),
+              Row(
+                children: [
+                  const Text(
+                    'Popular Services',
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontFamily: "PlusJakartaSans",
+                      color: Colors.grey,
+                    ),
+                  ),
+                  const Spacer(),
+                  Text(
+                    time,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontFamily: "PlusJakartaSans",
+                      color: Colors.grey,
+                    ),
+                  ),
+                ],
+              ),
+              const Divider(height: 20, thickness: 1),
+              Row(
+                children: [
+                  ClipRRect(
+                    borderRadius: const BorderRadius.all(Radius.circular(5)),
+                    child: Image.asset(
+                      AssetConstants.icBackgroundImage,
+                      height: 30,
+                      width: 30,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    specialistName,
+                    style: const TextStyle(
+                      fontSize: 10,
+                      fontFamily: "PlusJakartaSans",
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const Spacer(),
+                  AppElevatedButton(
+                    width: 100,
+                    height: 30,
+                    borderRadius: 8,
+                    const Text(
+                      "Change",
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: ColorConstants.whiteColor,
+                        fontFamily: "PlusJakartaSans",
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    onPressed: () {},
+                  ),
+                ],
+              ),
             ],
           ),
-          const SizedBox(height: 4),
-          const Text('Popular Services', style: TextStyle(color: Colors.grey)),
-          const SizedBox(height: 4),
-          Row(
-            children: [
-              // const CircleAvatar(radius: 12, backgroundImage: NetworkImage('https://via.placeholder.com/40')),
-              const SizedBox(width: 8),
-              Text(specialistName),
-              const Spacer(),
-              Text(time, style: const TextStyle(color: Colors.grey)),
-            ],
+        ),
+        Positioned(
+          top: -5,
+          right: -5,
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(20),
+              onTap: () {
+                setState(() {
+                  services.removeWhere(
+                    (s) =>
+                        s['title'] == title &&
+                        s['specialist'] == specialistName &&
+                        s['time'] == time &&
+                        s['price'] == price,
+                  );
+                  _calculateTotal();
+                });
+              },
+              child: Container(
+                padding: const EdgeInsets.all(2),
+                decoration: BoxDecoration(
+                  color: ColorConstants.primaryColor,
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.close, size: 12, color: Colors.white),
+              ),
+            ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
 
-/// Pinned header delegate
 class _FixedHeaderDelegate extends SliverPersistentHeaderDelegate {
   final double minExtentHeight;
   final double maxExtentHeight;
@@ -318,10 +559,13 @@ class _FixedHeaderDelegate extends SliverPersistentHeaderDelegate {
     double shrinkOffset,
     bool overlapsContent,
   ) {
-    return Material(elevation: 4, child: child);
+    return Material(elevation: 0, child: child);
   }
 
   @override
-  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
-      false;
+  bool shouldRebuild(covariant _FixedHeaderDelegate oldDelegate) {
+    return oldDelegate.minExtentHeight != minExtentHeight ||
+        oldDelegate.maxExtentHeight != maxExtentHeight ||
+        oldDelegate.child != child;
+  }
 }
