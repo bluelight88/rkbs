@@ -441,8 +441,14 @@ final class UtilMethods {
         statusBarBrightness: Brightness.light,
         statusBarColor: color,
         systemNavigationBarColor: color,
-        statusBarIconBrightness: color == ColorConstants.whiteColor ? Brightness.light : Brightness.dark,
-        systemNavigationBarIconBrightness: color == ColorConstants.whiteColor ? Brightness.dark : Brightness.light,
+        statusBarIconBrightness:
+            color == ColorConstants.whiteColor
+                ? Brightness.light
+                : Brightness.dark,
+        systemNavigationBarIconBrightness:
+            color == ColorConstants.whiteColor
+                ? Brightness.dark
+                : Brightness.light,
       ),
     );
   }

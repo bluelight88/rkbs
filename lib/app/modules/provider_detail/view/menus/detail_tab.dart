@@ -245,13 +245,16 @@ class DetailTab extends StatelessWidget {
                   Image.network(
                     providerDetailModel.amenities[index].logo,
                     height: 25,
-                    width: 25, errorBuilder: (context, error, stackTrace) {
-                    return Image.network(
-                      providerDetailModel.amenities[2].logo, // replace with your fallback asset path
-                      height: 25,
-                      width: 25,
-                    );
-                  },
+                    width: 25,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Image.network(
+                        providerDetailModel
+                            .amenities[2]
+                            .logo, // replace with your fallback asset path
+                        height: 25,
+                        width: 25,
+                      );
+                    },
                   ),
                   const Gap(10),
                   Text(

@@ -32,7 +32,8 @@ class _LoginScreenState extends State<LoginScreen> {
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.light, // light icons for dark background
+        statusBarIconBrightness:
+            Brightness.light, // light icons for dark background
         statusBarBrightness: Brightness.dark,
       ),
       child: GestureDetector(

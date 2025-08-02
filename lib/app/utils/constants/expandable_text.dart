@@ -23,68 +23,78 @@ class _ExpandableTextState extends State<ExpandableText> {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, size) {
-      final span = TextSpan(text: widget.text, style: widget.style);
-      final tp = TextPainter(
-        text: span,
-        maxLines: widget.trimLines,
-        textDirection: TextDirection.ltr,
-        ellipsis: '...',
-      );
-      tp.layout(maxWidth: size.maxWidth);
-
-      _isOverflowing = tp.didExceedMaxLines;
-
-      if (!_isOverflowing) {
-        // Just return plain text if it doesn't overflow
-        return Text(widget.text, style: widget.style);
-      }
-
-      if (_isExpanded) {
-        return RichText(
-          text: TextSpan(
-            style: widget.style,
-            children: [
-              TextSpan(text: widget.text),
-              const TextSpan(text: ' '),
-              TextSpan(
-                text: 'Show less',
-                style: const TextStyle(color: Colors.blue),
-                recognizer: TapGestureRecognizer()
-                  ..onTap = () => setState(() => _isExpanded = false),
-              ),
-            ],
-          ),
+    return LayoutBuilder(
+      builder: (context, size) {
+        final span = TextSpan(text: widget.text, style: widget.style);
+        final tp = TextPainter(
+          text: span,
+          maxLines: widget.trimLines,
+          textDirection: TextDirection.ltr,
+          ellipsis: '...',
         );
-      } else {
-        final link = ' Show more';
-        final truncatedText = _truncateText(
-          widget.text,
-          widget.style!,
-          size.maxWidth,
-          widget.trimLines,
-          link,
-        );
+        tp.layout(maxWidth: size.maxWidth);
 
-        return RichText(
-          text: TextSpan(
-            style: widget.style,
-            children: [
-              TextSpan(text: truncatedText),
-              TextSpan(
-                text: link,
-                style: const TextStyle(color: Colors.blue),
-                recognizer: TapGestureRecognizer()
-                  ..onTap = () => setState(() => _isExpanded = true),
-              ),
-            ],
-          ),
-        );
-      }
-    });
+        _isOverflowing = tp.didExceedMaxLines;
+
+        if (!_isOverflowing) {
+          // Just return plain text if it doesn't overflow
+          return Text(widget.text, style: widget.style);
+        }
+
+        if (_isExpanded) {
+          return RichText(
+            text: TextSpan(
+              style: widget.style,
+              children: [
+                TextSpan(text: widget.text),
+                const TextSpan(text: ' '),
+                TextSpan(
+                  text: 'Show less',
+                  style: const TextStyle(color: Colors.blue),
+                  recognizer:
+                      TapGestureRecognizer()
+                        ..onTap = () => setState(() => _isExpanded = false),
+                ),
+              ],
+            ),
+          );
+        } else {
+          final link = ' Show more';
+          final truncatedText = _truncateText(
+            widget.text,
+            widget.style!,
+            size.maxWidth,
+            widget.trimLines,
+            link,
+          );
+
+          return RichText(
+            text: TextSpan(
+              style: widget.style,
+              children: [
+                TextSpan(text: truncatedText),
+                TextSpan(
+                  text: link,
+                  style: const TextStyle(color: Colors.blue),
+                  recognizer:
+                      TapGestureRecognizer()
+                        ..onTap = () => setState(() => _isExpanded = true),
+                ),
+              ],
+            ),
+          );
+        }
+      },
+    );
   }
 
-  String _truncateText(String text, TextStyle style, double maxWidth, int maxLines, String link) {
+  String _truncateText(
+    String text,
+    TextStyle style,
+    double maxWidth,
+    int maxLines,
+    String link,
+  ) {
     String result = text;
     int end = text.length;
     int start = 0;

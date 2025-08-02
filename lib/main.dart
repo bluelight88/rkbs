@@ -4,8 +4,7 @@ import 'dart:io'
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
-import 'package:flutter/material.dart'
-    show WidgetsFlutterBinding, runApp;
+import 'package:flutter/material.dart' show WidgetsFlutterBinding, runApp;
 
 import 'app/modules/onboard/view/my_app.dart';
 import 'app/utils/constants/app_config.dart';

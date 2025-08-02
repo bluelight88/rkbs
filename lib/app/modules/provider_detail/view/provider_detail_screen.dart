@@ -294,7 +294,7 @@ class _ProviderDetailScreenState extends State<ProviderDetailScreen> {
         bottomNavigationBar: ValueListenableBuilder(
           valueListenable: selectedIndex,
           builder: (context, value, child) {
-            return value == 2
+            return value == 1
                 ? Container(
                   color: Colors.white,
                   padding: const EdgeInsets.symmetric(

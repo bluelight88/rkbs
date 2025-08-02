@@ -95,15 +95,19 @@ class _DynamicSliderState extends State<DynamicSlider> {
 
               return InkWell(
                 onTap: () {
-                  context.pushNamed(
-                    RouteName.providerDetailScreen,
-                    args: {
-                      "providerId": widget.items[index].providerId,
-                      "title": widget.items[index].providerName,
-                    },
-                  ).then((value) {
-                    UtilMethods().changeSystemColor(ColorConstants.whiteColor);
-                  },);
+                  context
+                      .pushNamed(
+                        RouteName.providerDetailScreen,
+                        args: {
+                          "providerId": widget.items[index].providerId,
+                          "title": widget.items[index].providerName,
+                        },
+                      )
+                      .then((value) {
+                        UtilMethods().changeSystemColor(
+                          ColorConstants.whiteColor,
+                        );
+                      });
                 },
                 child: Stack(
                   children: [

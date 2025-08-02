@@ -18,8 +18,8 @@ class BookAppointmentScreen extends StatelessWidget {
             pinned: true,
             floating: false,
             delegate: _FixedHeaderDelegate(
-              minExtentHeight: MediaQuery.of(context).size.height * 0.3,
-              maxExtentHeight: MediaQuery.of(context).size.height * 0.3,
+              minExtentHeight: MediaQuery.of(context).size.height * 0.4,
+              maxExtentHeight: MediaQuery.of(context).size.height * 0.4,
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.black,
@@ -72,10 +72,7 @@ class BookAppointmentScreen extends StatelessWidget {
                   const Gap(20),
                   _buildTimeSlots(),
                   const Gap(10),
-                  Divider(
-                    height: 1,
-                    thickness: 2,
-                  ),
+                  Divider(height: 1, thickness: 2),
                   const Gap(10),
                   const Text(
                     'Choose Specialist',

@@ -156,7 +156,7 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
                     width: 75,
                     decoration: BoxDecoration(
                       color:
-                      isSelected ? Colors.white : const Color(0xFF1F1F1F),
+                          isSelected ? Colors.white : const Color(0xFF1F1F1F),
                       borderRadius: BorderRadius.circular(14),
                       border: Border.all(color: const Color(0xff000000)),
                     ),
