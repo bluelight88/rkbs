@@ -72,7 +72,7 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -141,13 +141,13 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
 
           /// Horizontal Date Selector
           SizedBox(
-            height: 80,
+            height: 65,
             child: ListView.separated(
               controller: _scrollController,
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 8),
               itemCount: dates.length,
-              separatorBuilder: (_, __) => const SizedBox(width: 12),
+              separatorBuilder: (_, __) => const Gap(10),
               itemBuilder: (context, index) {
                 final date = dates[index];
                 final isSelected = DateUtils.isSameDay(date, _selectedDate);
@@ -155,7 +155,7 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
                 return GestureDetector(
                   onTap: () => _handleDateTap(date),
                   child: Container(
-                    width: 75,
+                    width: 60,
                     decoration: BoxDecoration(
                       color:
                           isSelected ? Colors.white : const Color(0xFF1F1F1F),

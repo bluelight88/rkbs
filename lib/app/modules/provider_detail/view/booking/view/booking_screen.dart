@@ -62,7 +62,7 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
   Widget build(BuildContext context) {
     final double screenHeight = MediaQuery.of(context).size.height;
     final double headerHeight =
-        screenHeight * 0.3 > 270 ? 300 : screenHeight * 0.3;
+        screenHeight * 0.3 > 270 ?  screenHeight * 0.3 : screenHeight * 0.4;
 
     return Scaffold(
       backgroundColor: ColorConstants.whiteColor,
@@ -100,7 +100,7 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                         Spacer(flex: 2),
                       ],
                     ),
-                    Gap(16),
+                    Gap(10),
                     CustomDatePicker(),
                   ],
                 ),
