@@ -7,10 +7,11 @@ import 'package:timoraa/app/modules/provider_detail/view/provider_detail_screen.
 import 'package:timoraa/app/modules/provider_detail/view_model/provider_detail/provider_detail_bloc.dart';
 import '../../modules/auth/view/login/login_screen.dart';
 import '../../modules/auth/view_model/login/login_bloc.dart';
+import '../../modules/booking/view/booking_screen.dart';
+import '../../modules/booking/view_model/booking_service_bloc.dart';
 import '../../modules/onboard/view/on_boarding_screen.dart';
 import '../../modules/onboard/view/splash_screen.dart';
 import '../../modules/onboard/view/under_development_screen.dart';
-import '../../modules/provider_detail/view/booking/view/booking_screen.dart';
 import '../constants/route_name.dart';
 
 final class NavigationManager {
@@ -45,7 +46,10 @@ final class NavigationManager {
       ),
       RouteName.onBoardingScreen => const OnBoardingScreen(),
       RouteName.dashboardScreen => const DashboardScreen(),
-      RouteName.bookingScreen => BookAppointmentScreen(),
+      RouteName.bookingScreen => BlocProvider(
+  create: (context) => BookingServiceBloc(),
+  child: BookAppointmentScreen(),
+),
       RouteName.providerDetailScreen => BlocProvider(
         create: (context) => ProviderDetailBloc(),
         child: ProviderDetailScreen(

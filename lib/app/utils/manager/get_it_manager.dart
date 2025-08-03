@@ -2,6 +2,7 @@ import 'package:get_it/get_it.dart';
 
 import '../../core/controller/app_language_controller.dart';
 import '../../modules/auth/model/repo/auth_repo.dart';
+import '../../modules/booking/model/booking_repo_model.dart';
 import '../../modules/dashboard/model/dashboard_repo_model.dart';
 import '../../modules/provider_detail/model/provider_repo_model.dart';
 import '../constants/apis.dart';
@@ -25,5 +26,6 @@ Future<void> initializeGetItDependencies() async {
   // Repositories
   getIt.registerLazySingleton<AuthRepo>(() => AuthRepo());
   getIt.registerLazySingleton<DashBoardRepo>(() => DashBoardRepo());
+  getIt.registerLazySingleton<BookingRepoModel>(() => BookingRepoModel());
   getIt.registerLazySingleton<ProviderRepo>(() => ProviderRepo());
 }

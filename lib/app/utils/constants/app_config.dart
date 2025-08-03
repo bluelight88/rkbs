@@ -40,27 +40,27 @@ final class AppConfig {
   void setBaseUrl(String url) => _config![_baseUrl] = url;
 
   Map<String, dynamic> devConstants = {
-    _baseUrl: APIS.baseUrlLocal,
+    _baseUrl: APIS.baseUrl,
     _isLocal: false,
   };
 
   Map<String, dynamic> stageConstants = {
-    _baseUrl: APIS.baseUrlLocal,
+    _baseUrl: APIS.baseUrl,
     _isLocal: false,
   };
 
   Map<String, dynamic> preProdConstants = {
-    _baseUrl: APIS.baseUrlLocal,
+    _baseUrl: APIS.baseUrl,
     _isLocal: false,
   };
 
   Map<String, dynamic> prodConstants = {
-    _baseUrl: APIS.baseUrlLocal,
+    _baseUrl: APIS.baseUrl,
     _isLocal: false,
   };
 
   Map<String, dynamic> localConstants = {
-    _baseUrl: APIS.baseUrlLocal,
+    _baseUrl: APIS.baseUrl,
     _isLocal: false,
   };
 }

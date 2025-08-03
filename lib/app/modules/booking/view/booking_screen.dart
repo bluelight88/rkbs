@@ -1,0 +1,599 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gap/gap.dart';
+import 'package:timoraa/app/core/widgets/buttons/app_elevated_button.dart';
+import 'package:timoraa/app/modules/booking/view/widgets/date_picker.dart';
+import 'package:timoraa/app/utils/constants/color_constants.dart';
+import 'package:intl/intl.dart';
+import 'package:timoraa/app/utils/extensions/app_extension.dart';
+
+import '../../../core/widgets/custom/center_loader_widget.dart';
+import '../../../core/widgets/custom/center_message_widget.dart';
+import '../../../utils/constants/asset_constants.dart';
+import '../model/booking_service_slot_model.dart';
+import '../view_model/booking_service_bloc.dart';
+
+class BookAppointmentScreen extends StatefulWidget {
+  const BookAppointmentScreen({super.key});
+
+  @override
+  State<BookAppointmentScreen> createState() => _BookAppointmentScreenState();
+}
+
+class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
+  final ValueNotifier<String> selectedSlotInfo = ValueNotifier<String>("");
+  final ValueNotifier<String> selectedTimeSlot = ValueNotifier<String>('');
+  final ValueNotifier<DateTime> selectedDate = ValueNotifier<DateTime>(
+    DateTime.now(),
+  );
+
+  final ValueNotifier<double> totalPrice = ValueNotifier<double>(0.0);
+
+  @override
+  void initState() {
+    _getBookingRecord();
+    super.initState();
+  }
+
+  void _calculateTotal(BookingServiceSlotModel model) {
+    final total = model.cost.fold<double>(0.0, (sum, item) {
+      final priceString =
+          item.cost.toString().replaceAll(RegExp(r'[^\d.]'), '').trim();
+      final price = double.tryParse(priceString) ?? 0.0;
+      return sum + price;
+    });
+    totalPrice.value = total;
+  }
+
+  void _getBookingRecord() {
+    context.read<BookingServiceBloc>().add(
+      BookingServiceList(
+        providerId: 1,
+        serviceId: 1,
+        staffId: 0,
+        date: selectedDate.value.formatDate("yyyy-MM-dd"),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final double screenHeight = MediaQuery.of(context).size.height;
+    final double headerHeight =
+        screenHeight * 0.3 > 230 ? 265 : screenHeight * 0.4;
+
+    return Scaffold(
+      backgroundColor: ColorConstants.whiteColor,
+      body: BlocConsumer<BookingServiceBloc, BookingServiceState>(
+        listener: (context, state) {
+          if (state is BookingServiceSuccess) {
+            _calculateTotal(state.model);
+          }
+          if (state is BookingServiceFailure) {}
+          if (state is BookingServiceLoading) {}
+        },
+        builder: (context, state) {
+          if (state is BookingServiceSuccess) {
+            return CustomScrollView(
+              slivers: [
+                SliverPersistentHeader(
+                  pinned: true,
+                  delegate: _FixedHeaderDelegate(
+                    minExtentHeight: headerHeight,
+                    maxExtentHeight: headerHeight,
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(20),
+                          bottomRight: Radius.circular(20),
+                        ),
+                      ),
+                      padding: const EdgeInsets.fromLTRB(16, 48, 16, 16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: const [
+                          Row(
+                            children: [
+                              BackButton(color: Colors.white),
+                              Spacer(),
+                              Text(
+                                'Book Appointment',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Spacer(flex: 2),
+                            ],
+                          ),
+                          Gap(10),
+                          CustomDatePicker(),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 10,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Time',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 18,
+                            fontFamily: "PlusJakartaSans",
+                            color: ColorConstants.primaryColor,
+                          ),
+                        ),
+                        const Gap(20),
+                        _buildTimeSlots(state.model),
+                        const Gap(10),
+                        const Divider(height: 1, thickness: 2),
+                        const Gap(10),
+                        const Text(
+                          'Choose Specialist',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontFamily: "PlusJakartaSans",
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const Gap(20),
+                        _buildSpecialists(),
+                        const Gap(24),
+                        ListView.separated(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          padding: EdgeInsets.zero,
+                          itemCount: state.model.cost.length,
+                          separatorBuilder: (context, index) => Gap(10),
+                          itemBuilder: (context, index) {
+                            return _buildServiceCard(
+                              state.model.servicesName,
+                              state.model.servicesDescription,
+                              "9:30 AM - 9:50 AM",
+                              state.model.cost[index].cost.toString(),
+                            );
+                          },
+                        ),
+                        const Gap(24),
+                        AppElevatedButton(
+                          const Text(
+                            'Add Another Service',
+                            style: TextStyle(
+                              color: ColorConstants.whiteColor,
+                              fontWeight: FontWeight.w700,
+                              fontFamily: "PlusJakartaSans",
+                            ),
+                          ),
+                          onPressed: () {},
+                        ),
+                        const SizedBox(height: 16),
+                        ValueListenableBuilder<double>(
+                          valueListenable: totalPrice,
+                          builder: (context, value, _) {
+                            return Center(
+                              child: Text(
+                                '\$${value.toStringAsFixed(2)}',
+                                style: const TextStyle(
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.w800,
+                                  fontFamily: "PlusJakartaSans",
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                        const Gap(10),
+                        ValueListenableBuilder<String>(
+                          valueListenable: selectedSlotInfo,
+                          builder: (context, value, _) {
+                            return value.isNotEmpty
+                                ? Center(
+                                  child: Text(
+                                    value,
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                      letterSpacing: 0,
+                                      color: Colors.grey,
+                                      fontSize: 14,
+                                      fontFamily: "PlusJakartaSans",
+                                    ),
+                                  ),
+                                )
+                                : SizedBox.shrink();
+                          },
+                        ),
+                        const Gap(10),
+                        ValueListenableBuilder<String>(
+                          valueListenable: selectedSlotInfo,
+                          builder: (context, value, _) {
+                            return value.isNotEmpty
+                                ? AppElevatedButton(
+                                  const Text(
+                                    'Book Now',
+                                    style: TextStyle(
+                                      color: ColorConstants.whiteColor,
+                                      fontWeight: FontWeight.w700,
+                                      fontFamily: "PlusJakartaSans",
+                                    ),
+                                  ),
+                                  onPressed: () {},
+                                )
+                                : SizedBox.shrink();
+                          },
+                        ),
+                        const Gap(40),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            );
+          }
+          if (state is BookingServiceFailure) {
+            return FailureWidget(state.message, onRefresh: _getBookingRecord);
+          }
+          return LoadingWidget();
+        },
+      ),
+    );
+  }
+
+  Widget _buildTimeSlots(BookingServiceSlotModel model) {
+    final bookingSlot = model.bookingSlot.firstOrNull;
+    if (bookingSlot == null) return const SizedBox();
+
+    final slotMap = {
+      'Morning Slot': bookingSlot.morningSlot,
+      'Afternoon Slot': bookingSlot.afternoonSlot,
+      'Evening Slot': bookingSlot.eveningSlot,
+    };
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children:
+          slotMap.entries.map((entry) {
+            final slotName = entry.key;
+            final slotList = entry.value;
+
+            if (slotList.isEmpty) return const SizedBox();
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  slotName,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontFamily: "PlusJakartaSans",
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const Gap(8),
+                ValueListenableBuilder<String>(
+                  valueListenable: selectedTimeSlot,
+                  builder: (context, selectedValue, _) {
+                    return SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children:
+                            slotList.map((slot) {
+                              return Padding(
+                                padding: const EdgeInsets.only(right: 8),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    final formatted = _getFormattedSlotInfo(
+                                      selectedDate: selectedDate.value,
+                                      selectedSlot: slot.slotDisplayTime,
+                                      slotDuration: 30,
+                                    );
+                                    selectedTimeSlot.value =
+                                        slot.slotDisplayTime;
+                                    selectedSlotInfo.value = formatted;
+                                  },
+                                  child: AnimatedContainer(
+                                    duration: const Duration(milliseconds: 200),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 12,
+                                      vertical: 10,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color:
+                                          selectedTimeSlot.value ==
+                                                  slot.slotDisplayTime
+                                              ? ColorConstants.primaryColor
+                                              : Colors.grey.shade100,
+                                      borderRadius: BorderRadius.circular(8),
+                                      border: Border.all(
+                                        color:
+                                            selectedTimeSlot.value ==
+                                                    slot.slotDisplayTime
+                                                ? ColorConstants.primaryColor
+                                                : Colors.grey.shade300,
+                                        width: 1.5,
+                                      ),
+                                    ),
+                                    child: Text(
+                                      slot.slotDisplayTime,
+                                      style: TextStyle(
+                                        color:
+                                            selectedTimeSlot.value ==
+                                                    slot.slotDisplayTime
+                                                ? ColorConstants.whiteColor
+                                                : Colors.black,
+                                        fontWeight: FontWeight.w500,
+                                        fontFamily: "PlusJakartaSans",
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                      ),
+                    );
+                  },
+                ),
+                const Gap(16),
+              ],
+            );
+          }).toList(),
+    );
+  }
+  String _getFormattedSlotInfo({
+    required DateTime selectedDate,
+    required String selectedSlot,
+    required int slotDuration,
+  }) {
+    // Clean up and standardize the slot string
+    final cleanSlot = selectedSlot
+        .replaceAll('\u202F', ' ')
+        .replaceAll('\u00A0', ' ')
+        .replaceAll(RegExp(r'\s+'), ' ')
+        .trim()
+        .toUpperCase();
+
+    // Extract time using RegExp
+    final match = RegExp(r'(\d{1,2}):(\d{2})\s*(AM|PM)').firstMatch(cleanSlot);
+    if (match == null) {
+      throw FormatException('Invalid time format: $selectedSlot');
+    }
+
+    int hour = int.parse(match.group(1)!);
+    int minute = int.parse(match.group(2)!);
+    final period = match.group(3)!;
+
+    if (period == 'PM' && hour != 12) hour += 12;
+    if (period == 'AM' && hour == 12) hour = 0;
+
+    final startDateTime = DateTime(
+      selectedDate.year,
+      selectedDate.month,
+      selectedDate.day,
+      hour,
+      minute,
+    );
+
+    final endDateTime = startDateTime.add(Duration(minutes: slotDuration));
+
+    final day = DateFormat('EEE d').format(selectedDate).toUpperCase();
+    final startFormatted = DateFormat.jm().format(startDateTime);
+    final endFormatted = DateFormat.jm().format(endDateTime);
+
+    return '$day, $startFormatted - $endFormatted - ${slotDuration}min';
+  }
+
+  Widget _buildSpecialists() {
+    final specialists = [
+      {'name': 'Kevin Smith', 'image': 'https://via.placeholder.com/60'},
+      {'name': 'John Smith', 'image': 'https://via.placeholder.com/60'},
+      {'name': 'Olive Smith', 'image': 'https://via.placeholder.com/60'},
+    ];
+
+    return SizedBox(
+      height: 80,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        itemCount: specialists.length,
+        separatorBuilder: (_, __) => const SizedBox(width: 12),
+        itemBuilder: (context, index) {
+          final s = specialists[index];
+          return Column(
+            children: [
+              ClipRRect(
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
+                child: Image.asset(
+                  AssetConstants.icBackgroundImage,
+                  height: 54,
+                  width: 54,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                s['name']!,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontFamily: "PlusJakartaSans",
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildServiceCard(
+    String title,
+    String specialistName,
+    String time,
+    String price,
+  ) {
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        Container(
+          padding: const EdgeInsets.only(
+            right: 20,
+            left: 10,
+            top: 10,
+            bottom: 10,
+          ),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.grey.shade300),
+            color: Colors.white,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      title,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontFamily: "PlusJakartaSans",
+                        fontWeight: FontWeight.w600,
+                        color: ColorConstants.primaryColor,
+                      ),
+                    ),
+                  ),
+                  Text(
+                    "\$ $price",
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              const Gap(5),
+              Row(
+                children: [
+                  const Text(
+                    'Popular Services',
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontFamily: "PlusJakartaSans",
+                      color: Colors.grey,
+                    ),
+                  ),
+                  const Spacer(),
+                  Text(
+                    time,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontFamily: "PlusJakartaSans",
+                      color: Colors.grey,
+                    ),
+                  ),
+                ],
+              ),
+              const Divider(height: 20, thickness: 1),
+              Row(
+                children: [
+                  ClipRRect(
+                    borderRadius: const BorderRadius.all(Radius.circular(5)),
+                    child: Image.asset(
+                      AssetConstants.icBackgroundImage,
+                      height: 30,
+                      width: 30,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    specialistName,
+                    style: const TextStyle(
+                      fontSize: 10,
+                      fontFamily: "PlusJakartaSans",
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const Spacer(),
+                  AppElevatedButton(
+                    width: 100,
+                    height: 30,
+                    borderRadius: 8,
+                    const Text(
+                      "Change",
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: ColorConstants.whiteColor,
+                        fontFamily: "PlusJakartaSans",
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    onPressed: () {},
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        Positioned(
+          top: -5,
+          right: -5,
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(20),
+              onTap: () {},
+              child: Container(
+                padding: const EdgeInsets.all(2),
+                decoration: BoxDecoration(
+                  color: ColorConstants.primaryColor,
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.close, size: 12, color: Colors.white),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _FixedHeaderDelegate extends SliverPersistentHeaderDelegate {
+  final double minExtentHeight;
+  final double maxExtentHeight;
+  final Widget child;
+
+  _FixedHeaderDelegate({
+    required this.minExtentHeight,
+    required this.maxExtentHeight,
+    required this.child,
+  });
+
+  @override
+  double get minExtent => minExtentHeight;
+
+  @override
+  double get maxExtent => maxExtentHeight;
+
+  @override
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
+    return Material(elevation: 0, child: child);
+  }
+
+  @override
+  bool shouldRebuild(covariant _FixedHeaderDelegate oldDelegate) {
+    return oldDelegate.minExtentHeight != minExtentHeight ||
+        oldDelegate.maxExtentHeight != maxExtentHeight ||
+        oldDelegate.child != child;
+  }
+}
