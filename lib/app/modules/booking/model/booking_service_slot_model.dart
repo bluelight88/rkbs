@@ -9,7 +9,7 @@ class BookingServiceSlotModel {
   final DateTime createdDatetime;
   final bool isActive;
   final DateTime firstDt;
-  final List<ServiceCost> cost;
+  final List<Staff> staff;
   final List<BookingSlot> bookingSlot;
 
   BookingServiceSlotModel({
@@ -21,7 +21,7 @@ class BookingServiceSlotModel {
     required this.createdDatetime,
     required this.isActive,
     required this.firstDt,
-    required this.cost,
+    required this.staff,
     required this.bookingSlot,
   });
 
@@ -34,14 +34,13 @@ class BookingServiceSlotModel {
     UtilMethods.instance.stringValueParser(json['services_code']),
     servicesDescription: UtilMethods.instance
         .stringValueParser(json['services_description']),
-    createdDatetime: UtilMethods.instance
-        .dateValueParser(json['created_datetime']),
+    createdDatetime:
+    UtilMethods.instance.dateValueParser(json['created_datetime']),
     isActive: json['is_active'] == true,
-    firstDt:
-    UtilMethods.instance.dateValueParser(json['first_dt']),
-    cost: UtilMethods.instance.listValueParser(
-      json['cost'],
-      ServiceCost.fromJson,
+    firstDt: UtilMethods.instance.dateValueParser(json['first_dt']),
+    staff: UtilMethods.instance.listValueParser(
+      json['staff'],
+      Staff.fromJson,
     ),
     bookingSlot: UtilMethods.instance.listValueParser(
       json['booking_slot'],
@@ -58,74 +57,63 @@ class BookingServiceSlotModel {
     'created_datetime': createdDatetime.toIso8601String(),
     'is_active': isActive,
     'first_dt': firstDt.toIso8601String(),
-    'cost': cost.map((e) => e.toJson()).toList(),
+    'staff': staff.map((e) => e.toJson()).toList(),
     'booking_slot': bookingSlot.map((e) => e.toJson()).toList(),
   };
 }
 
-class ServiceCost {
-  final int servicesCostId;
-  final int servicesId;
-  final double cost;
-  final int servicesDurationUnit;
-  final int servicesDuration;
-  final DateTime createdDatetime;
-  final bool isActive;
+class Staff {
+  final int staffId;
+  final String staffName;
+  final String staffPhoto;
+  final int selectedStaff;
 
-  ServiceCost({
-    required this.servicesCostId,
-    required this.servicesId,
-    required this.cost,
-    required this.servicesDurationUnit,
-    required this.servicesDuration,
-    required this.createdDatetime,
-    required this.isActive,
+  Staff({
+    required this.staffId,
+    required this.staffName,
+    required this.staffPhoto,
+    required this.selectedStaff,
   });
 
-  factory ServiceCost.fromJson(Map json) => ServiceCost(
-    servicesCostId:
-    UtilMethods.instance.intValueParser(json['services_cost_id']),
-    servicesId: UtilMethods.instance.intValueParser(json['services_id']),
-    cost: UtilMethods.instance.doubleValueParser(json['cost']),
-    servicesDurationUnit:
-    UtilMethods.instance.intValueParser(json['services_duration_unit']),
-    servicesDuration:
-    UtilMethods.instance.intValueParser(json['services_duration']),
-    createdDatetime: UtilMethods.instance
-        .dateValueParser(json['created_datetime']),
-    isActive: json['is_active'] == true,
+  factory Staff.fromJson(Map json) => Staff(
+    staffId: UtilMethods.instance.intValueParser(json['staff_id']),
+    staffName: UtilMethods.instance.stringValueParser(json['staff_name']),
+    staffPhoto: UtilMethods.instance.stringValueParser(json['staff_photo']),
+    selectedStaff:
+    UtilMethods.instance.intValueParser(json['selected_staff']),
   );
 
   Map<String, dynamic> toJson() => {
-    'services_cost_id': servicesCostId,
-    'services_id': servicesId,
-    'cost': cost,
-    'services_duration_unit': servicesDurationUnit,
-    'services_duration': servicesDuration,
-    'created_datetime': createdDatetime.toIso8601String(),
-    'is_active': isActive,
+    'staff_id': staffId,
+    'staff_name': staffName,
+    'staff_photo': staffPhoto,
+    'selected_staff': selectedStaff,
   };
 }
 
 class BookingSlot {
   final int staffId;
   final String staffName;
+  final String staffPhoto;
   final List<Slot> morningSlot;
   final List<Slot> afternoonSlot;
   final List<Slot> eveningSlot;
+  final List<ServiceCost> cost;
 
   BookingSlot({
     required this.staffId,
     required this.staffName,
+    required this.staffPhoto,
     required this.morningSlot,
     required this.afternoonSlot,
     required this.eveningSlot,
+    required this.cost,
   });
 
   factory BookingSlot.fromJson(Map json) => BookingSlot(
     staffId: UtilMethods.instance.intValueParser(json['staff_id']),
-    staffName:
-    UtilMethods.instance.stringValueParser(json['staff_name']),
+    staffName: UtilMethods.instance.stringValueParser(json['staff_name']),
+    staffPhoto: UtilMethods.instance.stringValueParser(json['staff_photo']),
     morningSlot: UtilMethods.instance.listValueParser(
       json['morning_slot'],
       Slot.fromJson,
@@ -138,14 +126,20 @@ class BookingSlot {
       json['evening_slot'],
       Slot.fromJson,
     ),
+    cost: UtilMethods.instance.listValueParser(
+      json['cost'],
+      ServiceCost.fromJson,
+    ),
   );
 
   Map<String, dynamic> toJson() => {
     'staff_id': staffId,
     'staff_name': staffName,
+    'staff_photo': staffPhoto,
     'morning_slot': morningSlot.map((e) => e.toJson()).toList(),
     'afternoon_slot': afternoonSlot.map((e) => e.toJson()).toList(),
     'evening_slot': eveningSlot.map((e) => e.toJson()).toList(),
+    'cost': cost.map((e) => e.toJson()).toList(),
   };
 }
 
@@ -167,5 +161,39 @@ class Slot {
   Map<String, dynamic> toJson() => {
     'slot_display_time': slotDisplayTime,
     'slot_id': slotId,
+  };
+}
+
+class ServiceCost {
+  final int servicesId;
+  final int staffId;
+  final double cost;
+  final int servicesDurationUnit;
+  final int servicesDuration;
+
+  ServiceCost({
+    required this.servicesId,
+    required this.staffId,
+    required this.cost,
+    required this.servicesDurationUnit,
+    required this.servicesDuration,
+  });
+
+  factory ServiceCost.fromJson(Map json) => ServiceCost(
+    servicesId: UtilMethods.instance.intValueParser(json['services_id']),
+    staffId: UtilMethods.instance.intValueParser(json['staff_id']),
+    cost: UtilMethods.instance.doubleValueParser(json['cost']),
+    servicesDurationUnit: UtilMethods.instance
+        .intValueParser(json['services_duration_unit']),
+    servicesDuration:
+    UtilMethods.instance.intValueParser(json['services_duration']),
+  );
+
+  Map<String, dynamic> toJson() => {
+    'services_id': servicesId,
+    'staff_id': staffId,
+    'cost': cost,
+    'services_duration_unit': servicesDurationUnit,
+    'services_duration': servicesDuration,
   };
 }

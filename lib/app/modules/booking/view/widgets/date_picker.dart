@@ -34,13 +34,18 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
     final index = dates.indexWhere((d) => DateUtils.isSameDay(d, targetDate));
 
     if (index != -1 && _scrollController.hasClients) {
+      final itemWidth = 70.0; // 60 width + 10 gap
+      final screenWidth = MediaQuery.of(context).size.width;
+      final targetOffset = (index * itemWidth) - (screenWidth / 2) + (itemWidth / 2);
+
       _scrollController.animateTo(
-        index * 87.0, // 75 width + 12 spacing
+        targetOffset.clamp(0, _scrollController.position.maxScrollExtent),
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
     }
   }
+
 
   void _handleDateTap(DateTime date) {
     final today = DateTime.now();
@@ -61,6 +66,15 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
       });
     }
   }
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollToDate(_selectedDate);
+    });
+    super.initState();
+  }
+
 
   @override
   Widget build(BuildContext context) {

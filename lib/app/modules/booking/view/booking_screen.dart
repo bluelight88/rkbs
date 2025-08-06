@@ -26,8 +26,10 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
   final ValueNotifier<DateTime> selectedDate = ValueNotifier<DateTime>(
     DateTime.now(),
   );
-
   final ValueNotifier<double> totalPrice = ValueNotifier<double>(0.0);
+  final ValueNotifier<int> selectedStaff = ValueNotifier<int>(0);
+
+  List<Staff> _staffList = [];
 
   @override
   void initState() {
@@ -35,8 +37,8 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
     super.initState();
   }
 
-  void _calculateTotal(BookingServiceSlotModel model) {
-    final total = model.cost.fold<double>(0.0, (sum, item) {
+  void _calculateTotal(BookingSlot bookingSlot) {
+    final total = bookingSlot.cost.fold<double>(0.0, (sum, item) {
       final priceString =
           item.cost.toString().replaceAll(RegExp(r'[^\d.]'), '').trim();
       final price = double.tryParse(priceString) ?? 0.0;
@@ -50,10 +52,19 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
       BookingServiceList(
         providerId: 1,
         serviceId: 1,
-        staffId: 0,
+        staffId: selectedStaff.value,
         date: selectedDate.value.formatDate("yyyy-MM-dd"),
       ),
     );
+  }
+
+  void _onSelectStaff(int index) {
+    if (index == 0) return;
+    final temp = _staffList[0];
+    _staffList[0] = _staffList[index];
+    _staffList[index] = temp;
+    selectedStaff.value = _staffList[0].staffId;
+    _getBookingRecord();
   }
 
   @override
@@ -67,10 +78,29 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
       body: BlocConsumer<BookingServiceBloc, BookingServiceState>(
         listener: (context, state) {
           if (state is BookingServiceSuccess) {
-            _calculateTotal(state.model);
+            _staffList = List.from(state.model.staff);
+            selectedStaff.value = _staffList[0].staffId;
+            _calculateTotal(state.model.bookingSlot[0]);
+            final bookingSlot = state.model.bookingSlot.firstOrNull;
+            if (bookingSlot != null) {
+              final firstAvailableSlot =
+                  [
+                    ...bookingSlot.morningSlot,
+                    ...bookingSlot.afternoonSlot,
+                    ...bookingSlot.eveningSlot,
+                  ].firstOrNull;
+
+              if (firstAvailableSlot != null) {
+                selectedTimeSlot.value = firstAvailableSlot.slotDisplayTime;
+                selectedSlotInfo.value = _getFormattedSlotInfo(
+                  selectedDate: selectedDate.value,
+                  selectedSlot: firstAvailableSlot.slotDisplayTime,
+                  slotDuration:
+                      state.model.bookingSlot[0].cost[0].servicesDuration,
+                );
+              }
+            }
           }
-          if (state is BookingServiceFailure) {}
-          if (state is BookingServiceLoading) {}
         },
         builder: (context, state) {
           if (state is BookingServiceSuccess) {
@@ -125,6 +155,17 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
+                          'Choose Specialist',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontFamily: "PlusJakartaSans",
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const Gap(20),
+                        _buildSpecialists(),
+                        const Gap(24),
+                        const Text(
                           'Time',
                           style: TextStyle(
                             fontWeight: FontWeight.w500,
@@ -138,29 +179,41 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                         const Gap(10),
                         const Divider(height: 1, thickness: 2),
                         const Gap(10),
-                        const Text(
-                          'Choose Specialist',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontFamily: "PlusJakartaSans",
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        const Gap(20),
-                        _buildSpecialists(),
-                        const Gap(24),
                         ListView.separated(
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
                           padding: EdgeInsets.zero,
-                          itemCount: state.model.cost.length,
+                          itemCount: state.model.bookingSlot[0].cost.length,
                           separatorBuilder: (context, index) => Gap(10),
                           itemBuilder: (context, index) {
-                            return _buildServiceCard(
-                              state.model.servicesName,
-                              state.model.servicesDescription,
-                              "9:30 AM - 9:50 AM",
-                              state.model.cost[index].cost.toString(),
+                            return ValueListenableBuilder(
+                              valueListenable: selectedSlotInfo,
+                              builder: (context, value, child) {
+                                return _buildServiceCard(
+                                  state.model.servicesName,
+                                  _staffList
+                                      .firstWhere(
+                                        (staff) =>
+                                            staff.staffId ==
+                                            selectedStaff.value,
+                                        orElse: () => _staffList[0],
+                                      )
+                                      .staffName,
+                                  selectedSlotInfo.value.split(',').length > 1
+                                      ? selectedSlotInfo.value
+                                                  .split(',')[1]
+                                                  .split('-')
+                                                  .length >
+                                              2
+                                          ? '${selectedSlotInfo.value.split(',')[1].split('-')[0].trim()} - ${selectedSlotInfo.value.split(',')[1].split('-')[1].trim()}'
+                                          : selectedSlotInfo.value
+                                              .split(',')[1]
+                                              .trim()
+                                      : selectedSlotInfo.value,
+                                  state.model.bookingSlot[0].cost[0].cost
+                                      .toString(),
+                                );
+                              },
                             );
                           },
                         ),
@@ -264,7 +317,6 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
           slotMap.entries.map((entry) {
             final slotName = entry.key;
             final slotList = entry.value;
-
             if (slotList.isEmpty) return const SizedBox();
 
             return Column(
@@ -348,20 +400,20 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
           }).toList(),
     );
   }
+
   String _getFormattedSlotInfo({
     required DateTime selectedDate,
     required String selectedSlot,
     required int slotDuration,
   }) {
-    // Clean up and standardize the slot string
-    final cleanSlot = selectedSlot
-        .replaceAll('\u202F', ' ')
-        .replaceAll('\u00A0', ' ')
-        .replaceAll(RegExp(r'\s+'), ' ')
-        .trim()
-        .toUpperCase();
+    final cleanSlot =
+        selectedSlot
+            .replaceAll('\u202F', ' ')
+            .replaceAll('\u00A0', ' ')
+            .replaceAll(RegExp(r'\s+'), ' ')
+            .trim()
+            .toUpperCase();
 
-    // Extract time using RegExp
     final match = RegExp(r'(\d{1,2}):(\d{2})\s*(AM|PM)').firstMatch(cleanSlot);
     if (match == null) {
       throw FormatException('Invalid time format: $selectedSlot');
@@ -381,7 +433,6 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
       hour,
       minute,
     );
-
     final endDateTime = startDateTime.add(Duration(minutes: slotDuration));
 
     final day = DateFormat('EEE d').format(selectedDate).toUpperCase();
@@ -392,41 +443,68 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
   }
 
   Widget _buildSpecialists() {
-    final specialists = [
-      {'name': 'Kevin Smith', 'image': 'https://via.placeholder.com/60'},
-      {'name': 'John Smith', 'image': 'https://via.placeholder.com/60'},
-      {'name': 'Olive Smith', 'image': 'https://via.placeholder.com/60'},
-    ];
-
     return SizedBox(
       height: 80,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
-        itemCount: specialists.length,
-        separatorBuilder: (_, __) => const SizedBox(width: 12),
+        itemCount: _staffList.length,
+        separatorBuilder:
+            (context, index) =>
+                index == 0
+                    ? VerticalDivider(
+                      width: 30,
+                      thickness: 2,
+                      endIndent: 20,
+                      indent: 5,
+                      color: Colors.grey.shade400,
+                    )
+                    : SizedBox(width: 12),
         itemBuilder: (context, index) {
-          final s = specialists[index];
-          return Column(
-            children: [
-              ClipRRect(
-                borderRadius: const BorderRadius.all(Radius.circular(10)),
-                child: Image.asset(
-                  AssetConstants.icBackgroundImage,
-                  height: 54,
-                  width: 54,
-                  fit: BoxFit.cover,
+          return ValueListenableBuilder<int>(
+            valueListenable: selectedStaff,
+            builder: (context, value, _) {
+              return GestureDetector(
+                onTap: () => _onSelectStaff(index),
+                child: Column(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          width: 2,
+                          color:
+                              value == _staffList[index].staffId
+                                  ? ColorConstants.primaryColor
+                                  : Colors.transparent,
+                        ),
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(10),
+                        ),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(8),
+                        ),
+                        child: Image.asset(
+                          AssetConstants.icBackgroundImage,
+                          height: 54,
+                          width: 54,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      _staffList[index].staffName,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontFamily: "PlusJakartaSans",
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                s['name']!,
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontFamily: "PlusJakartaSans",
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
+              );
+            },
           );
         },
       ),
