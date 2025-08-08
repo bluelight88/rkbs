@@ -1,20 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:timoraa/app/core/models/cart_service_model.dart';
 import 'package:timoraa/app/core/widgets/buttons/app_elevated_button.dart';
 import 'package:timoraa/app/modules/booking/view/widgets/date_picker.dart';
 import 'package:timoraa/app/utils/constants/color_constants.dart';
 import 'package:intl/intl.dart';
 import 'package:timoraa/app/utils/extensions/app_extension.dart';
+import 'package:timoraa/app/utils/extensions/navigation_extension.dart';
+import 'package:timoraa/app/utils/services/app_state.dart';
 
 import '../../../core/widgets/custom/center_loader_widget.dart';
 import '../../../core/widgets/custom/center_message_widget.dart';
+import '../../../utils/constants/app_constants.dart';
 import '../../../utils/constants/asset_constants.dart';
-import '../model/booking_service_slot_model.dart';
+import '../../../utils/manager/get_it_manager.dart';
+import '../../../utils/manager/storage_manager.dart';
+import '../../provider_detail/model/provider_detail_model.dart';
+import '../model/booking_service_slot_model.dart' as service;
 import '../view_model/booking_service_bloc.dart';
 
 class BookAppointmentScreen extends StatefulWidget {
-  const BookAppointmentScreen({super.key});
+  final Service services;
+
+  const BookAppointmentScreen({super.key, required this.services});
 
   @override
   State<BookAppointmentScreen> createState() => _BookAppointmentScreenState();
@@ -23,13 +32,14 @@ class BookAppointmentScreen extends StatefulWidget {
 class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
   final ValueNotifier<String> selectedSlotInfo = ValueNotifier<String>("");
   final ValueNotifier<String> selectedTimeSlot = ValueNotifier<String>('');
+  final ValueNotifier<int> selectedTimeSlotId = ValueNotifier<int>(0);
   final ValueNotifier<DateTime> selectedDate = ValueNotifier<DateTime>(
     DateTime.now(),
   );
   final ValueNotifier<double> totalPrice = ValueNotifier<double>(0.0);
   final ValueNotifier<int> selectedStaff = ValueNotifier<int>(0);
 
-  List<Staff> _staffList = [];
+  List<service.Staff> _staffList = [];
 
   @override
   void initState() {
@@ -37,7 +47,7 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
     super.initState();
   }
 
-  void _calculateTotal(BookingSlot bookingSlot) {
+  void _calculateTotal(service.BookingSlot bookingSlot) {
     final total = bookingSlot.cost.fold<double>(0.0, (sum, item) {
       final priceString =
           item.cost.toString().replaceAll(RegExp(r'[^\d.]'), '').trim();
@@ -48,12 +58,19 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
   }
 
   void _getBookingRecord() {
+    final now = DateTime.now();
+    final isToday = DateUtils.isSameDay(selectedDate.value, now);
+
+    final formattedDate =
+        isToday
+            ? selectedDate.value.formatDate("yyyy-MM-dd HH:mm")
+            : selectedDate.value.formatDate("yyyy-MM-dd");
     context.read<BookingServiceBloc>().add(
       BookingServiceList(
         providerId: 1,
         serviceId: 1,
         staffId: selectedStaff.value,
-        date: selectedDate.value.formatDate("yyyy-MM-dd"),
+        date: formattedDate,
       ),
     );
   }
@@ -91,6 +108,7 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                   ].firstOrNull;
 
               if (firstAvailableSlot != null) {
+                selectedTimeSlotId.value = firstAvailableSlot.slotId;
                 selectedTimeSlot.value = firstAvailableSlot.slotDisplayTime;
                 selectedSlotInfo.value = _getFormattedSlotInfo(
                   selectedDate: selectedDate.value,
@@ -122,8 +140,8 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                       padding: const EdgeInsets.fromLTRB(16, 48, 16, 16),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Row(
+                        children: [
+                          const Row(
                             children: [
                               BackButton(color: Colors.white),
                               Spacer(),
@@ -138,8 +156,12 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                               Spacer(flex: 2),
                             ],
                           ),
-                          Gap(10),
-                          CustomDatePicker(),
+                          CustomDatePicker(
+                            selectedDate: selectedDate,
+                            callback: () {
+                              _getBookingRecord();
+                            },
+                          ),
                         ],
                       ),
                     ),
@@ -165,6 +187,7 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                         const Gap(20),
                         _buildSpecialists(),
                         const Gap(24),
+
                         const Text(
                           'Time',
                           style: TextStyle(
@@ -179,39 +202,72 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                         const Gap(10),
                         const Divider(height: 1, thickness: 2),
                         const Gap(10),
-                        ListView.separated(
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          padding: EdgeInsets.zero,
-                          itemCount: state.model.bookingSlot[0].cost.length,
-                          separatorBuilder: (context, index) => Gap(10),
-                          itemBuilder: (context, index) {
-                            return ValueListenableBuilder(
-                              valueListenable: selectedSlotInfo,
-                              builder: (context, value, child) {
+                        ValueListenableBuilder(
+                          valueListenable: selectedSlotInfo,
+                          builder: (context, slotValue, child) {
+                            final allServices = <CartServiceModel>[
+                              CartServiceModel(
+                                serviceId: widget.services.servicesId,
+                                staffId: selectedStaff.value,
+                                slotId: selectedTimeSlotId.value,
+                                slotName: slotValue,
+                                serviceDuration:
+                                    widget
+                                        .services
+                                        .servicesCost[0]
+                                        .servicesDuration,
+                                serviceName: widget.services.servicesCode,
+                                cost: widget.services.servicesCost[0].cost,
+                              ),
+                              ...appState.cartItems,
+                            ];
+
+                            return ListView.separated(
+                              shrinkWrap: true,
+                              padding: EdgeInsets.zero,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: allServices.length,
+                              separatorBuilder: (_, __) => const Gap(10),
+                              itemBuilder: (context, index) {
+                                final service = allServices[index];
+                                final staffName =
+                                    _staffList
+                                        .firstWhere(
+                                          (staff) =>
+                                              staff.staffId == service.staffId,
+                                          orElse: () => _staffList[0],
+                                        )
+                                        .staffName;
+
+                                final slotName =
+                                    service.slotName.split(',').length > 1
+                                        ? service.slotName
+                                                    .split(',')[1]
+                                                    .split('-')
+                                                    .length >
+                                                2
+                                            ? '${service.slotName.split(',')[1].split('-')[0].trim()} - ${service.slotName.split(',')[1].split('-')[1].trim()}'
+                                            : service.slotName
+                                                .split(',')[1]
+                                                .trim()
+                                        : service.slotName;
+
                                 return _buildServiceCard(
-                                  state.model.servicesName,
-                                  _staffList
-                                      .firstWhere(
-                                        (staff) =>
-                                            staff.staffId ==
-                                            selectedStaff.value,
-                                        orElse: () => _staffList[0],
-                                      )
-                                      .staffName,
-                                  selectedSlotInfo.value.split(',').length > 1
-                                      ? selectedSlotInfo.value
-                                                  .split(',')[1]
-                                                  .split('-')
-                                                  .length >
-                                              2
-                                          ? '${selectedSlotInfo.value.split(',')[1].split('-')[0].trim()} - ${selectedSlotInfo.value.split(',')[1].split('-')[1].trim()}'
-                                          : selectedSlotInfo.value
-                                              .split(',')[1]
-                                              .trim()
-                                      : selectedSlotInfo.value,
-                                  state.model.bookingSlot[0].cost[0].cost
-                                      .toString(),
+                                  service.serviceName,
+                                  staffName,
+                                  slotName,
+                                  service.cost.toString(),
+                                  index,
+                                  onRemove: () {
+                                    setState(() {
+                                      if (index == 0) {
+                                        context.pop();
+                                      } else {
+                                        // Remove from cart
+                                        appState.cartItems.removeAt(index - 1);
+                                      }
+                                    });
+                                  },
                                 );
                               },
                             );
@@ -227,63 +283,87 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                               fontFamily: "PlusJakartaSans",
                             ),
                           ),
-                          onPressed: () {},
-                        ),
-                        const SizedBox(height: 16),
-                        ValueListenableBuilder<double>(
-                          valueListenable: totalPrice,
-                          builder: (context, value, _) {
-                            return Center(
-                              child: Text(
-                                '\$${value.toStringAsFixed(2)}',
-                                style: const TextStyle(
-                                  fontSize: 30,
-                                  fontWeight: FontWeight.w800,
-                                  fontFamily: "PlusJakartaSans",
-                                ),
+                          onPressed: () async {
+                            appState.cartItems.add(
+                              CartServiceModel(
+                                serviceId: widget.services.servicesId,
+                                staffId: selectedStaff.value,
+                                slotId: selectedTimeSlotId.value,
+                                slotName: selectedTimeSlot.value,
+                                serviceDuration:
+                                    widget
+                                        .services
+                                        .servicesCost[0]
+                                        .servicesDuration,
+                                serviceName: widget.services.servicesCode,
+                                cost: widget.services.servicesCost[0].cost,
                               ),
+                            );
+                            await getIt<StorageManager>().saveDynamicList(
+                              AppConstants.cartItems,
+                              appState.cartItems
+                                  .map((e) => e.toJson())
+                                  .toList(),
                             );
                           },
                         ),
-                        const Gap(10),
-                        ValueListenableBuilder<String>(
-                          valueListenable: selectedSlotInfo,
-                          builder: (context, value, _) {
-                            return value.isNotEmpty
-                                ? Center(
-                                  child: Text(
-                                    value,
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(
-                                      letterSpacing: 0,
-                                      color: Colors.grey,
-                                      fontSize: 14,
-                                      fontFamily: "PlusJakartaSans",
-                                    ),
+
+                        const SizedBox(height: 16),
+                        ValueListenableBuilder<double>(
+                          valueListenable: totalPrice,
+                          builder:
+                              (context, value, _) => Center(
+                                child: Text(
+                                  '\$${value.toStringAsFixed(2)}',
+                                  style: const TextStyle(
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.w800,
+                                    fontFamily: "PlusJakartaSans",
                                   ),
-                                )
-                                : SizedBox.shrink();
-                          },
+                                ),
+                              ),
                         ),
                         const Gap(10),
                         ValueListenableBuilder<String>(
                           valueListenable: selectedSlotInfo,
-                          builder: (context, value, _) {
-                            return value.isNotEmpty
-                                ? AppElevatedButton(
-                                  const Text(
-                                    'Book Now',
-                                    style: TextStyle(
-                                      color: ColorConstants.whiteColor,
-                                      fontWeight: FontWeight.w700,
-                                      fontFamily: "PlusJakartaSans",
-                                    ),
-                                  ),
-                                  onPressed: () {},
-                                )
-                                : SizedBox.shrink();
-                          },
+                          builder:
+                              (context, value, _) =>
+                                  value.isNotEmpty
+                                      ? Center(
+                                        child: Text(
+                                          value,
+                                          textAlign: TextAlign.center,
+                                          style: const TextStyle(
+                                            letterSpacing: 0,
+                                            color: Colors.grey,
+                                            fontSize: 14,
+                                            fontFamily: "PlusJakartaSans",
+                                          ),
+                                        ),
+                                      )
+                                      : const SizedBox.shrink(),
                         ),
+
+                        const Gap(10),
+                        ValueListenableBuilder<String>(
+                          valueListenable: selectedSlotInfo,
+                          builder:
+                              (context, value, _) =>
+                                  value.isNotEmpty
+                                      ? AppElevatedButton(
+                                        const Text(
+                                          'Book Now',
+                                          style: TextStyle(
+                                            color: ColorConstants.whiteColor,
+                                            fontWeight: FontWeight.w700,
+                                            fontFamily: "PlusJakartaSans",
+                                          ),
+                                        ),
+                                        onPressed: () {},
+                                      )
+                                      : const SizedBox.shrink(),
+                        ),
+
                         const Gap(40),
                       ],
                     ),
@@ -301,7 +381,7 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
     );
   }
 
-  Widget _buildTimeSlots(BookingServiceSlotModel model) {
+  Widget _buildTimeSlots(service.BookingServiceSlotModel model) {
     final bookingSlot = model.bookingSlot.firstOrNull;
     if (bookingSlot == null) return const SizedBox();
 
@@ -331,8 +411,8 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                   ),
                 ),
                 const Gap(8),
-                ValueListenableBuilder<String>(
-                  valueListenable: selectedTimeSlot,
+                ValueListenableBuilder<int>(
+                  valueListenable: selectedTimeSlotId,
                   builder: (context, selectedValue, _) {
                     return SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
@@ -350,6 +430,7 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                                     );
                                     selectedTimeSlot.value =
                                         slot.slotDisplayTime;
+                                    selectedTimeSlotId.value = slot.slotId;
                                     selectedSlotInfo.value = formatted;
                                   },
                                   child: AnimatedContainer(
@@ -360,15 +441,15 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                                     ),
                                     decoration: BoxDecoration(
                                       color:
-                                          selectedTimeSlot.value ==
-                                                  slot.slotDisplayTime
+                                          selectedTimeSlotId.value ==
+                                                  slot.slotId
                                               ? ColorConstants.primaryColor
                                               : Colors.grey.shade100,
                                       borderRadius: BorderRadius.circular(8),
                                       border: Border.all(
                                         color:
-                                            selectedTimeSlot.value ==
-                                                    slot.slotDisplayTime
+                                            selectedTimeSlotId.value ==
+                                                    slot.slotId
                                                 ? ColorConstants.primaryColor
                                                 : Colors.grey.shade300,
                                         width: 1.5,
@@ -378,8 +459,8 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                                       slot.slotDisplayTime,
                                       style: TextStyle(
                                         color:
-                                            selectedTimeSlot.value ==
-                                                    slot.slotDisplayTime
+                                            selectedTimeSlotId.value ==
+                                                    slot.slotId
                                                 ? ColorConstants.whiteColor
                                                 : Colors.black,
                                         fontWeight: FontWeight.w500,
@@ -516,7 +597,9 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
     String specialistName,
     String time,
     String price,
-  ) {
+    int index, {
+    required VoidCallback onRemove,
+  }) {
     return Stack(
       clipBehavior: Clip.none,
       children: [
@@ -625,7 +708,7 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
             color: Colors.transparent,
             child: InkWell(
               borderRadius: BorderRadius.circular(20),
-              onTap: () {},
+              onTap: onRemove,
               child: Container(
                 padding: const EdgeInsets.all(2),
                 decoration: BoxDecoration(

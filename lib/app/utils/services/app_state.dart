@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:timoraa/app/core/models/cart_service_model.dart';
 
 import '../constants/app_config.dart';
 import '../constants/app_constants.dart';
@@ -85,6 +86,7 @@ final class AppState {
   ValueNotifier<String> countryCode = ValueNotifier<String>("UK");
   ValueNotifier<String> ipAddress = ValueNotifier<String>("");
   ValueNotifier<int> appPageIndex = ValueNotifier<int>(0);
+  List<CartServiceModel> cartItems = [];
 
   /// Method to set initial Values
   Future<void> setInitialValues() async {

@@ -27,7 +27,6 @@ class BookingServiceBloc
       'service_id': event.serviceId,
       'staff_id': event.staffId,
       'dt': event.date,
-      //   todo: HH:MM for date time now
     };
     final response = await getIt<BookingRepoModel>().getBooking(params);
     if (response is DataSuccess) {

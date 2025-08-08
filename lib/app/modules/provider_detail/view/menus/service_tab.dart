@@ -94,7 +94,10 @@ class _ServiceTabState extends State<ServiceTab> {
                   title: service.servicesCode,
                   subTitle: service.servicesDescription,
                   onTap: () {
-                    context.pushNamed(RouteName.bookingScreen);
+                    context.pushNamed(
+                      RouteName.bookingScreen,
+                      args: {"services": service},
+                    );
                   },
                   bottomChild: Container(
                     height: 40,

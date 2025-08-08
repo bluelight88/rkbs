@@ -3,14 +3,20 @@ import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 
 class CustomDatePicker extends StatefulWidget {
-  const CustomDatePicker({super.key});
+  final VoidCallback callback;
+  final ValueNotifier<DateTime> selectedDate;
+
+  const CustomDatePicker({
+    super.key,
+    required this.callback,
+    required this.selectedDate,
+  });
 
   @override
   State<CustomDatePicker> createState() => _CustomDatePickerState();
 }
 
 class _CustomDatePickerState extends State<CustomDatePicker> {
-  DateTime _selectedDate = DateTime.now();
   final ScrollController _scrollController = ScrollController();
 
   List<DateTime> getMonthDates(DateTime month) {
@@ -21,22 +27,23 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
 
   void _changeMonth(int delta) {
     setState(() {
-      _selectedDate = DateTime(
-        _selectedDate.year,
-        _selectedDate.month + delta,
+      widget.selectedDate.value = DateTime(
+        widget.selectedDate.value.year,
+        widget.selectedDate.value.month + delta,
         1,
       );
     });
   }
 
   void _scrollToDate(DateTime targetDate) {
-    final dates = getMonthDates(_selectedDate);
+    final dates = getMonthDates(widget.selectedDate.value);
     final index = dates.indexWhere((d) => DateUtils.isSameDay(d, targetDate));
 
     if (index != -1 && _scrollController.hasClients) {
       final itemWidth = 70.0; // 60 width + 10 gap
       final screenWidth = MediaQuery.of(context).size.width;
-      final targetOffset = (index * itemWidth) - (screenWidth / 2) + (itemWidth / 2);
+      final targetOffset =
+          (index * itemWidth) - (screenWidth / 2) + (itemWidth / 2);
 
       _scrollController.animateTo(
         targetOffset.clamp(0, _scrollController.position.maxScrollExtent),
@@ -46,39 +53,44 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
     }
   }
 
-
   void _handleDateTap(DateTime date) {
-    final today = DateTime.now();
-    final normalizedToday = DateTime(today.year, today.month, today.day);
+    final now = DateTime.now();
+    final normalizedToday = DateTime(now.year, now.month, now.day);
     final normalizedTap = DateTime(date.year, date.month, date.day);
 
     if (normalizedTap.isBefore(normalizedToday)) {
+      // Past date → force to today with current time
       setState(() {
-        _selectedDate = normalizedToday;
+        widget.selectedDate.value = now;
       });
-
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _scrollToDate(normalizedToday);
       });
-    } else {
+    } else if (DateUtils.isSameDay(normalizedTap, normalizedToday)) {
+      // Today → keep current time for correct time parsing later
       setState(() {
-        _selectedDate = date;
+        widget.selectedDate.value = now;
+      });
+    } else {
+      // Future date → keep midnight
+      setState(() {
+        widget.selectedDate.value = normalizedTap;
       });
     }
+    widget.callback();
   }
 
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _scrollToDate(_selectedDate);
+      _scrollToDate(widget.selectedDate.value);
     });
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
-    final List<DateTime> dates = getMonthDates(_selectedDate);
+    final List<DateTime> dates = getMonthDates(widget.selectedDate.value);
 
     return Container(
       color: Colors.black,
@@ -111,7 +123,9 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
                 Column(
                   children: [
                     Text(
-                      DateFormat('MMMM').format(_selectedDate).toUpperCase(),
+                      DateFormat(
+                        'MMMM',
+                      ).format(widget.selectedDate.value).toUpperCase(),
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 16,
@@ -121,7 +135,7 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
                     ),
                     const Gap(10),
                     Text(
-                      _selectedDate.year.toString(),
+                      widget.selectedDate.value.year.toString(),
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 28,
@@ -164,7 +178,10 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
               separatorBuilder: (_, __) => const Gap(10),
               itemBuilder: (context, index) {
                 final date = dates[index];
-                final isSelected = DateUtils.isSameDay(date, _selectedDate);
+                final isSelected = DateUtils.isSameDay(
+                  date,
+                  widget.selectedDate.value,
+                );
 
                 return GestureDetector(
                   onTap: () => _handleDateTap(date),

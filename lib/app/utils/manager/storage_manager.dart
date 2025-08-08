@@ -1,3 +1,5 @@
+import "dart:convert";
+
 import "package:shared_preferences/shared_preferences.dart";
 
 final class StorageManager {
@@ -22,6 +24,16 @@ final class StorageManager {
 
   Future<void> saveList(String key, List<String> data) async =>
       await _spInstance.setStringList(key, data);
+
+  Future<void> saveDynamicList(String key, List<dynamic> data) async {
+    final stringList = data.map((item) => jsonEncode(item)).toList();
+    await _spInstance.setStringList(key, stringList);
+  }
+
+  Future<List<dynamic>> getDynamicList(String key) async {
+    final stringList = _spInstance.getStringList(key) ?? [];
+    return stringList.map((item) => jsonDecode(item)).toList();
+  }
 
   Future<List<String>?> getList(String key) async =>
       _spInstance.getStringList(key);

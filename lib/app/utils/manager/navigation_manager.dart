@@ -39,17 +39,17 @@ final class NavigationManager {
   }) {
     Widget routeScreen = const UnderDevelopmentScreen();
     routeScreen = switch (routeName) {
-      RouteName.splashScreen => const SplashScreen(),
       RouteName.authScreen => MultiBlocProvider(
         providers: [BlocProvider(create: (context) => LoginBloc())],
         child: const LoginScreen(),
       ),
-      RouteName.onBoardingScreen => const OnBoardingScreen(),
-      RouteName.dashboardScreen => const DashboardScreen(),
       RouteName.bookingScreen => BlocProvider(
-  create: (context) => BookingServiceBloc(),
-  child: BookAppointmentScreen(),
-),
+        create: (context) => BookingServiceBloc(),
+        child: BookAppointmentScreen(services: args["services"]),
+      ),
+      RouteName.dashboardScreen => const DashboardScreen(),
+      RouteName.onBoardingScreen => const OnBoardingScreen(),
+      RouteName.packageViewScreen => const PackageViewScreen(),
       RouteName.providerDetailScreen => BlocProvider(
         create: (context) => ProviderDetailBloc(),
         child: ProviderDetailScreen(
@@ -57,7 +57,7 @@ final class NavigationManager {
           title: args["title"],
         ),
       ),
-      RouteName.packageViewScreen => const PackageViewScreen(),
+      RouteName.splashScreen => const SplashScreen(),
       _ => UnderDevelopmentScreen(showLeading: args['showLeading'] ?? true),
     };
     return routeScreen;
