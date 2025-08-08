@@ -493,4 +493,92 @@ final class UtilMethods {
     final document = parse(input); // from package:html/parser.dart
     return parse(document.body?.text).documentElement?.text ?? '';
   }
+
+  String getFormattedSlotInfo({
+    required DateTime selectedDate,
+    required String selectedSlot,
+    required int slotDuration,
+  }) {
+    final cleanSlot =
+        selectedSlot
+            .replaceAll('\u202F', ' ')
+            .replaceAll('\u00A0', ' ')
+            .replaceAll(RegExp(r'\s+'), ' ')
+            .trim()
+            .toUpperCase();
+
+    final match = RegExp(r'(\d{1,2}):(\d{2})\s*(AM|PM)').firstMatch(cleanSlot);
+    if (match == null) {
+      throw FormatException('Invalid time format: $selectedSlot');
+    }
+
+    int hour = int.parse(match.group(1)!);
+    int minute = int.parse(match.group(2)!);
+    final period = match.group(3)!;
+
+    if (period == 'PM' && hour != 12) hour += 12;
+    if (period == 'AM' && hour == 12) hour = 0;
+
+    final startDateTime = DateTime(
+      selectedDate.year,
+      selectedDate.month,
+      selectedDate.day,
+      hour,
+      minute,
+    );
+    final endDateTime = startDateTime.add(Duration(minutes: slotDuration));
+
+    final day = DateFormat('EEE d').format(selectedDate).toUpperCase();
+    final startFormatted = DateFormat.jm().format(startDateTime);
+    final endFormatted = DateFormat.jm().format(endDateTime);
+
+    return '$day, $startFormatted - $endFormatted - ${slotDuration}min';
+  }
+
+  String getSlotNameWithDuration(
+    String slotNameRaw,
+    int serviceDurationMinutes,
+  ) {
+    final parts = slotNameRaw.split(',');
+    if (parts.length > 1) {
+      final timeRange = parts[1].trim(); // e.g. "10:00 AM - 11:00 AM"
+      final times = timeRange.split('-');
+      if (times.length >= 2) {
+        final startTimeStr = times[0].trim(); // e.g. "10:00 AM"
+        final now = DateTime.now();
+
+        DateTime? startTime;
+        try {
+          final formatter = DateFormat.jm(); // parse input with AM/PM
+          final parsedTime = formatter.parse(startTimeStr);
+          startTime = DateTime(
+            now.year,
+            now.month,
+            now.day,
+            parsedTime.hour,
+            parsedTime.minute,
+          );
+        } catch (_) {
+          startTime = null;
+        }
+
+        if (startTime != null) {
+          final endTime = startTime.add(
+            Duration(minutes: serviceDurationMinutes),
+          );
+          final outputFormat = DateFormat.jm(); // format output with AM/PM
+
+          final formattedStart = outputFormat.format(startTime);
+          final formattedEnd = outputFormat.format(endTime);
+
+          return '$formattedStart - $formattedEnd';
+        } else {
+          return timeRange;
+        }
+      } else {
+        return timeRange;
+      }
+    }
+    return slotNameRaw;
+  }
 }
