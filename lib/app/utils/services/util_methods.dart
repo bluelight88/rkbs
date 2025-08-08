@@ -539,46 +539,47 @@ final class UtilMethods {
     String slotNameRaw,
     int serviceDurationMinutes,
   ) {
-    final parts = slotNameRaw.split(',');
-    if (parts.length > 1) {
-      final timeRange = parts[1].trim(); // e.g. "10:00 AM - 11:00 AM"
-      final times = timeRange.split('-');
-      if (times.length >= 2) {
-        final startTimeStr = times[0].trim(); // e.g. "10:00 AM"
-        final now = DateTime.now();
+    try {
+      final now = DateTime.now();
 
-        DateTime? startTime;
-        try {
-          final formatter = DateFormat.jm(); // parse input with AM/PM
-          final parsedTime = formatter.parse(startTimeStr);
-          startTime = DateTime(
-            now.year,
-            now.month,
-            now.day,
-            parsedTime.hour,
-            parsedTime.minute,
-          );
-        } catch (_) {
-          startTime = null;
-        }
+      final formatter = DateFormat.jm(); // parse input with AM/PM
+      final parsedTime = formatter.parse(slotNameRaw.trim());
 
-        if (startTime != null) {
-          final endTime = startTime.add(
-            Duration(minutes: serviceDurationMinutes),
-          );
-          final outputFormat = DateFormat.jm(); // format output with AM/PM
+      final startTime = DateTime(
+        now.year,
+        now.month,
+        now.day,
+        parsedTime.hour,
+        parsedTime.minute,
+      );
 
-          final formattedStart = outputFormat.format(startTime);
-          final formattedEnd = outputFormat.format(endTime);
+      final endTime = startTime.add(Duration(minutes: serviceDurationMinutes));
+      final outputFormat = DateFormat.jm(); // format output with AM/PM
 
-          return '$formattedStart - $formattedEnd';
-        } else {
-          return timeRange;
-        }
-      } else {
-        return timeRange;
-      }
+      final formattedStart = outputFormat.format(startTime);
+      final formattedEnd = outputFormat.format(endTime);
+
+      return '$formattedStart - $formattedEnd';
+    } catch (_) {
+      return slotNameRaw;
     }
-    return slotNameRaw;
+  }
+
+  String extractCleanTimeRange(String raw) {
+    final commaIndex = raw.indexOf(',');
+    String afterComma = commaIndex != -1 ? raw.substring(commaIndex + 1) : raw;
+
+    final cleaned = afterComma.replaceAll(
+      RegExp(r'\s*-\s*\d+Min\.?$', caseSensitive: false),
+      '',
+    );
+
+    String noSpacesAroundDash = cleaned.replaceAll(RegExp(r'\s*-\s*'), '-');
+    String formatted = noSpacesAroundDash.replaceAllMapped(
+      RegExp(r'(\d{1,2}:\d{2})\s*([AaPp][Mm])'),
+      (m) => '${m[1]}${m[2]!.toLowerCase()}',
+    );
+
+    return formatted.trim();
   }
 }

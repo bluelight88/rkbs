@@ -1,25 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-import 'package:timoraa/app/core/models/cart_service_model.dart';
-import 'package:timoraa/app/core/widgets/buttons/app_elevated_button.dart';
-import 'package:timoraa/app/modules/booking/view/widgets/booking_service_cart.dart';
-import 'package:timoraa/app/modules/booking/view/widgets/date_picker.dart';
-import 'package:timoraa/app/modules/booking/view/widgets/specialist_staff_card.dart';
-import 'package:timoraa/app/utils/constants/color_constants.dart';
 import 'package:timoraa/app/utils/extensions/app_extension.dart';
 import 'package:timoraa/app/utils/extensions/navigation_extension.dart';
-import 'package:timoraa/app/utils/services/app_state.dart';
-import 'package:timoraa/app/utils/services/util_methods.dart';
-
-import '../../../core/widgets/custom/center_loader_widget.dart';
-import '../../../core/widgets/custom/center_message_widget.dart';
+import '../../../core/models/cart_service_model.dart';
+import '../../../core/widgets/buttons/app_elevated_button.dart';
 import '../../../utils/constants/app_constants.dart';
+import '../../../utils/constants/color_constants.dart';
 import '../../../utils/manager/get_it_manager.dart';
 import '../../../utils/manager/storage_manager.dart';
+import '../../../utils/services/app_state.dart';
+import '../../../utils/services/util_methods.dart';
 import '../../provider_detail/model/provider_detail_model.dart';
 import '../model/booking_service_slot_model.dart' as service;
 import '../view_model/booking_service_bloc.dart';
+import '../view/widgets/booking_service_cart.dart';
+import '../view/widgets/date_picker.dart';
+import '../view/widgets/specialist_staff_card.dart';
 
 class BookAppointmentScreen extends StatefulWidget {
   final Service services;
@@ -42,10 +39,13 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
 
   List<service.Staff> _staffList = [];
 
+  // Map serviceId to slotName notifier, to update BookingServiceCart with time range display
+  final Map<int, ValueNotifier<String>> _slotNameNotifiers = {};
+
   @override
   void initState() {
-    _getBookingRecord();
     super.initState();
+    _getBookingRecord();
   }
 
   @override
@@ -54,6 +54,7 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
       (item) => item.serviceId == widget.services.servicesId,
     );
     getIt<StorageManager>().removeData(AppConstants.cartItems);
+    _slotNameNotifiers.forEach((key, notifier) => notifier.dispose());
     super.dispose();
   }
 
@@ -84,11 +85,40 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
     );
   }
 
+  Future<void> _updateCartTimeForService(
+    int serviceId,
+    String newSlotStartTime,
+  ) async {
+    final index = appState.cartItems.indexWhere(
+      (item) => item.serviceId == serviceId,
+    );
+    if (index == -1) return;
+    final serviceDuration = appState.cartItems[index].serviceDuration;
+    final formattedRange = UtilMethods.instance.getSlotNameWithDuration(
+      newSlotStartTime,
+      serviceDuration,
+    );
+    appState.cartItems[index].slotName = formattedRange;
+    if (_slotNameNotifiers.containsKey(serviceId)) {
+      _slotNameNotifiers[serviceId]!.value = formattedRange;
+    } else {
+      _slotNameNotifiers[serviceId] = ValueNotifier(formattedRange);
+    }
+
+    await getIt<StorageManager>().saveDynamicList(
+      AppConstants.cartItems,
+      appState.cartItems.map((e) => e.toJson()).toList(),
+    );
+
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     final double screenHeight = MediaQuery.of(context).size.height;
     final double headerHeight =
         screenHeight * 0.3 > 230 ? 265 : screenHeight * 0.4;
+
     return Scaffold(
       backgroundColor: ColorConstants.whiteColor,
       body: BlocConsumer<BookingServiceBloc, BookingServiceState>(
@@ -113,6 +143,7 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
               if (firstAvailableSlot != null) {
                 selectedTimeSlotId.value = firstAvailableSlot.slotId;
                 selectedTimeSlot.value = firstAvailableSlot.slotDisplayTime;
+
                 selectedSlotInfo.value = UtilMethods.instance
                     .getFormattedSlotInfo(
                       selectedDate: selectedDate.value,
@@ -122,23 +153,32 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                     );
               }
             }
+
             final primaryService = CartServiceModel(
               serviceId: widget.services.servicesId,
               staffId: selectedStaff.value,
               slotId: selectedTimeSlotId.value,
-              slotName:
-                  selectedSlotInfo.value.isNotEmpty
-                      ? selectedSlotInfo.value
-                      : selectedTimeSlot.value,
+              slotName: selectedTimeSlot.value,
+              // initially just start time
               serviceDuration: widget.services.servicesCost[0].servicesDuration,
               serviceName: widget.services.servicesCode,
               cost: widget.services.servicesCost[0].cost,
             );
+
             final alreadyExists = appState.cartItems.any(
               (item) => item.serviceId == primaryService.serviceId,
             );
             if (!alreadyExists) {
               appState.cartItems.insert(0, primaryService);
+
+              // Initialize notifier with formatted range string here
+              _slotNameNotifiers[primaryService.serviceId] = ValueNotifier(
+                UtilMethods.instance.getSlotNameWithDuration(
+                  primaryService.slotName,
+                  primaryService.serviceDuration,
+                ),
+              );
+
               await getIt<StorageManager>().saveDynamicList(
                 AppConstants.cartItems,
                 appState.cartItems.map((e) => e.toJson()).toList(),
@@ -233,63 +273,56 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                         const Gap(10),
                         const Divider(height: 1, thickness: 2),
                         const Gap(10),
-                        ValueListenableBuilder(
-                          valueListenable: selectedSlotInfo,
-                          builder: (context, slotValue, child) {
-                            return ListView.separated(
-                              shrinkWrap: true,
-                              padding: EdgeInsets.zero,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemCount: appState.cartItems.length,
-                              separatorBuilder: (_, __) => const Gap(10),
-                              itemBuilder: (context, index) {
-                                final serviceItem = appState.cartItems[index];
-                                final staffName =
-                                    _staffList
-                                        .firstWhere(
-                                          (staff) =>
-                                              staff.staffId ==
-                                              serviceItem.staffId,
-                                          orElse:
-                                              () =>
-                                                  _staffList.isNotEmpty
-                                                      ? _staffList[0]
-                                                      : service.Staff(
-                                                        staffId: 0,
-                                                        selectedStaff: 0,
-                                                        staffPhoto: "",
-                                                        staffName: 'Anyone',
-                                                      ),
-                                        )
-                                        .staffName;
+                        ListView.separated(
+                          shrinkWrap: true,
+                          padding: EdgeInsets.zero,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: appState.cartItems.length,
+                          separatorBuilder: (_, __) => const Gap(10),
+                          itemBuilder: (context, index) {
+                            final serviceItem = appState.cartItems[index];
+                            final staffName =
+                                _staffList
+                                    .firstWhere(
+                                      (staff) =>
+                                          staff.staffId == serviceItem.staffId,
+                                      orElse:
+                                          () =>
+                                              _staffList.isNotEmpty
+                                                  ? _staffList[0]
+                                                  : service.Staff(
+                                                    staffId: 0,
+                                                    selectedStaff: 0,
+                                                    staffPhoto: "",
+                                                    staffName: 'Anyone',
+                                                  ),
+                                    )
+                                    .staffName;
 
-                                final slotName = UtilMethods.instance
-                                    .getSlotNameWithDuration(
-                                      serviceItem.slotName,
-                                      serviceItem.serviceDuration,
-                                    );
-                                return BookingServiceCart(
-                                  serviceItem.serviceName,
-                                  staffName,
-                                  slotName,
-                                  serviceItem.cost.toString(),
-                                  index,
-                                  () async {
-                                    setState(() {
-                                      if (index == 0) {
-                                        context.pop();
-                                      } else {
-                                        appState.cartItems.removeAt(index - 1);
-                                      }
-                                    });
-                                    await getIt<StorageManager>()
-                                        .saveDynamicList(
-                                          AppConstants.cartItems,
-                                          appState.cartItems
-                                              .map((e) => e.toJson())
-                                              .toList(),
-                                        );
-                                  },
+                            return BookingServiceCart(
+                              serviceItem.serviceName,
+                              staffName,
+                              selectedSlotInfo,
+                              serviceItem.cost.toString(),
+                              index,
+                              () async {
+                                setState(() {
+                                  if (index == 0) {
+                                    context.pop();
+                                  } else {
+                                    appState.cartItems.removeAt(index - 1);
+                                  }
+                                });
+
+                                _slotNameNotifiers
+                                    .remove(serviceItem.serviceId)
+                                    ?.dispose();
+
+                                await getIt<StorageManager>().saveDynamicList(
+                                  AppConstants.cartItems,
+                                  appState.cartItems
+                                      .map((e) => e.toJson())
+                                      .toList(),
                                 );
                               },
                             );
@@ -306,27 +339,36 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                             ),
                           ),
                           onPressed: () async {
-                            appState.cartItems.add(
-                              CartServiceModel(
-                                serviceId: widget.services.servicesId,
-                                staffId: selectedStaff.value,
-                                slotId: selectedTimeSlotId.value,
-                                slotName: selectedTimeSlot.value,
-                                serviceDuration:
-                                    widget
-                                        .services
-                                        .servicesCost[0]
-                                        .servicesDuration,
-                                serviceName: widget.services.servicesCode,
-                                cost: widget.services.servicesCost[0].cost,
+                            final newService = CartServiceModel(
+                              serviceId: widget.services.servicesId,
+                              staffId: selectedStaff.value,
+                              slotId: selectedTimeSlotId.value,
+                              slotName: selectedTimeSlot.value,
+                              serviceDuration:
+                                  widget
+                                      .services
+                                      .servicesCost[0]
+                                      .servicesDuration,
+                              serviceName: widget.services.servicesCode,
+                              cost: widget.services.servicesCost[0].cost,
+                            );
+                            appState.cartItems.add(newService);
+
+                            _slotNameNotifiers[newService
+                                .serviceId] = ValueNotifier(
+                              UtilMethods.instance.getSlotNameWithDuration(
+                                newService.slotName,
+                                newService.serviceDuration,
                               ),
                             );
+
                             await getIt<StorageManager>().saveDynamicList(
                               AppConstants.cartItems,
                               appState.cartItems
                                   .map((e) => e.toJson())
                                   .toList(),
                             );
+                            setState(() {});
                           },
                         ),
                         const SizedBox(height: 16),
@@ -392,9 +434,9 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
             );
           }
           if (state is BookingServiceFailure) {
-            return FailureWidget(state.message, onRefresh: _getBookingRecord);
+            return Center(child: Text(state.message));
           }
-          return LoadingWidget();
+          return const Center(child: CircularProgressIndicator());
         },
       ),
     );
@@ -442,21 +484,23 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                                 padding: const EdgeInsets.only(right: 8),
                                 child: GestureDetector(
                                   onTap: () async {
-                                    final formatted = UtilMethods.instance
-                                        .getSlotNameWithDuration(
-                                          slot.slotDisplayTime,
-                                          widget
-                                              .services
-                                              .servicesCost[0]
-                                              .servicesDuration,
-                                        );
                                     selectedTimeSlot.value =
                                         slot.slotDisplayTime;
                                     selectedTimeSlotId.value = slot.slotId;
-                                    selectedSlotInfo.value = formatted;
+                                    selectedSlotInfo.value = UtilMethods
+                                        .instance
+                                        .getFormattedSlotInfo(
+                                          selectedDate: selectedDate.value,
+                                          selectedSlot: slot.slotDisplayTime,
+                                          slotDuration:
+                                              widget
+                                                  .services
+                                                  .servicesCost[0]
+                                                  .servicesDuration,
+                                        );
                                     await _updateCartTimeForService(
                                       widget.services.servicesId,
-                                      formatted,
+                                      slot.slotDisplayTime,
                                     );
                                   },
                                   child: AnimatedContainer(
@@ -505,21 +549,6 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
               ],
             );
           }).toList(),
-    );
-  }
-
-  Future<void> _updateCartTimeForService(
-    int serviceId,
-    String newSlotTime,
-  ) async {
-    final index = appState.cartItems.indexWhere(
-      (item) => item.serviceId == serviceId,
-    );
-    if (index == -1) return;
-    appState.cartItems[index].slotName = newSlotTime;
-    await getIt<StorageManager>().saveDynamicList(
-      AppConstants.cartItems,
-      appState.cartItems.map((e) => e.toJson()).toList(),
     );
   }
 }
