@@ -1,5 +1,3 @@
-
-
 import 'dart:convert';
 
 import '../../../core/models/api/data_state.dart';

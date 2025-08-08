@@ -28,20 +28,17 @@ class BookingServiceSlotModel {
   factory BookingServiceSlotModel.fromJson(Map json) => BookingServiceSlotModel(
     servicesId: UtilMethods.instance.intValueParser(json['services_id']),
     providerId: UtilMethods.instance.intValueParser(json['provider_id']),
-    servicesName:
-    UtilMethods.instance.stringValueParser(json['services_name']),
-    servicesCode:
-    UtilMethods.instance.stringValueParser(json['services_code']),
-    servicesDescription: UtilMethods.instance
-        .stringValueParser(json['services_description']),
-    createdDatetime:
-    UtilMethods.instance.dateValueParser(json['created_datetime']),
+    servicesName: UtilMethods.instance.stringValueParser(json['services_name']),
+    servicesCode: UtilMethods.instance.stringValueParser(json['services_code']),
+    servicesDescription: UtilMethods.instance.stringValueParser(
+      json['services_description'],
+    ),
+    createdDatetime: UtilMethods.instance.dateValueParser(
+      json['created_datetime'],
+    ),
     isActive: json['is_active'] == true,
     firstDt: UtilMethods.instance.dateValueParser(json['first_dt']),
-    staff: UtilMethods.instance.listValueParser(
-      json['staff'],
-      Staff.fromJson,
-    ),
+    staff: UtilMethods.instance.listValueParser(json['staff'], Staff.fromJson),
     bookingSlot: UtilMethods.instance.listValueParser(
       json['booking_slot'],
       BookingSlot.fromJson,
@@ -79,8 +76,7 @@ class Staff {
     staffId: UtilMethods.instance.intValueParser(json['staff_id']),
     staffName: UtilMethods.instance.stringValueParser(json['staff_name']),
     staffPhoto: UtilMethods.instance.stringValueParser(json['staff_photo']),
-    selectedStaff:
-    UtilMethods.instance.intValueParser(json['selected_staff']),
+    selectedStaff: UtilMethods.instance.intValueParser(json['selected_staff']),
   );
 
   Map<String, dynamic> toJson() => {
@@ -147,14 +143,12 @@ class Slot {
   final String slotDisplayTime;
   final int slotId;
 
-  Slot({
-    required this.slotDisplayTime,
-    required this.slotId,
-  });
+  Slot({required this.slotDisplayTime, required this.slotId});
 
   factory Slot.fromJson(Map json) => Slot(
-    slotDisplayTime:
-    UtilMethods.instance.stringValueParser(json['slot_display_time']),
+    slotDisplayTime: UtilMethods.instance.stringValueParser(
+      json['slot_display_time'],
+    ),
     slotId: UtilMethods.instance.intValueParser(json['slot_id']),
   );
 
@@ -183,10 +177,12 @@ class ServiceCost {
     servicesId: UtilMethods.instance.intValueParser(json['services_id']),
     staffId: UtilMethods.instance.intValueParser(json['staff_id']),
     cost: UtilMethods.instance.doubleValueParser(json['cost']),
-    servicesDurationUnit: UtilMethods.instance
-        .intValueParser(json['services_duration_unit']),
-    servicesDuration:
-    UtilMethods.instance.intValueParser(json['services_duration']),
+    servicesDurationUnit: UtilMethods.instance.intValueParser(
+      json['services_duration_unit'],
+    ),
+    servicesDuration: UtilMethods.instance.intValueParser(
+      json['services_duration'],
+    ),
   );
 
   Map<String, dynamic> toJson() => {

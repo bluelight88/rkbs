@@ -1,7 +1,7 @@
 class CartServiceModel {
-  final int serviceId, staffId, slotId, serviceDuration;
-  final double cost;
-  final String serviceName, slotName;
+  int serviceId, staffId, slotId, serviceDuration;
+  double cost;
+  String serviceName, slotName;
 
   CartServiceModel({
     required this.serviceId,
