@@ -127,6 +127,20 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
             _staffList = List.from(state.model.staff);
             if (_staffList.isNotEmpty) {
               selectedStaff.value = _staffList[0].staffId;
+              if (appState.cartItems.isNotEmpty) {
+                final index = appState.cartItems.indexWhere(
+                  (item) => item.serviceId == widget.services.servicesId,
+                );
+                if (index != -1) {
+                  appState.cartItems[index].staffId = selectedStaff.value;
+                  appState.cartItems[index].cost =
+                      widget.services.servicesCost[0].cost;
+                  await getIt<StorageManager>().saveDynamicList(
+                    AppConstants.cartItems,
+                    appState.cartItems.map((e) => e.toJson()).toList(),
+                  );
+                }
+              }
             }
             if (state.model.bookingSlot.isNotEmpty) {
               _calculateTotal(state.model.bookingSlot[0]);
