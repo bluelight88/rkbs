@@ -352,38 +352,7 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                               fontFamily: "PlusJakartaSans",
                             ),
                           ),
-                          onPressed: () async {
-                            final newService = CartServiceModel(
-                              serviceId: widget.services.servicesId,
-                              staffId: selectedStaff.value,
-                              slotId: selectedTimeSlotId.value,
-                              slotName: selectedTimeSlot.value,
-                              serviceDuration:
-                                  widget
-                                      .services
-                                      .servicesCost[0]
-                                      .servicesDuration,
-                              serviceName: widget.services.servicesCode,
-                              cost: widget.services.servicesCost[0].cost,
-                            );
-                            appState.cartItems.add(newService);
-
-                            _slotNameNotifiers[newService
-                                .serviceId] = ValueNotifier(
-                              UtilMethods.instance.getSlotNameWithDuration(
-                                newService.slotName,
-                                newService.serviceDuration,
-                              ),
-                            );
-
-                            await getIt<StorageManager>().saveDynamicList(
-                              AppConstants.cartItems,
-                              appState.cartItems
-                                  .map((e) => e.toJson())
-                                  .toList(),
-                            );
-                            setState(() {});
-                          },
+                          onPressed: () async {},
                         ),
                         const SizedBox(height: 16),
                         ValueListenableBuilder<double>(

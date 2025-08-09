@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:timoraa/app/utils/extensions/navigation_extension.dart';
 import 'package:timoraa/app/utils/services/util_methods.dart';
 
 import '../../../../core/widgets/buttons/app_elevated_button.dart';
@@ -125,7 +126,9 @@ class BookingServiceCart extends StatelessWidget {
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          context.pop();
+                        },
                       ),
                     ],
                   ),
