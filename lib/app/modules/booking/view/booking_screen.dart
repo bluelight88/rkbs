@@ -6,6 +6,7 @@ import 'package:timoraa/app/core/widgets/buttons/app_elevated_button.dart';
 import 'package:timoraa/app/modules/booking/view/widgets/date_picker.dart';
 import 'package:timoraa/app/utils/constants/color_constants.dart';
 import 'package:intl/intl.dart';
+import 'package:timoraa/app/utils/constants/route_name.dart';
 import 'package:timoraa/app/utils/extensions/app_extension.dart';
 import 'package:timoraa/app/utils/extensions/navigation_extension.dart';
 import 'package:timoraa/app/utils/services/app_state.dart';
@@ -279,21 +280,6 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                             ),
                           ),
                           onPressed: () async {
-                            appState.cartItems.add(
-                              CartServiceModel(
-                                serviceId: widget.services.servicesId,
-                                staffId: selectedStaff.value,
-                                slotId: selectedTimeSlotId.value,
-                                slotName: selectedTimeSlot.value,
-                                serviceDuration:
-                                    widget
-                                        .services
-                                        .servicesCost[0]
-                                        .servicesDuration,
-                                serviceName: widget.services.servicesCode,
-                                cost: widget.services.servicesCost[0].cost,
-                              ),
-                            );
                           },
                         ),
                         const SizedBox(height: 16),
@@ -347,7 +333,9 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                                             fontFamily: "PlusJakartaSans",
                                           ),
                                         ),
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          context.pushNamed(RouteName.authScreen);
+                                        },
                                       )
                                       : const SizedBox.shrink(),
                         ),
@@ -682,7 +670,9 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      context.pop();
+                    },
                   ),
                 ],
               ),
