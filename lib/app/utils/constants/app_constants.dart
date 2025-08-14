@@ -21,6 +21,5 @@ class AppConstants {
       isAppLaunchedFirstTime = 'isAppLaunchedFirstTime',
       maxWrittenConsultationResponseHours =
           "maxWrittenConsultationResponseHours",
-      dateFormat = "yyyy-MM-dd",
-      cartItems = "cartItems";
+      dateFormat = "yyyy-MM-dd";
 }
