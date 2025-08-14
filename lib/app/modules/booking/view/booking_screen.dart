@@ -280,6 +280,21 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                             ),
                           ),
                           onPressed: () async {
+                            appState.cartItems.add(
+                              CartServiceModel(
+                                serviceId: widget.services.servicesId,
+                                staffId: selectedStaff.value,
+                                slotId: selectedTimeSlotId.value,
+                                slotName: selectedTimeSlot.value,
+                                serviceDuration:
+                                    widget
+                                        .services
+                                        .servicesCost[0]
+                                        .servicesDuration,
+                                serviceName: widget.services.servicesCode,
+                                cost: widget.services.servicesCost[0].cost,
+                              ),
+                            );
                           },
                         ),
                         const SizedBox(height: 16),
