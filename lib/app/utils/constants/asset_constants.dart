@@ -14,5 +14,8 @@ class AssetConstants {
       icLike = "assets/png/ic_like.png",
       icDownload = "assets/png/ic_download.png",
       icComment = "assets/png/ic_comment.png",
-      icAppointmentCalender = "assets/png/ic_appointment_calender.png";
+      icAppointmentCalender = "assets/png/ic_appointment_calender.png",
+      icApple = "assets/png/apple.png",
+      icFacebook = "assets/png/facebook.jpg",
+      icGoogle = "assets/png/google.png";
 }

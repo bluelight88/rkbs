@@ -8,6 +8,8 @@ import 'package:timoraa/app/utils/constants/asset_constants.dart';
 import 'package:timoraa/app/utils/constants/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:timoraa/app/utils/constants/route_name.dart';
+import 'package:timoraa/app/utils/extensions/navigation_extension.dart';
 import 'package:timoraa/app/utils/services/app_state.dart';
 
 import '../../../../utils/constants/color_constants.dart';
@@ -64,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 recognizer:
                                     TapGestureRecognizer()
                                       ..onTap = () {
-                                        appState.appPageIndex.value = 3;
+                                        context.pushNamed(RouteName.authScreen);
                                       },
                               ),
                               const TextSpan(

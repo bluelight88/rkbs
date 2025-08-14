@@ -8,14 +8,22 @@ import 'color_constants.dart';
 final class SearchTextFormField extends StatefulWidget {
   final TextEditingController controller;
   final void Function(String val) onChanged;
+  final GestureTapCallback? onTapSuffix;
   final String labelText;
-  final bool enable;
+  final IconData image;
+  final bool enable, isPassword, isVisible;
+  final String? Function(String?)? validator;
 
   const SearchTextFormField({
     required this.controller,
     required this.labelText,
     required this.onChanged,
+    this.onTapSuffix,
     this.enable = false,
+    this.isPassword = false,
+    this.isVisible = false,
+    this.image = Icons.search,
+    this.validator,
     super.key,
   });
 
@@ -37,6 +45,7 @@ final class _SearchTextFormFieldState extends State<SearchTextFormField> {
   @override
   TextFormField build(BuildContext context) => TextFormField(
     controller: widget.controller,
+    validator: widget.validator,
     decoration: InputDecoration(
       labelText: widget.labelText,
       labelStyle: const TextStyle(
@@ -62,7 +71,14 @@ final class _SearchTextFormFieldState extends State<SearchTextFormField> {
       ),
       suffixIcon: Padding(
         padding: const EdgeInsets.only(right: 10),
-        child: Icon(Icons.search, size: 25, color: ColorConstants.primaryColor),
+        child: InkWell(
+          onTap: widget.onTapSuffix,
+          child: Icon(
+            widget.image,
+            size: 20,
+            color: ColorConstants.primaryColor,
+          ),
+        ),
       ),
       suffixIconConstraints: const BoxConstraints(
         maxHeight: 30,
@@ -76,7 +92,8 @@ final class _SearchTextFormFieldState extends State<SearchTextFormField> {
       color: ColorConstants.primaryColor,
       fontFamily: "PlusJakartaSans",
     ),
-    validator: null,
+    autovalidateMode: AutovalidateMode.onUserInteraction,
+    obscureText: widget.isPassword ? widget.isVisible : false,
     enabled: widget.enable,
     onTapOutside: (event) => FocusScope.of(context).unfocus(),
     onChanged: (value) => streamController.add(value),
