@@ -7,7 +7,6 @@ import 'package:timoraa/app/utils/constants/custom_text_form_field.dart';
 import 'package:timoraa/app/utils/constants/route_name.dart';
 import 'package:timoraa/app/utils/extensions/navigation_extension.dart';
 
-import '../../../../utils/services/app_state.dart';
 import '../../model/provider_detail_model.dart';
 
 class ServiceTab extends StatefulWidget {
