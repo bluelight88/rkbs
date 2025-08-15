@@ -7,7 +7,8 @@ import 'package:timoraa/app/modules/provider_detail/view/provider_detail_screen.
 import 'package:timoraa/app/modules/provider_detail/view_model/provider_detail/provider_detail_bloc.dart';
 import '../../modules/auth/view/login/login_screen.dart';
 import '../../modules/auth/view_model/login/login_bloc.dart';
-import '../../modules/booking/view/booking_screen.dart';
+import '../../modules/booking/view/booking_selection/booking_screen.dart';
+import '../../modules/booking/view/review_booking/review_booking_screen.dart';
 import '../../modules/booking/view_model/booking_service_bloc.dart';
 import '../../modules/onboard/view/on_boarding_screen.dart';
 import '../../modules/onboard/view/splash_screen.dart';
@@ -41,7 +42,7 @@ final class NavigationManager {
     routeScreen = switch (routeName) {
       RouteName.authScreen => MultiBlocProvider(
         providers: [BlocProvider(create: (context) => LoginBloc())],
-        child: const LoginScreen(),
+        child: LoginScreen(fromBooking: args['fromBooking'] ?? false),
       ),
       RouteName.bookingScreen => BlocProvider(
         create: (context) => BookingServiceBloc(),
@@ -57,7 +58,7 @@ final class NavigationManager {
           title: args["title"],
         ),
       ),
-      RouteName.splashScreen => const SplashScreen(),
+      RouteName.splashScreen => const SplashScreen(),  RouteName.reviewBookingScreen => const ReviewBookingScreen(),
       _ => UnderDevelopmentScreen(showLeading: args['showLeading'] ?? true),
     };
     return routeScreen;

@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:timoraa/app/utils/extensions/navigation_extension.dart';
 
-import '../../../../core/widgets/buttons/app_elevated_button.dart';
-import '../../../../utils/constants/asset_constants.dart';
-import '../../../../utils/constants/color_constants.dart';
+import '../../../../../core/widgets/buttons/app_elevated_button.dart';
+import '../../../../../utils/constants/asset_constants.dart';
+import '../../../../../utils/constants/color_constants.dart';
+
 
 class ServiceCard extends StatelessWidget {
   final String title;

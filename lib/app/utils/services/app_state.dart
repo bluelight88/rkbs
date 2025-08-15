@@ -86,6 +86,11 @@ final class AppState {
   ValueNotifier<String> countryCode = ValueNotifier<String>("UK");
   ValueNotifier<String> ipAddress = ValueNotifier<String>("");
   ValueNotifier<int> appPageIndex = ValueNotifier<int>(0);
+  ValueNotifier<double> totalPrice = ValueNotifier<double>(0.0);
+  ValueNotifier<String> selectedTimeSlot = ValueNotifier<String>('');
+  ValueNotifier<String> selectedSlotInfo = ValueNotifier<String>("");
+  ValueNotifier<String> selectedSaloon = ValueNotifier<String>("");
+  ValueNotifier<String> selectedSaloonAddress = ValueNotifier<String>("");
   List<CartServiceModel> cartItems = [];
 
   /// Method to set initial Values

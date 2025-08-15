@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 
-import '../../../../utils/constants/color_constants.dart';
-import '../../model/booking_service_slot_model.dart' as service;
+import '../../../../../utils/constants/color_constants.dart';
+import '../../../model/booking_service_slot_model.dart' as service;
+
 
 class TimeSlots extends StatelessWidget {
   final service.BookingServiceSlotModel model;

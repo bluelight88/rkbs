@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 
-import '../../../../utils/constants/asset_constants.dart';
-import '../../../../utils/constants/color_constants.dart';
-import '../../model/booking_service_slot_model.dart' as service;
+import '../../../../../utils/constants/asset_constants.dart';
+import '../../../../../utils/constants/color_constants.dart';
+import '../../../../provider_detail/model/provider_detail_model.dart';
 
-class SpecialistsList extends StatelessWidget {
-  final List<service.Staff> staffList;
+class SpecialistStaffCard extends StatelessWidget {
   final ValueNotifier<int> selectedStaff;
-  final void Function(int) onSelectStaff;
-
-  const SpecialistsList({
-    super.key,
-    required this.staffList,
+  final VoidCallback callback;
+  final List<Staff> staffList;
+  const SpecialistStaffCard({
+    required this.callback,
     required this.selectedStaff,
-    required this.onSelectStaff,
+    required this.staffList,
+    super.key,
   });
 
   @override
@@ -33,13 +32,20 @@ class SpecialistsList extends StatelessWidget {
                       indent: 5,
                       color: Colors.grey.shade400,
                     )
-                    : const SizedBox(width: 12),
+                    : SizedBox(width: 12),
         itemBuilder: (context, index) {
           return ValueListenableBuilder<int>(
             valueListenable: selectedStaff,
             builder: (context, value, _) {
               return GestureDetector(
-                onTap: () => onSelectStaff(index),
+                onTap: () {
+                  if (index == 0) return;
+                  final temp = staffList[0];
+                  staffList[0] = staffList[index];
+                  staffList[index] = temp;
+                  selectedStaff.value = staffList[0].staffId;
+                  callback();
+                },
                 child: Column(
                   children: [
                     Container(

@@ -9,7 +9,8 @@ import '../../../../utils/constants/custom_text_form_field.dart';
 import '../../../../utils/constants/route_name.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  final bool fromBooking;
+  const LoginScreen({required this.fromBooking,super.key});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -148,8 +149,13 @@ class _LoginScreenState extends State<LoginScreen> {
                       height: 50,
                       backgroundColor: ColorConstants.lightPrimaryColor,
                       onPressed: () {
-                        context.pushReplacementNamed(RouteName.dashboardScreen);
-                      },
+                        if(widget.fromBooking){
+                          context.pushReplacementNamed(RouteName
+                              .reviewBookingScreen);
+                        }else {
+                          context.pushReplacementNamed(RouteName
+                              .dashboardScreen);
+                        }},
                     ),
                     const Gap(40),
                     Row(

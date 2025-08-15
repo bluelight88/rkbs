@@ -5,6 +5,7 @@ class RouteName {
       onBoardingScreen = 'onBoardingScreen',
       packageViewScreen = 'packageViewScreen',
       providerDetailScreen = 'providerDetailScreen',
+      reviewBookingScreen  = 'reviewBookingScreen',
       splashScreen = '/',
       underDevelopmentScreen = 'underDevelopmentScreen';
 }

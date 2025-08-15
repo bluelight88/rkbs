@@ -13,6 +13,7 @@ import 'package:timoraa/app/modules/provider_detail/view_model/provider_detail/p
 import 'package:timoraa/app/utils/constants/color_constants.dart';
 import '../../../core/widgets/buttons/app_outlined_buttons.dart';
 import '../../../utils/constants/asset_constants.dart';
+import '../../../utils/services/app_state.dart';
 
 class ProviderDetailScreen extends StatefulWidget {
   final String title;
@@ -55,7 +56,24 @@ class _ProviderDetailScreenState extends State<ProviderDetailScreen> {
       ),
       child: Scaffold(
         backgroundColor: ColorConstants.primaryColor,
-        body: BlocBuilder<ProviderDetailBloc, ProviderDetailState>(
+        body: BlocConsumer<ProviderDetailBloc, ProviderDetailState>(
+          listener: (context, state) {
+            if (state is ProviderDetailSuccess) {
+              final addressLines = [
+                state.providerDetailModel.providerAddressline1,
+                state.providerDetailModel.providerAddressline2,
+                state.providerDetailModel.providerAddressline3,
+                state.providerDetailModel.providerCity,
+              ];
+              final filteredAddress =
+                  addressLines.where((line) => line.trim().isNotEmpty).toList();
+              final addressString =
+                  "${filteredAddress.sublist(0, filteredAddress.length - 1).join(", ")}, ${filteredAddress.last}";
+              appState.selectedSaloon.value =
+                  state.providerDetailModel.providerName;
+              appState.selectedSaloonAddress.value = addressString;
+            }
+          },
           builder: (context, state) {
             if (state is ProviderDetailSuccess) {
               final addressLines = [
