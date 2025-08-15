@@ -118,7 +118,7 @@ final class ToastUtils {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Icon(
-                    Icons.phone_callback_outlined,
+                    Icons.engineering,
                     color: Colors.white,
                     size: 30,
                   ),
