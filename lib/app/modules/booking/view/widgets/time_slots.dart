@@ -137,8 +137,9 @@ class TimeSlots extends StatelessWidget {
             .toUpperCase();
 
     final match = RegExp(r'(\d{1,2}):(\d{2})\s*(AM|PM)').firstMatch(cleanSlot);
-    if (match == null)
+    if (match == null) {
       throw FormatException('Invalid time format: $selectedSlot');
+    }
 
     int hour = int.parse(match.group(1)!);
     int minute = int.parse(match.group(2)!);
