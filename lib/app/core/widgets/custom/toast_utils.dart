@@ -117,11 +117,7 @@ final class ToastUtils {
               title: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(
-                    Icons.engineering,
-                    color: Colors.white,
-                    size: 30,
-                  ),
+                  const Icon(Icons.engineering, color: Colors.white, size: 30),
                   const SizedBox(width: 20),
                   Expanded(
                     child: Container(

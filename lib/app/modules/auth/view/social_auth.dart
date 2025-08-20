@@ -4,7 +4,6 @@ import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class SocialAuthService {
-
   static Future<void> signInWithGoogle() async {
     final googleSignIn = GoogleSignIn.instance;
     try {
@@ -17,12 +16,13 @@ class SocialAuthService {
       debugPrint('ID Token: $idToken');
       debugPrint('Access Token: $accessToken');
     } on GoogleSignInException catch (e) {
-      debugPrint('Google Sign-In error: code: ${e.code.name}, description: ${e.description}');
+      debugPrint(
+        'Google Sign-In error: code: ${e.code.name}, description: ${e.description}',
+      );
     } catch (error) {
       debugPrint('Unexpected sign-in error: $error');
     }
   }
-
 
   static Future<void> signInWithFacebook() async {
     try {

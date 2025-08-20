@@ -58,7 +58,8 @@ final class NavigationManager {
           title: args["title"],
         ),
       ),
-      RouteName.splashScreen => const SplashScreen(),  RouteName.reviewBookingScreen => const ReviewBookingScreen(),
+      RouteName.splashScreen => const SplashScreen(),
+      RouteName.reviewBookingScreen => const ReviewBookingScreen(),
       _ => UnderDevelopmentScreen(showLeading: args['showLeading'] ?? true),
     };
     return routeScreen;

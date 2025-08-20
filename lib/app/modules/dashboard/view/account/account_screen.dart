@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 class AccountPage extends StatelessWidget {
   const AccountPage({super.key});
 
@@ -9,5 +8,3 @@ class AccountPage extends StatelessWidget {
     return Center(child: Text("Manage Your Profile"));
   }
 }
-
-

@@ -10,10 +10,8 @@ class ReviewBookingScreen extends StatelessWidget {
   const ReviewBookingScreen({super.key});
 
   String _getTrimmedSlotInfo(String slotInfo) {
-    // If the string contains "- 30Min" or similar, remove the last part
     final parts = slotInfo.split(' - ');
     if (parts.length > 2) {
-      // Join all parts except the last one
       return '${parts[0]} - ${parts[1]}';
     }
     return slotInfo;
@@ -94,10 +92,13 @@ class ReviewBookingScreen extends StatelessWidget {
               child: ListView.separated(
                 padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                 separatorBuilder: (context, index) {
+                  if (index == appState.cartItems.length - 1) {
+                    return SizedBox.shrink(); // No divider before total row
+                  }
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     child: Divider(
-                      color: ColorConstants.greyText,
+                      color: ColorConstants.searchFieldTextColor,
                       thickness: 1,
                       indent: 5,
                       endIndent: 5,
@@ -106,63 +107,115 @@ class ReviewBookingScreen extends StatelessWidget {
                 },
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Flexible(
-                        child: Text(
-                          appState.cartItems[index].serviceName,
-                          maxLines: 2,
-                          style: TextStyle(
-                            color: ColorConstants.primaryColor,
-                            fontSize: 18,
-                            fontFamily: "PlusJakartaSans",
+                  if (index == appState.cartItems.length &&
+                      appState.cartItems.isNotEmpty) {
+                    final total = appState.cartItems.fold<double>(
+                      0,
+                      (sum, item) => sum + item.cost,
+                    );
+                    return Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          child: Divider(
+                            color: ColorConstants.searchFieldTextColor,
+                            thickness: 1,
+                            indent: 5,
+                            endIndent: 5,
                           ),
                         ),
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            "\$${appState.cartItems[index].cost.toStringAsFixed(2)}",
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 10,
+                            horizontal: 10,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Total",
+                                style: TextStyle(
+                                  color: ColorConstants.primaryColor,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: "PlusJakartaSans",
+                                ),
+                              ),
+                              Text(
+                                "\$${total.toStringAsFixed(2)}",
+                                style: TextStyle(
+                                  color: ColorConstants.primaryColor,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: "PlusJakartaSans",
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Flexible(
+                          child: Text(
+                            appState.cartItems[index].serviceName,
+                            maxLines: 2,
                             style: TextStyle(
                               color: ColorConstants.primaryColor,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
+                              fontSize: 18,
                               fontFamily: "PlusJakartaSans",
                             ),
                           ),
-                          const Gap(10),
-                          Opacity(
-                            opacity: 0.5,
-                            child: Text(
-                              appState.cartItems[index].slotName
-                                          .split(',')
-                                          .length >
-                                      1
-                                  ? appState.cartItems[index].slotName
-                                              .split(',')[1]
-                                              .split('-')
-                                              .length >
-                                          2
-                                      ? '${appState.cartItems[index].slotName.split(',')[1].split('-')[0].trim()} - ${appState.cartItems[index].slotName.split(',')[1].split('-')[1].trim()}'
-                                      : appState.cartItems[index].slotName
-                                          .split(',')[1]
-                                          .trim()
-                                  : appState.cartItems[index].slotName,
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              "\$${appState.cartItems[index].cost.toStringAsFixed(2)}",
                               style: TextStyle(
                                 color: ColorConstants.primaryColor,
-                                fontSize: 18,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
                                 fontFamily: "PlusJakartaSans",
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
+                            const Gap(10),
+                            Opacity(
+                              opacity: 0.5,
+                              child: Text(
+                                appState.cartItems[index].slotName
+                                            .split(',')
+                                            .length >
+                                        1
+                                    ? appState.cartItems[index].slotName
+                                                .split(',')[1]
+                                                .split('-')
+                                                .length >
+                                            2
+                                        ? '${appState.cartItems[index].slotName.split(',')[1].split('-')[0].trim()} - ${appState.cartItems[index].slotName.split(',')[1].split('-')[1].trim()}'
+                                        : appState.cartItems[index].slotName
+                                            .split(',')[1]
+                                            .trim()
+                                    : appState.cartItems[index].slotName,
+                                style: TextStyle(
+                                  color: ColorConstants.primaryColor,
+                                  fontSize: 18,
+                                  fontFamily: "PlusJakartaSans",
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   );
                 },
-                itemCount: appState.cartItems.length,
+                itemCount: appState.cartItems.length + 1,
               ),
             ),
           ],

@@ -6,7 +6,6 @@ import '../../../../../core/widgets/buttons/app_elevated_button.dart';
 import '../../../../../utils/constants/asset_constants.dart';
 import '../../../../../utils/constants/color_constants.dart';
 
-
 class ServiceCard extends StatelessWidget {
   final String title;
   final String specialistName;

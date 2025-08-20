@@ -108,7 +108,8 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                   ].firstOrNull;
               if (firstAvailableSlot != null) {
                 selectedTimeSlotId.value = firstAvailableSlot.slotId;
-                appState.selectedTimeSlot.value = firstAvailableSlot.slotDisplayTime;
+                appState.selectedTimeSlot.value =
+                    firstAvailableSlot.slotDisplayTime;
                 appState.selectedSlotInfo.value = _getFormattedSlotInfo(
                   selectedDate: selectedDate.value,
                   selectedSlot: firstAvailableSlot.slotDisplayTime,
@@ -293,9 +294,8 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                                                       item.serviceId ==
                                                       service.serviceId,
                                                 );
-                                                appState.totalPrice.value = appState
-                                                    .cartItems
-                                                    .fold(
+                                                appState.totalPrice.value =
+                                                    appState.cartItems.fold(
                                                       0.0,
                                                       (sum, item) =>
                                                           sum + item.cost,
@@ -338,7 +338,8 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                                         ),
                                         const Gap(10),
                                         ValueListenableBuilder<String>(
-                                          valueListenable: appState.selectedSlotInfo,
+                                          valueListenable:
+                                              appState.selectedSlotInfo,
                                           builder:
                                               (context, value, _) =>
                                                   value.isNotEmpty
@@ -360,7 +361,8 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                                         ),
                                         const Gap(10),
                                         ValueListenableBuilder<String>(
-                                          valueListenable: appState.selectedSlotInfo,
+                                          valueListenable:
+                                              appState.selectedSlotInfo,
                                           builder:
                                               (context, value, _) =>
                                                   value.isNotEmpty
@@ -378,18 +380,47 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                                                           ),
                                                         ),
                                                         onPressed: () {
-                                                          appState.cartItems.add(
-                                                            CartServiceModel(
-                                                              serviceId: widget.services.servicesId,
-                                                              staffId: selectedStaff.value,
-                                                              slotId: selectedTimeSlotId.value,
-                                                              slotName: appState.selectedSlotInfo.value,
-                                                              serviceDuration: widget.services.servicesCost[0].servicesDuration,
-                                                              serviceName: widget.services.servicesCode,
-                                                              cost: state.model.bookingSlot[0].cost[0].cost,
-                                                            ),
-                                                          );
-
+                                                          if (!appState.cartItems.any(
+                                                            (item) =>
+                                                                item.serviceId ==
+                                                                widget
+                                                                    .services
+                                                                    .servicesId,
+                                                          )) {
+                                                            appState.cartItems.add(
+                                                              CartServiceModel(
+                                                                serviceId:
+                                                                    widget
+                                                                        .services
+                                                                        .servicesId,
+                                                                staffId:
+                                                                    selectedStaff
+                                                                        .value,
+                                                                slotId:
+                                                                    selectedTimeSlotId
+                                                                        .value,
+                                                                slotName:
+                                                                    appState
+                                                                        .selectedSlotInfo
+                                                                        .value,
+                                                                serviceDuration:
+                                                                    widget
+                                                                        .services
+                                                                        .servicesCost[0]
+                                                                        .servicesDuration,
+                                                                serviceName:
+                                                                    widget
+                                                                        .services
+                                                                        .servicesCode,
+                                                                cost:
+                                                                    state
+                                                                        .model
+                                                                        .bookingSlot[0]
+                                                                        .cost[0]
+                                                                        .cost,
+                                                              ),
+                                                            );
+                                                          }
                                                           context.pushNamed(
                                                             RouteName
                                                                 .authScreen,
