@@ -8,13 +8,7 @@ sealed class LoginEvent extends Equatable {
 }
 
 final class UserLogin extends LoginEvent {
-  final String email, password, fcmToken, deviceId, voipToken;
+  final String email, password;
 
-  const UserLogin({
-    required this.email,
-    required this.password,
-    required this.fcmToken,
-    required this.deviceId,
-    required this.voipToken,
-  });
+  const UserLogin({required this.email, required this.password});
 }

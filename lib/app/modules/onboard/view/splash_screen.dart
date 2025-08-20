@@ -10,7 +10,10 @@ import 'package:timoraa/app/utils/manager/api_controller.dart';
 import 'package:timoraa/app/utils/manager/get_it_manager.dart';
 
 import '../../../core/widgets/buttons/app_elevated_button.dart';
+import '../../../utils/constants/app_constants.dart';
+import '../../../utils/manager/storage_manager.dart';
 import '../../../utils/services/app_state.dart';
+import '../../../utils/services/package_services.dart';
 import '../../../utils/services/value_checker.dart';
 
 final class SplashScreen extends StatefulWidget {
@@ -25,8 +28,7 @@ final class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void initState() {
-    getIt<APIController>().prepareRequest();
-    APIController();
+    _setInitialValues(context);
     ValueChecker().getUserLocationInfo().then((code) {
       appState.countryCode.value = code.countryCode;
       appState.ipAddress.value = code.ipAddress;
@@ -35,6 +37,35 @@ final class _SplashScreenState extends State<SplashScreen> {
       });
     });
     super.initState();
+  }
+
+  void _setInitialValues(BuildContext context) async {
+    await Future.wait([
+      getIt<StorageManager>().init(),
+      getIt<PackageServices>().getDeviceInfo(),
+      appState.setInitialValues(),
+    ]);
+    final userId = await getIt<StorageManager>().getIntData(
+      AppConstants.userId,
+    );
+    final userName = await getIt<StorageManager>().getData(AppConstants.name);
+    final sessionId = await getIt<StorageManager>().getData(
+      AppConstants.sessionId,
+    );
+    final userImage = await getIt<StorageManager>().getData(
+      AppConstants.userImage,
+    );
+    getIt<APIController>().prepareRequest();
+    APIController();
+    if (userId != null &&
+        sessionId != null &&
+        userName != null &&
+        userImage != null) {
+      appState.setUserId = "$userId";
+      appState.setUserName = userName;
+      appState.setSessionId = sessionId;
+      appState.setUserImage = userImage;
+    }
   }
 
   @override

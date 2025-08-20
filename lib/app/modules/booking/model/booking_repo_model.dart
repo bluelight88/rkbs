@@ -11,7 +11,7 @@ final class BookingRepoModel {
   Future<DataState> getBooking(Map<String, dynamic> params) async {
     try {
       final response = await getIt<APIController>().request(
-        APIS.bookAppointment,
+        APIS.bookAppointmentDetails,
         APIMethod.get,
         param: params,
       );
@@ -19,6 +19,21 @@ final class BookingRepoModel {
         response.data is String ? jsonDecode(response.data) : response.data,
       );
       return DataSuccess(bookingResponse);
+    } on ErrorException catch (e) {
+      return DataFailure(e.error);
+    } catch (e) {
+      return UnknownDataFailure(e);
+    }
+  }
+
+  Future<DataState> doBooking(Map<String, dynamic> params) async {
+    try {
+      final response = await getIt<APIController>().request(
+        APIS.bookAppointment,
+        APIMethod.post,
+        param: params,
+      );
+      return DataSuccess(response.data);
     } on ErrorException catch (e) {
       return DataFailure(e.error);
     } catch (e) {

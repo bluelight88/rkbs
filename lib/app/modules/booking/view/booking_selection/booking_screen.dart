@@ -46,6 +46,12 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
     super.initState();
   }
 
+  @override
+  void dispose() {
+    appState.cartItems.clear();
+    super.dispose();
+  }
+
   void _calculateTotal(service.BookingSlot bookingSlot) {
     final total = bookingSlot.cost.fold<double>(0.0, (sum, item) {
       final priceString =
@@ -421,14 +427,23 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                                                               ),
                                                             );
                                                           }
-                                                          context.pushNamed(
-                                                            RouteName
-                                                                .authScreen,
-                                                            args: {
-                                                              "fromBooking":
-                                                                  true,
-                                                            },
-                                                          );
+                                                          if (appState
+                                                              .userId
+                                                              .isNotEmpty) {
+                                                            context.pushNamed(
+                                                              RouteName
+                                                                  .reviewBookingScreen,
+                                                            );
+                                                          } else {
+                                                            context.pushNamed(
+                                                              RouteName
+                                                                  .authScreen,
+                                                              args: {
+                                                                "fromBooking":
+                                                                    true,
+                                                              },
+                                                            );
+                                                          }
                                                         },
                                                       )
                                                       : const SizedBox.shrink(),

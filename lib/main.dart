@@ -21,9 +21,6 @@ void mainDelegate() async {
   runZonedGuarded<void>(() async {
     HttpOverrides.global = MyHttpOverrides();
     WidgetsFlutterBinding.ensureInitialized();
-
-    /// uncomment once integrated firebase
-    // await Firebase.initializeApp();
     await initializeGetItDependencies();
     if (!AppConfig.instance.isFlavourInitialized) {
       AppConfig.instance.setEnvironment(AppConfig.instance.currentEnv);

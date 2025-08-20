@@ -22,3 +22,17 @@ final class BookingServiceFailure extends BookingServiceState {
 
   const BookingServiceFailure({required this.message});
 }
+
+final class DoBookServiceLoading extends BookingServiceState {}
+
+final class DoBookServiceSuccess extends BookingServiceState {
+  final BookingServiceSlotModel model;
+
+  const DoBookServiceSuccess({required this.model});
+}
+
+final class DoBookServiceFailure extends BookingServiceState {
+  final String message;
+
+  const DoBookServiceFailure({required this.message});
+}

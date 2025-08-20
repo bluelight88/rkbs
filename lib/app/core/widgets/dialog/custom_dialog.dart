@@ -59,7 +59,7 @@ final class CustomDialog {
       };
       await getIt<APIController>().request(
         APIS.logout,
-        APIMethod.post,
+        APIMethod.get,
         param: param,
       );
     } catch (e) {

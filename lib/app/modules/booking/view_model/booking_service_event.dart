@@ -20,3 +20,7 @@ class BookingServiceList extends BookingServiceEvent {
     required this.date,
   });
 }
+
+class BookService extends BookingServiceEvent {
+  const BookService();
+}

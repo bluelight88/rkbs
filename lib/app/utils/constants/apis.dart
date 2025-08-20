@@ -3,11 +3,12 @@ class APIS {
   static const String baseUrl = 'http://api.timoraa.com/';
 
   // Authentication
-  static const String loginAPI = '${baseUrl}api/login',
+  static const String loginAPI = '${baseUrl}data/api/device/LoginCustomer',
       todo = 'to_do',
       logout = '${baseUrl}api/logout',
       home = '${baseUrl}data/api/device/GetHomePageDetails',
       providerDetail = '${baseUrl}data/api/device/GetProviderDetails',
-      bookAppointment = '${baseUrl}data/api/device/GetServiceById',
+      bookAppointmentDetails = '${baseUrl}data/api/device/GetServiceById',
+      bookAppointment = '${baseUrl}data/api/device/DoBooking',
       sendOtp = '${baseUrl}api/send/otp';
 }

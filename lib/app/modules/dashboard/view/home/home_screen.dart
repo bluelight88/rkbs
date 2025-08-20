@@ -56,7 +56,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               ),
                               TextSpan(
-                                text: "USER \n",
+                                text:
+                                    appState.userName != "-"
+                                        ? "${appState.userName}\n"
+                                        : "USER\n",
                                 style: const TextStyle(
                                   color: ColorConstants.primaryColor,
                                   fontWeight: FontWeight.w600,

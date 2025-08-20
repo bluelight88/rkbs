@@ -14,11 +14,14 @@ import 'storage_manager.dart';
 GetIt getIt = GetIt.instance;
 
 Future<void> initializeGetItDependencies() async {
+  final storageManager = StorageManager();
+  await storageManager.init(); // ✅ ensure initialized once
+  getIt.registerSingleton<StorageManager>(storageManager);
+
   getIt.registerSingleton<APIS>(APIS());
   getIt.registerSingleton<APIController>(APIController());
   getIt.registerSingleton<PackageServices>(PackageServices());
   getIt.registerSingleton<PermissionManager>(PermissionManager());
-  getIt.registerSingleton<StorageManager>(StorageManager());
   getIt.registerLazySingleton<AppLanguageController>(
     () => AppLanguageController(),
   );

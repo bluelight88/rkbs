@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
@@ -15,6 +17,7 @@ class BookingServiceBloc
     extends Bloc<BookingServiceEvent, BookingServiceState> {
   BookingServiceBloc() : super(BookingServiceInitial()) {
     on<BookingServiceList>(_getBookingServiceRecord);
+    on<BookService>(_doBook);
   }
 
   void _getBookingServiceRecord(
@@ -39,6 +42,26 @@ class BookingServiceBloc
         BookingServiceFailure(
           message: appState.localization.somethingWentWrong,
         ),
+      );
+    }
+  }
+
+  void _doBook(BookService event, Emitter<BookingServiceState> emit) async {
+    emit(DoBookServiceLoading());
+    final headerData = {
+      "customer_id": appState.userId,
+      "booking_details": appState.cartItems,
+    };
+    final Map<String, dynamic> params = {"headerData": jsonEncode(headerData)};
+    final response = await getIt<BookingRepoModel>().doBooking(params);
+    if (response is DataSuccess) {
+      emit(DoBookServiceSuccess(model: response.data));
+    } else if (response is DataFailure) {
+      emit(DoBookServiceFailure(message: response.error.description));
+    }
+    if (response is UnknownDataFailure) {
+      emit(
+        DoBookServiceFailure(message: appState.localization.somethingWentWrong),
       );
     }
   }

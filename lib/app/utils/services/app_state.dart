@@ -39,6 +39,7 @@ final class AppState {
       _userRole = "",
       _userId = "",
       _userName = "-",
+      _userImage = "-",
       _userMail = "-",
       _appVersion = "";
 
@@ -50,6 +51,8 @@ final class AppState {
   String get userId => _userId;
 
   String get userName => _userName;
+
+  String get userImage => _userImage;
 
   String get userRole => _userRole;
 
@@ -79,6 +82,8 @@ final class AppState {
 
   set setUserName(String userName) => _userName = userName;
 
+  set setUserImage(String userImage) => _userImage = userImage;
+
   set setUserMail(String userMail) => _userMail = userMail;
 
   set setUserRole(String userRole) => _userRole = userRole;
@@ -103,8 +108,8 @@ final class AppState {
     );
     await _setDeviceId();
     await _setPackageInfo();
-    await _setAPNSToken();
-    await _setFCMToken();
+    // await _setAPNSToken();
+    // await _setFCMToken();
   }
 
   void _clearValues() {
@@ -114,6 +119,7 @@ final class AppState {
     _userRole = "";
     _userId = "";
     _userName = "-";
+    _userImage = "-";
     _userMail = "-";
   }
 
@@ -137,33 +143,33 @@ final class AppState {
   }
 
   /// Set FCM Token
-  Future<void> _setFCMToken() async {
-    if (_fcmToken.isNotEmpty) return debugPrint("FCM Token already assigned.");
-    try {
-      _fcmToken = (await FirebaseMessaging.instance.getToken() ?? '');
-      debugPrint("FCM Token is => $_fcmToken");
-    } catch (e) {
-      debugPrint("Error found in _setFCMToken => $e");
-      await _setFCMToken();
-    }
-  }
+  // Future<void> _setFCMToken() async {
+  //   if (_fcmToken.isNotEmpty) return debugPrint("FCM Token already assigned.");
+  //   try {
+  //     _fcmToken = (await FirebaseMessaging.instance.getToken() ?? '');
+  //     debugPrint("FCM Token is => $_fcmToken");
+  //   } catch (e) {
+  //     debugPrint("Error found in _setFCMToken => $e");
+  //     await _setFCMToken();
+  //   }
+  // }
 
   /// Set APNS Token
-  Future<void> _setAPNSToken() async {
-    if (_apnsToken.isNotEmpty) {
-      return debugPrint("APNS Token already assigned.");
-    }
-    try {
-      _apnsToken = (await FirebaseMessaging.instance.getAPNSToken() ?? "");
-      debugPrint("APNS Token is => $_apnsToken");
-    } catch (e) {
-      debugPrint("Error found in _setAPNSToken => $e");
-      await Future.delayed(
-        const Duration(seconds: 2),
-        () async => await _setAPNSToken(),
-      );
-    }
-  }
+  // Future<void> _setAPNSToken() async {
+  //   if (_apnsToken.isNotEmpty) {
+  //     return debugPrint("APNS Token already assigned.");
+  //   }
+  //   try {
+  //     _apnsToken = (await FirebaseMessaging.instance.getAPNSToken() ?? "");
+  //     debugPrint("APNS Token is => $_apnsToken");
+  //   } catch (e) {
+  //     debugPrint("Error found in _setAPNSToken => $e");
+  //     await Future.delayed(
+  //       const Duration(seconds: 2),
+  //       () async => await _setAPNSToken(),
+  //     );
+  //   }
+  // }
 
   /// Set Package info
   Future<void> _setPackageInfo() async {

@@ -59,7 +59,10 @@ final class NavigationManager {
         ),
       ),
       RouteName.splashScreen => const SplashScreen(),
-      RouteName.reviewBookingScreen => const ReviewBookingScreen(),
+      RouteName.reviewBookingScreen => BlocProvider(
+        create: (context) => BookingServiceBloc(),
+        child: ReviewBookingScreen(),
+      ),
       _ => UnderDevelopmentScreen(showLeading: args['showLeading'] ?? true),
     };
     return routeScreen;

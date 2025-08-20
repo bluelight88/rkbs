@@ -70,11 +70,6 @@ final class APIController {
         if (appState.ipAddress.value.isNotEmpty)
           "ip-address": appState.ipAddress.value,
       };
-      // debugPrint("📤 REQUEST:");
-      // debugPrint("➡️ METHOD: ${method.name.toUpperCase()}");
-      // debugPrint("➡️ URL: $url");
-      // debugPrint("➡️ HEADERS: $headerOptions");
-      // debugPrint("➡️ PARAMS: $params");
       if (method == APIMethod.get) {
         response = await _dio.get(
           url,
@@ -83,10 +78,21 @@ final class APIController {
         );
       }
       if (method == APIMethod.post) {
+        final formData = FormData.fromMap(
+          params.map((key, value) {
+            if (value is String) {
+              return MapEntry(key, value);
+            } else {
+              return MapEntry(key, value.toString());
+            }
+          }),
+        );
         response = await _dio.post(
           url,
-          data: params,
-          options: Options(headers: headerOptions),
+          data: formData,
+          options: Options(
+            headers: {...headerOptions, "Content-Type": "multipart/form-data"},
+          ),
         );
       }
       if (method == APIMethod.delete) {
@@ -266,16 +272,7 @@ final class APIController {
     String? session = response.headers['set-cookie']?.firstWhereOrNull(
       (element) => element.startsWith(AppConstants.sessionId),
     );
-    // debugPrint("📥 RESPONSE HANDLER");
-    // debugPrint("⬅️ Status Code: ${response.statusCode}");
-    // debugPrint("⬅️ Headers: ${response.headers}");
-    // if (response.data is Map) {
-    //   debugPrint("⬅️ Body:");
-    //   UtilMethods().logPrettyJson(response.data as Map);
-    // } else {
-    //   debugPrint("⬅️ Body:");
-    //   UtilMethods().logFullText(response.data.toString());
-    // }
+    // debugPrint
     if (session != null) {
       await getIt<StorageManager>().saveData(
         AppConstants.sessionId,
@@ -319,11 +316,11 @@ final class APIController {
       return ApiResponseModel(null, error, false);
     }
     if (response.statusCode == 200) {
-      (responseData['status'] == 'success')
+      (responseData['status'].toString().toLowerCase() == 'success')
           ? apiResponse = ApiResponseModel(
             responseData['obj'],
             null,
-            responseData['status'] == 'success',
+            responseData['status'].toString().toLowerCase() == 'success',
             message:
                 responseData['errorMessage'] ??
                 appState.localization.somethingWentWrong,
@@ -336,7 +333,7 @@ final class APIController {
                   appState.localization.somethingWentWrong,
               responseData['error_code'],
             ),
-            responseData['status'] == 'success',
+            responseData['status'].toString().toLowerCase() == 'success',
             message:
                 responseData['errorMessage'] ??
                 appState.localization.somethingWentWrong,
