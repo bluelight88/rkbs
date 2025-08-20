@@ -57,6 +57,10 @@ final class LoginBloc extends Bloc<LoginEvent, LoginState> {
         AppConstants.sessionId,
         response.data.sessionId,
       );
+      await getIt<StorageManager>().saveData(
+        AppConstants.userImage,
+        response.data.customerImg,
+      );
       emit(LoginSuccess(msg: "Login Success"));
     } else if (response is DataFailure) {
       emit(LoginFailure(response.error.description));

@@ -63,7 +63,6 @@ final class APIController {
       final Map<String, dynamic> headerOptions = {
         'Cookie': appState.sessionId,
         'tz': appState.timeZone,
-        "role": appState.userRole,
         if (appState.userId.isNotEmpty) "user-id": appState.userId,
         if (appState.countryCode.value.isNotEmpty)
           "country-code": appState.countryCode.value,
@@ -198,7 +197,6 @@ final class APIController {
           headers: {
             'Cookie': appState.sessionId,
             'tz': appState.timeZone,
-            "role": appState.userRole,
             if (appState.userId.isNotEmpty) "user-id": appState.userId,
             if (appState.countryCode.value.isNotEmpty)
               "country-code": appState.countryCode.value,

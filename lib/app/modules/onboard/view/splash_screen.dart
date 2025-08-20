@@ -45,22 +45,17 @@ final class _SplashScreenState extends State<SplashScreen> {
       getIt<PackageServices>().getDeviceInfo(),
       appState.setInitialValues(),
     ]);
-    final userId = await getIt<StorageManager>().getIntData(
-      AppConstants.userId,
-    );
-    final userName = await getIt<StorageManager>().getData(AppConstants.name);
-    final sessionId = await getIt<StorageManager>().getData(
-      AppConstants.sessionId,
-    );
-    final userImage = await getIt<StorageManager>().getData(
-      AppConstants.userImage,
-    );
+    final userId =
+        await getIt<StorageManager>().getIntData(AppConstants.userId) ?? 0;
+    final userName =
+        await getIt<StorageManager>().getData(AppConstants.name) ?? '';
+    final sessionId =
+        await getIt<StorageManager>().getData(AppConstants.sessionId) ?? '';
+    final userImage =
+        await getIt<StorageManager>().getData(AppConstants.userImage) ?? '';
     getIt<APIController>().prepareRequest();
     APIController();
-    if (userId != null &&
-        sessionId != null &&
-        userName != null &&
-        userImage != null) {
+    if (userId != 0 && sessionId.isNotEmpty && userName.isNotEmpty) {
       appState.setUserId = "$userId";
       appState.setUserName = userName;
       appState.setSessionId = sessionId;

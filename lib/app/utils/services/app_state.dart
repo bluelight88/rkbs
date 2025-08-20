@@ -36,7 +36,6 @@ final class AppState {
       _deviceId = "",
       _fcmToken = "",
       _apnsToken = "",
-      _userRole = "",
       _userId = "",
       _userName = "-",
       _userImage = "-",
@@ -53,8 +52,6 @@ final class AppState {
   String get userName => _userName;
 
   String get userImage => _userImage;
-
-  String get userRole => _userRole;
 
   String get userMail => _userMail;
 
@@ -86,8 +83,6 @@ final class AppState {
 
   set setUserMail(String userMail) => _userMail = userMail;
 
-  set setUserRole(String userRole) => _userRole = userRole;
-
   ValueNotifier<String> countryCode = ValueNotifier<String>("UK");
   ValueNotifier<String> ipAddress = ValueNotifier<String>("");
   ValueNotifier<int> appPageIndex = ValueNotifier<int>(0);
@@ -116,7 +111,6 @@ final class AppState {
     _sessionId = "";
     _fcmToken = "";
     _apnsToken = "";
-    _userRole = "";
     _userId = "";
     _userName = "-";
     _userImage = "-";
