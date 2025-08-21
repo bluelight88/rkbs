@@ -76,7 +76,7 @@ class _SearchPageState extends State<SearchPage> {
                 ),
                 SingleChildScrollView(
                   child: SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.7,
+                    height: MediaQuery.of(context).size.height * 0.6,
                     width: MediaQuery.of(context).size.width,
                     child: DynamicSlider(
                       title: "Barber Near You",

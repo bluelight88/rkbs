@@ -60,6 +60,7 @@ final class _SplashScreenState extends State<SplashScreen> {
       appState.setUserName = userName;
       appState.setSessionId = sessionId;
       appState.setUserImage = userImage;
+      appState.loginUserName.value = userName;
     }
   }
 

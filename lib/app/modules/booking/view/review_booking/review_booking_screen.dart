@@ -165,6 +165,7 @@ class ReviewBookingScreen extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Flexible(
                             child: Text(
@@ -173,6 +174,7 @@ class ReviewBookingScreen extends StatelessWidget {
                               style: TextStyle(
                                 color: ColorConstants.primaryColor,
                                 fontSize: 18,
+                                letterSpacing: 2,
                                 fontFamily: "PlusJakartaSans",
                               ),
                             ),
@@ -209,7 +211,7 @@ class ReviewBookingScreen extends StatelessWidget {
                                       : appState.cartItems[index].slotName,
                                   style: TextStyle(
                                     color: ColorConstants.primaryColor,
-                                    fontSize: 18,
+                                    fontSize: 12,
                                     fontFamily: "PlusJakartaSans",
                                   ),
                                 ),

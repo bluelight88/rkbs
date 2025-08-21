@@ -88,6 +88,7 @@ final class AppState {
   ValueNotifier<int> appPageIndex = ValueNotifier<int>(0);
   ValueNotifier<double> totalPrice = ValueNotifier<double>(0.0);
   ValueNotifier<String> selectedTimeSlot = ValueNotifier<String>('');
+  ValueNotifier<String> loginUserName = ValueNotifier<String>('');
   ValueNotifier<String> selectedSlotInfo = ValueNotifier<String>("");
   ValueNotifier<String> selectedSaloon = ValueNotifier<String>("");
   ValueNotifier<String> selectedSaloonAddress = ValueNotifier<String>("");

@@ -44,45 +44,52 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        RichText(
-                          text: TextSpan(
-                            children: [
-                              const TextSpan(
-                                text: "Hello ",
-                                style: TextStyle(
-                                  color: ColorConstants.primaryColor,
-                                  fontFamily: "PlusJakartaSans",
-                                  fontSize: 15,
-                                ),
+                        ValueListenableBuilder(
+                          valueListenable: appState.loginUserName,
+                          builder: (context, value, child) {
+                            return RichText(
+                              text: TextSpan(
+                                children: [
+                                  const TextSpan(
+                                    text: "Hello ",
+                                    style: TextStyle(
+                                      color: ColorConstants.primaryColor,
+                                      fontFamily: "PlusJakartaSans",
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text:
+                                        value.isNotEmpty
+                                            ? "$value\n"
+                                            : "USER\n",
+                                    style: const TextStyle(
+                                      color: ColorConstants.primaryColor,
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: "PlusJakartaSans",
+                                      fontSize: 22,
+                                    ),
+                                    recognizer:
+                                        TapGestureRecognizer()
+                                          ..onTap = () {
+                                            context.pushNamed(
+                                              RouteName.authScreen,
+                                            );
+                                          },
+                                  ),
+                                  const TextSpan(
+                                    text: "Welcome to Saloon",
+                                    style: TextStyle(
+                                      color: ColorConstants.primaryColor,
+                                      fontWeight: FontWeight.normal,
+                                      fontFamily: "PlusJakartaSans",
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              TextSpan(
-                                text:
-                                    appState.userName != "-"
-                                        ? "${appState.userName}\n"
-                                        : "USER\n",
-                                style: const TextStyle(
-                                  color: ColorConstants.primaryColor,
-                                  fontWeight: FontWeight.w600,
-                                  fontFamily: "PlusJakartaSans",
-                                  fontSize: 22,
-                                ),
-                                recognizer:
-                                    TapGestureRecognizer()
-                                      ..onTap = () {
-                                        context.pushNamed(RouteName.authScreen);
-                                      },
-                              ),
-                              const TextSpan(
-                                text: "Welcome to Saloon",
-                                style: TextStyle(
-                                  color: ColorConstants.primaryColor,
-                                  fontWeight: FontWeight.normal,
-                                  fontFamily: "PlusJakartaSans",
-                                  fontSize: 15,
-                                ),
-                              ),
-                            ],
-                          ),
+                            );
+                          },
                         ),
                         ClipRRect(
                           borderRadius: BorderRadius.circular(30),

@@ -44,6 +44,7 @@ final class LoginBloc extends Bloc<LoginEvent, LoginState> {
     if (response is DataSuccess) {
       appState.setUserId = "${response.data.customerId}";
       appState.setUserName = response.data.customerName;
+      appState.loginUserName.value = response.data.customerName;
       appState.setSessionId = response.data.sessionId;
       await getIt<StorageManager>().saveIntData(
         AppConstants.userId,

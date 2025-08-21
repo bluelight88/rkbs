@@ -42,6 +42,7 @@ class AccountPage extends StatelessWidget {
                 appState.selectedSlotInfo.value = '';
                 appState.selectedSaloon.value = '';
                 appState.selectedSaloonAddress.value = '';
+                appState.loginUserName.value = '';
                 appState.totalPrice.value = 0.0;
                 appState.appPageIndex.value = 0;
                 context.pushReplacementNamed(RouteName.splashScreen);
