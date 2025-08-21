@@ -51,8 +51,6 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
     appState.cartItems.clear();
     appState.selectedTimeSlot.value = '';
     appState.selectedSlotInfo.value = '';
-    appState.selectedSaloon.value = '';
-    appState.selectedSaloonAddress.value = '';
     appState.totalPrice.value = 0.0;
     super.dispose();
   }

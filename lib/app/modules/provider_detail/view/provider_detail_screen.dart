@@ -40,6 +40,13 @@ class _ProviderDetailScreenState extends State<ProviderDetailScreen> {
     _getProviderDetail();
   }
 
+  @override
+  void dispose() {
+    appState.selectedSaloon.value = '';
+    appState.selectedSaloonAddress.value = '';
+    super.dispose();
+  }
+
   void _getProviderDetail() {
     context.read<ProviderDetailBloc>().add(
       FetchProviderDetail(providerId: widget.providerId),
