@@ -1,5 +1,6 @@
 class RouteName {
-  static const String authScreen = 'loginScreen',
+  static const String appointmentConfirmed = 'appointmentConfirmed',
+      authScreen = 'loginScreen',
       bookingScreen = 'bookingScreen',
       dashboardScreen = 'dashboardScreen',
       onBoardingScreen = 'onBoardingScreen',

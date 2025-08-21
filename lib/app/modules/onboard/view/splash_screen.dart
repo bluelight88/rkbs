@@ -85,10 +85,10 @@ final class _SplashScreenState extends State<SplashScreen> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 70),
+                        padding: const EdgeInsets.symmetric(horizontal: 60),
                         child: Center(
                           child: Text(
-                            "Find the perfect stylist at your door Steps",
+                            "Find the perfect stylist\n at your door Steps",
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontWeight: FontWeight.w200,

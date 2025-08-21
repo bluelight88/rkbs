@@ -7,6 +7,7 @@ import 'package:timoraa/app/modules/provider_detail/view/provider_detail_screen.
 import 'package:timoraa/app/modules/provider_detail/view_model/provider_detail/provider_detail_bloc.dart';
 import '../../modules/auth/view/login/login_screen.dart';
 import '../../modules/auth/view_model/login/login_bloc.dart';
+import '../../modules/booking/view/appointment_confirm/appointment_confirmed_screen.dart';
 import '../../modules/booking/view/booking_selection/booking_screen.dart';
 import '../../modules/booking/view/review_booking/review_booking_screen.dart';
 import '../../modules/booking/view_model/booking_service_bloc.dart';
@@ -40,6 +41,7 @@ final class NavigationManager {
   }) {
     Widget routeScreen = const UnderDevelopmentScreen();
     routeScreen = switch (routeName) {
+      RouteName.appointmentConfirmed => AppointmentConfirmedScreen(),
       RouteName.authScreen => MultiBlocProvider(
         providers: [BlocProvider(create: (context) => LoginBloc())],
         child: LoginScreen(fromBooking: args['fromBooking'] ?? false),

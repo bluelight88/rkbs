@@ -4,9 +4,11 @@ import 'package:gap/gap.dart';
 import 'package:timoraa/app/core/widgets/app_bar/custom_app_bar.dart';
 import 'package:timoraa/app/core/widgets/buttons/app_elevated_button.dart';
 import 'package:timoraa/app/utils/constants/color_constants.dart';
+import 'package:timoraa/app/utils/extensions/navigation_extension.dart';
 import 'package:timoraa/app/utils/services/app_state.dart';
 
 import '../../../../utils/constants/asset_constants.dart';
+import '../../../../utils/constants/route_name.dart';
 import '../../view_model/booking_service_bloc.dart';
 
 class ReviewBookingScreen extends StatelessWidget {
@@ -237,7 +239,9 @@ class ReviewBookingScreen extends StatelessWidget {
                   ),
                 ),
                 onPressed: () {
-                  context.read<BookingServiceBloc>().add(BookService());
+                  // todo: uncomment below for booking api and update navigation on listener event
+                  // context.read<BookingServiceBloc>().add(BookService());
+                  context.pushReplacementNamed(RouteName.appointmentConfirmed);
                 },
               ),
             ],

@@ -65,6 +65,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
         "Appointments",
         titleColor: ColorConstants.primaryColor,
         color: Colors.white,
+        showLeading: false,
       ),
       body:
           appState.userId.isEmpty
