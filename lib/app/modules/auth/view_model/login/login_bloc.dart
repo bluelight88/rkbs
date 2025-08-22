@@ -62,7 +62,11 @@ final class LoginBloc extends Bloc<LoginEvent, LoginState> {
         AppConstants.userImage,
         response.data.customerImg,
       );
-      emit(LoginSuccess(msg: "Login Success"));
+      if (response.data.customerId == 0) {
+        emit(LoginFailure("No user found with provided credentials"));
+      } else {
+        emit(LoginSuccess(msg: "Login Success"));
+      }
     } else if (response is DataFailure) {
       emit(LoginFailure(response.error.description));
     }

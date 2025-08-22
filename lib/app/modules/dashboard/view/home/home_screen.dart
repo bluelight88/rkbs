@@ -72,9 +72,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                     recognizer:
                                         TapGestureRecognizer()
                                           ..onTap = () {
-                                            context.pushNamed(
-                                              RouteName.authScreen,
-                                            );
+                                            if (!value.isNotEmpty &&
+                                                context.mounted) {
+                                              context.pushNamed(
+                                                RouteName.authScreen,
+                                              );
+                                            }
                                           },
                                   ),
                                   const TextSpan(

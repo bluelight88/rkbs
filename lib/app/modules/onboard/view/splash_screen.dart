@@ -33,7 +33,11 @@ final class _SplashScreenState extends State<SplashScreen> {
       appState.countryCode.value = code.countryCode;
       appState.ipAddress.value = code.ipAddress;
       Timer(Duration(seconds: 3), () {
-        onBoard.value = true;
+        if (appState.userId.isEmpty) {
+          onBoard.value = true;
+        } else {
+          context.pushReplacementNamed(RouteName.dashboardScreen);
+        }
       });
     });
     super.initState();
