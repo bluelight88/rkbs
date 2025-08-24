@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:timoraa/app/core/widgets/app_bar/custom_app_bar.dart';
 import 'package:timoraa/app/core/widgets/buttons/app_elevated_button.dart';
+import 'package:timoraa/app/core/widgets/custom/toast_utils.dart';
+import 'package:timoraa/app/core/widgets/dialog/custom_dialog.dart';
 import 'package:timoraa/app/utils/constants/color_constants.dart';
 import 'package:timoraa/app/utils/extensions/navigation_extension.dart';
 import 'package:timoraa/app/utils/services/app_state.dart';
@@ -11,15 +13,29 @@ import '../../../../utils/constants/asset_constants.dart';
 import '../../../../utils/constants/route_name.dart';
 import '../../view_model/booking_service_bloc.dart';
 
-class ReviewBookingScreen extends StatelessWidget {
+class ReviewBookingScreen extends StatefulWidget {
   const ReviewBookingScreen({super.key});
 
+  @override
+  State<ReviewBookingScreen> createState() => _ReviewBookingScreenState();
+}
+
+class _ReviewBookingScreenState extends State<ReviewBookingScreen> {
   String _getTrimmedSlotInfo(String slotInfo) {
     final parts = slotInfo.split(' - ');
     if (parts.length > 2) {
       return '${parts[0]} - ${parts[1]}';
     }
     return slotInfo;
+  }
+
+  @override
+  void dispose() {
+    appState.cartItems.clear();
+    appState.selectedTimeSlot.value = '';
+    appState.selectedSlotInfo.value = '';
+    // appState.totalPrice.value = 0.0;
+    super.dispose();
   }
 
   @override
@@ -32,7 +48,19 @@ class ReviewBookingScreen extends StatelessWidget {
       ),
       backgroundColor: ColorConstants.whiteColor,
       body: BlocListener<BookingServiceBloc, BookingServiceState>(
-        listener: (context, state) {},
+        listener: (context, state) {
+          if (state is DoBookServiceSuccess) {
+            CustomDialog.hideLoader(context);
+            context.pushReplacementNamed(RouteName.appointmentConfirmed);
+          }
+          if (state is DoBookServiceLoading) {
+            CustomDialog.showLoader(context);
+          }
+          if (state is DoBookServiceFailure) {
+            CustomDialog.hideLoader(context);
+            ToastUtils.showFailed(message: state.message);
+          }
+        },
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: Column(
@@ -239,9 +267,7 @@ class ReviewBookingScreen extends StatelessWidget {
                   ),
                 ),
                 onPressed: () {
-                  // todo: uncomment below for booking api and update navigation on listener event
-                  // context.read<BookingServiceBloc>().add(BookService());
-                  context.pushReplacementNamed(RouteName.appointmentConfirmed);
+                  context.read<BookingServiceBloc>().add(BookService());
                 },
               ),
             ],

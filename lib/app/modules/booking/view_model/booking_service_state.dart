@@ -26,7 +26,7 @@ final class BookingServiceFailure extends BookingServiceState {
 final class DoBookServiceLoading extends BookingServiceState {}
 
 final class DoBookServiceSuccess extends BookingServiceState {
-  final BookingServiceSlotModel model;
+  final BookingObj model;
 
   const DoBookServiceSuccess({required this.model});
 }

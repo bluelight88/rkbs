@@ -253,7 +253,6 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                                                 .cost[0]
                                                 .cost,
                                       ),
-                                      ...appState.cartItems,
                                     ];
 
                                     return Column(

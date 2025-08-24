@@ -6,6 +6,7 @@ import 'package:equatable/equatable.dart';
 import '../../../core/models/api/data_state.dart';
 import '../../../utils/manager/get_it_manager.dart';
 import '../../../utils/services/app_state.dart';
+import '../model/booked_service_model.dart';
 import '../model/booking_repo_model.dart';
 import '../model/booking_service_slot_model.dart';
 
@@ -48,18 +49,33 @@ class BookingServiceBloc
 
   void _doBook(BookService event, Emitter<BookingServiceState> emit) async {
     emit(DoBookServiceLoading());
-    final headerData = {
-      "customer_id": appState.userId,
-      "booking_details": appState.cartItems,
+
+    final headerData = appState.cartItems;
+    final customerData = int.parse(appState.userId);
+    final paymentData = [];
+
+    final Map<String, dynamic> params = {
+      "booking_details": jsonEncode(headerData),
+      "customer_id": jsonEncode(customerData),
+      "payment_details": jsonEncode(paymentData),
     };
-    final Map<String, dynamic> params = {"headerData": jsonEncode(headerData)};
     final response = await getIt<BookingRepoModel>().doBooking(params);
     if (response is DataSuccess) {
-      emit(DoBookServiceSuccess(model: response.data));
+      if (response.data.status.toLowerCase() == "success") {
+        emit(DoBookServiceSuccess(model: response.data));
+      } else {
+        emit(
+          DoBookServiceFailure(
+            message:
+                response.data.msg.isNotEmpty
+                    ? response.data.msg
+                    : "Booking failed",
+          ),
+        );
+      }
     } else if (response is DataFailure) {
       emit(DoBookServiceFailure(message: response.error.description));
-    }
-    if (response is UnknownDataFailure) {
+    } else if (response is UnknownDataFailure) {
       emit(
         DoBookServiceFailure(message: appState.localization.somethingWentWrong),
       );

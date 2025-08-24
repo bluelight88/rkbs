@@ -3,7 +3,6 @@ import 'package:gap/gap.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:timoraa/app/utils/constants/color_constants.dart';
 import 'package:timoraa/app/utils/extensions/navigation_extension.dart';
-import 'package:timoraa/app/utils/manager/local_notification_manager.dart';
 
 import '../../../../core/widgets/buttons/app_elevated_button.dart';
 import '../../../../utils/constants/route_name.dart';
@@ -30,21 +29,6 @@ class _AppointmentConfirmedScreenState
   Future<void> _checkPermission() async {
     final status = await Permission.notification.status;
     notificationGranted.value = status.isGranted;
-  }
-
-  Future<void> _requestPermission() async {
-    if (!LocalNotificationManager.isInitialized) {
-      LocalNotificationManager.initialize(context);
-    }
-    final status = await Permission.notification.status;
-
-    if (status.isGranted || LocalNotificationManager.isInitialized) {
-      notificationGranted.value = true;
-    } else if (status.isPermanentlyDenied) {
-      await openAppSettings();
-    } else {
-      notificationGranted.value = false;
-    }
   }
 
   void _goToDashboard() {
@@ -119,13 +103,11 @@ class _AppointmentConfirmedScreenState
                 return Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 20,
-                    vertical: 20,
+                    vertical: 5,
                   ),
                   child: AppElevatedButton(
                     Text(
-                      notificationGranted.value
-                          ? "Go to Appointment Screen"
-                          : "Turn on Notifications",
+                      "Turn on Notifications",
                       style: const TextStyle(
                         color: ColorConstants.whiteColor,
                         fontSize: 14,
@@ -133,19 +115,25 @@ class _AppointmentConfirmedScreenState
                         fontFamily: "PlusJakartaSans",
                       ),
                     ),
-                    onPressed: () async {
-                      if (notificationGranted.value) {
-                        _goToDashboard();
-                      } else {
-                        await _requestPermission();
-                        if (notificationGranted.value) {
-                          _goToDashboard();
-                        }
-                      }
-                    },
+                    onPressed: () {},
                   ),
                 );
               },
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              child: AppElevatedButton(
+                Text(
+                  "Go to Appointment Screen",
+                  style: const TextStyle(
+                    color: ColorConstants.whiteColor,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    fontFamily: "PlusJakartaSans",
+                  ),
+                ),
+                onPressed: _goToDashboard,
+              ),
             ),
           ],
         ),

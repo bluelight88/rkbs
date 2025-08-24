@@ -5,6 +5,7 @@ import '../../../core/models/api/exceptions.dart';
 import '../../../utils/constants/apis.dart';
 import '../../../utils/manager/api_controller.dart';
 import '../../../utils/manager/get_it_manager.dart';
+import 'booked_service_model.dart';
 import 'booking_service_slot_model.dart';
 
 final class BookingRepoModel {
@@ -33,7 +34,10 @@ final class BookingRepoModel {
         APIMethod.post,
         param: params,
       );
-      return DataSuccess(response.data);
+      final bookingResponse = BookingObj.fromJson(
+        response.data is String ? jsonDecode(response.data) : response.data,
+      );
+      return DataSuccess(bookingResponse);
     } on ErrorException catch (e) {
       return DataFailure(e.error);
     } catch (e) {
