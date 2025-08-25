@@ -9,6 +9,7 @@ class TimeSlots extends StatelessWidget {
   final service.BookingServiceSlotModel model;
   final ValueNotifier<DateTime> selectedDate;
   final ValueNotifier<int> selectedTimeSlotId;
+  final ValueNotifier<int> slotDuration;
   final ValueNotifier<String> selectedTimeSlot;
   final ValueNotifier<String> selectedSlotInfo;
 
@@ -16,6 +17,7 @@ class TimeSlots extends StatelessWidget {
     super.key,
     required this.model,
     required this.selectedDate,
+    required this.slotDuration,
     required this.selectedTimeSlotId,
     required this.selectedTimeSlot,
     required this.selectedSlotInfo,
@@ -67,7 +69,7 @@ class TimeSlots extends StatelessWidget {
                                     final formatted = _getFormattedSlotInfo(
                                       selectedDate: selectedDate.value,
                                       selectedSlot: slot.slotDisplayTime,
-                                      slotDuration: 30,
+                                      slotDuration: slotDuration.value,
                                     );
                                     selectedTimeSlot.value =
                                         slot.slotDisplayTime;

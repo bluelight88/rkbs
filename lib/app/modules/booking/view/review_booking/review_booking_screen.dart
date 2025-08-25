@@ -32,8 +32,6 @@ class _ReviewBookingScreenState extends State<ReviewBookingScreen> {
   @override
   void dispose() {
     appState.cartItems.clear();
-    appState.selectedTimeSlot.value = '';
-    appState.selectedSlotInfo.value = '';
     // appState.totalPrice.value = 0.0;
     super.dispose();
   }

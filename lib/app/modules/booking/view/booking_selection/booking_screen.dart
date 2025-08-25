@@ -33,6 +33,7 @@ class BookAppointmentScreen extends StatefulWidget {
 
 class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
   final ValueNotifier<int> selectedTimeSlotId = ValueNotifier<int>(0);
+  final ValueNotifier<int> serviceDuration = ValueNotifier<int>(0);
   final ValueNotifier<DateTime> selectedDate = ValueNotifier<DateTime>(
     DateTime.now(),
   );
@@ -107,6 +108,8 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
             _staffList = List.from(state.model.staff);
             selectedStaff.value = _staffList[0].staffId;
             _calculateTotal(state.model.bookingSlot[0]);
+            serviceDuration.value =
+                state.model.bookingSlot[0].cost[0].servicesDuration;
             final bookingSlot = state.model.bookingSlot.firstOrNull;
             if (bookingSlot != null) {
               final firstAvailableSlot =
@@ -122,8 +125,7 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                 appState.selectedSlotInfo.value = _getFormattedSlotInfo(
                   selectedDate: selectedDate.value,
                   selectedSlot: firstAvailableSlot.slotDisplayTime,
-                  slotDuration:
-                      state.model.bookingSlot[0].cost[0].servicesDuration,
+                  slotDuration: serviceDuration.value,
                 );
               }
             }
@@ -224,6 +226,7 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                                   model: state.model,
                                   selectedDate: selectedDate,
                                   selectedTimeSlotId: selectedTimeSlotId,
+                                  slotDuration: serviceDuration,
                                   selectedTimeSlot: appState.selectedTimeSlot,
                                   selectedSlotInfo: appState.selectedSlotInfo,
                                 ),
@@ -231,227 +234,239 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                                 const Divider(height: 1, thickness: 2),
                                 const Gap(10),
                                 ValueListenableBuilder(
-                                  valueListenable: appState.selectedSlotInfo,
-                                  builder: (context, slotValue, _) {
-                                    final allServices = <CartServiceModel>[
-                                      CartServiceModel(
-                                        serviceId: widget.services.servicesId,
-                                        staffId: selectedStaff.value,
-                                        slotId: selectedTimeSlotId.value,
-                                        slotName: slotValue,
-                                        serviceDuration:
-                                            widget
-                                                .services
-                                                .servicesCost[0]
-                                                .servicesDuration,
-                                        serviceName:
-                                            widget.services.servicesCode,
-                                        cost:
-                                            state
-                                                .model
-                                                .bookingSlot[0]
-                                                .cost[0]
-                                                .cost,
-                                      ),
-                                    ];
-
-                                    return Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        ...allServices.map((service) {
-                                          final staffName =
-                                              _staffList
-                                                  .firstWhere(
-                                                    (staff) =>
-                                                        staff.staffId ==
-                                                        service.staffId,
-                                                    orElse: () => _staffList[0],
-                                                  )
-                                                  .staffName;
-                                          final slotName =
-                                              service.slotName
-                                                          .split(',')
-                                                          .length >
-                                                      1
-                                                  ? service.slotName
-                                                              .split(',')[1]
-                                                              .split('-')
-                                                              .length >
-                                                          2
-                                                      ? '${service.slotName.split(',')[1].split('-')[0].trim()} - ${service.slotName.split(',')[1].split('-')[1].trim()}'
-                                                      : service.slotName
-                                                          .split(',')[1]
-                                                          .trim()
-                                                  : service.slotName;
-                                          return Padding(
-                                            padding: const EdgeInsets.only(
-                                              bottom: 10,
-                                            ),
-                                            child: ServiceCard(
-                                              title: service.serviceName,
-                                              specialistName: staffName,
-                                              time: slotName,
-                                              price: service.cost
-                                                  .toStringAsFixed(2),
-                                              serviceId: service.serviceId,
-                                              mainServiceId: service.serviceId,
-                                              onRemove: () {
-                                                appState.cartItems.removeWhere(
-                                                  (item) =>
-                                                      item.serviceId ==
-                                                      service.serviceId,
-                                                );
-                                                appState.totalPrice.value =
-                                                    appState.cartItems.fold(
-                                                      0.0,
-                                                      (sum, item) =>
-                                                          sum + item.cost,
-                                                    );
-                                              },
-                                            ),
-                                          );
-                                        }),
-                                        const Gap(24),
-                                        AppElevatedButton(
-                                          const Text(
-                                            'Add Another Service',
-                                            style: TextStyle(
-                                              color: ColorConstants.whiteColor,
-                                              fontWeight: FontWeight.w700,
-                                              fontFamily: "PlusJakartaSans",
-                                            ),
+                                  valueListenable: serviceDuration,
+                                  builder: (context, service, _) {
+                                    return ValueListenableBuilder(
+                                      valueListenable:
+                                          appState.selectedSlotInfo,
+                                      builder: (context, slotValue, _) {
+                                        final allServices = <CartServiceModel>[
+                                          CartServiceModel(
+                                            serviceId:
+                                                widget.services.servicesId,
+                                            staffId: selectedStaff.value,
+                                            slotId: selectedTimeSlotId.value,
+                                            slotName: slotValue,
+                                            serviceDuration:
+                                                serviceDuration.value,
+                                            serviceName:
+                                                widget.services.servicesCode,
+                                            cost:
+                                                state
+                                                    .model
+                                                    .bookingSlot[0]
+                                                    .cost[0]
+                                                    .cost,
                                           ),
-                                          onPressed: () async {
-                                            ToastUtils.showBusy(
-                                              message: "Under Development",
-                                            );
-                                          },
-                                        ),
-                                        Gap(16),
-                                        ValueListenableBuilder<double>(
-                                          valueListenable: appState.totalPrice,
-                                          builder:
-                                              (context, value, _) => Center(
-                                                child: Text(
-                                                  '\$${value.toStringAsFixed(2)}',
-                                                  style: const TextStyle(
-                                                    fontSize: 30,
-                                                    fontWeight: FontWeight.w800,
-                                                    fontFamily:
-                                                        "PlusJakartaSans",
-                                                  ),
+                                        ];
+
+                                        return Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            ...allServices.map((service) {
+                                              final staffName =
+                                                  _staffList
+                                                      .firstWhere(
+                                                        (staff) =>
+                                                            staff.staffId ==
+                                                            service.staffId,
+                                                        orElse:
+                                                            () => _staffList[0],
+                                                      )
+                                                      .staffName;
+                                              final slotName =
+                                                  service.slotName
+                                                              .split(',')
+                                                              .length >
+                                                          1
+                                                      ? service.slotName
+                                                                  .split(',')[1]
+                                                                  .split('-')
+                                                                  .length >
+                                                              2
+                                                          ? '${service.slotName.split(',')[1].split('-')[0].trim()} - ${service.slotName.split(',')[1].split('-')[1].trim()}'
+                                                          : service.slotName
+                                                              .split(',')[1]
+                                                              .trim()
+                                                      : service.slotName;
+                                              return Padding(
+                                                padding: const EdgeInsets.only(
+                                                  bottom: 10,
+                                                ),
+                                                child: ServiceCard(
+                                                  title: service.serviceName,
+                                                  specialistName: staffName,
+                                                  time: slotName,
+                                                  price: service.cost
+                                                      .toStringAsFixed(2),
+                                                  serviceId: service.serviceId,
+                                                  mainServiceId:
+                                                      service.serviceId,
+                                                  onRemove: () {
+                                                    appState.cartItems
+                                                        .removeWhere(
+                                                          (item) =>
+                                                              item.serviceId ==
+                                                              service.serviceId,
+                                                        );
+                                                    appState.totalPrice.value =
+                                                        appState.cartItems.fold(
+                                                          0.0,
+                                                          (sum, item) =>
+                                                              sum + item.cost,
+                                                        );
+                                                  },
+                                                ),
+                                              );
+                                            }),
+                                            const Gap(24),
+                                            AppElevatedButton(
+                                              const Text(
+                                                'Add Another Service',
+                                                style: TextStyle(
+                                                  color:
+                                                      ColorConstants.whiteColor,
+                                                  fontWeight: FontWeight.w700,
+                                                  fontFamily: "PlusJakartaSans",
                                                 ),
                                               ),
-                                        ),
-                                        const Gap(10),
-                                        ValueListenableBuilder<String>(
-                                          valueListenable:
-                                              appState.selectedSlotInfo,
-                                          builder:
-                                              (context, value, _) =>
-                                                  value.isNotEmpty
-                                                      ? Center(
-                                                        child: Text(
-                                                          value,
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          style: const TextStyle(
-                                                            letterSpacing: 0,
-                                                            color: Colors.grey,
-                                                            fontSize: 14,
-                                                            fontFamily:
-                                                                "PlusJakartaSans",
-                                                          ),
-                                                        ),
-                                                      )
-                                                      : const SizedBox.shrink(),
-                                        ),
-                                        const Gap(10),
-                                        ValueListenableBuilder<String>(
-                                          valueListenable:
-                                              appState.selectedSlotInfo,
-                                          builder:
-                                              (context, value, _) =>
-                                                  value.isNotEmpty
-                                                      ? AppElevatedButton(
-                                                        const Text(
-                                                          'Book Now',
-                                                          style: TextStyle(
-                                                            color:
-                                                                ColorConstants
-                                                                    .whiteColor,
-                                                            fontWeight:
-                                                                FontWeight.w700,
-                                                            fontFamily:
-                                                                "PlusJakartaSans",
-                                                          ),
-                                                        ),
-                                                        onPressed: () {
-                                                          if (!appState.cartItems.any(
-                                                            (item) =>
-                                                                item.serviceId ==
-                                                                widget
-                                                                    .services
-                                                                    .servicesId,
-                                                          )) {
-                                                            appState.cartItems.add(
-                                                              CartServiceModel(
-                                                                serviceId:
+                                              onPressed: () async {
+                                                ToastUtils.showBusy(
+                                                  message: "Under Development",
+                                                );
+                                              },
+                                            ),
+                                            Gap(16),
+                                            ValueListenableBuilder<double>(
+                                              valueListenable:
+                                                  appState.totalPrice,
+                                              builder:
+                                                  (context, value, _) => Center(
+                                                    child: Text(
+                                                      '\$${value.toStringAsFixed(2)}',
+                                                      style: const TextStyle(
+                                                        fontSize: 30,
+                                                        fontWeight:
+                                                            FontWeight.w800,
+                                                        fontFamily:
+                                                            "PlusJakartaSans",
+                                                      ),
+                                                    ),
+                                                  ),
+                                            ),
+                                            const Gap(10),
+                                            ValueListenableBuilder<String>(
+                                              valueListenable:
+                                                  appState.selectedSlotInfo,
+                                              builder:
+                                                  (context, value, _) =>
+                                                      value.isNotEmpty
+                                                          ? Center(
+                                                            child: Text(
+                                                              value,
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                              style: const TextStyle(
+                                                                letterSpacing:
+                                                                    0,
+                                                                color:
+                                                                    Colors.grey,
+                                                                fontSize: 14,
+                                                                fontFamily:
+                                                                    "PlusJakartaSans",
+                                                              ),
+                                                            ),
+                                                          )
+                                                          : const SizedBox.shrink(),
+                                            ),
+                                            const Gap(10),
+                                            ValueListenableBuilder<String>(
+                                              valueListenable:
+                                                  appState.selectedSlotInfo,
+                                              builder:
+                                                  (context, value, _) =>
+                                                      value.isNotEmpty
+                                                          ? AppElevatedButton(
+                                                            const Text(
+                                                              'Book Now',
+                                                              style: TextStyle(
+                                                                color:
+                                                                    ColorConstants
+                                                                        .whiteColor,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w700,
+                                                                fontFamily:
+                                                                    "PlusJakartaSans",
+                                                              ),
+                                                            ),
+                                                            onPressed: () {
+                                                              if (!appState.cartItems.any(
+                                                                (item) =>
+                                                                    item.serviceId ==
                                                                     widget
                                                                         .services
                                                                         .servicesId,
-                                                                staffId:
-                                                                    selectedStaff
-                                                                        .value,
-                                                                slotId:
-                                                                    selectedTimeSlotId
-                                                                        .value,
-                                                                slotName:
-                                                                    appState
-                                                                        .selectedSlotInfo
-                                                                        .value,
-                                                                serviceDuration:
-                                                                    widget
-                                                                        .services
-                                                                        .servicesCost[0]
-                                                                        .servicesDuration,
-                                                                serviceName:
-                                                                    widget
-                                                                        .services
-                                                                        .servicesCode,
-                                                                cost:
-                                                                    state
-                                                                        .model
-                                                                        .bookingSlot[0]
-                                                                        .cost[0]
-                                                                        .cost,
-                                                              ),
-                                                            );
-                                                          }
-                                                          if (appState
-                                                              .userId
-                                                              .isNotEmpty) {
-                                                            context.pushNamed(
-                                                              RouteName
-                                                                  .reviewBookingScreen,
-                                                            );
-                                                          } else {
-                                                            context.pushNamed(
-                                                              RouteName
-                                                                  .authScreen,
-                                                              args: {
-                                                                "fromBooking":
-                                                                    true,
-                                                              },
-                                                            );
-                                                          }
-                                                        },
-                                                      )
-                                                      : const SizedBox.shrink(),
-                                        ),
-                                        const Gap(40),
-                                      ],
+                                                              )) {
+                                                                appState.cartItems.add(
+                                                                  CartServiceModel(
+                                                                    serviceId:
+                                                                        widget
+                                                                            .services
+                                                                            .servicesId,
+                                                                    staffId:
+                                                                        selectedStaff
+                                                                            .value,
+                                                                    slotId:
+                                                                        selectedTimeSlotId
+                                                                            .value,
+                                                                    slotName:
+                                                                        appState
+                                                                            .selectedSlotInfo
+                                                                            .value,
+                                                                    serviceDuration:
+                                                                        serviceDuration
+                                                                            .value,
+                                                                    serviceName:
+                                                                        widget
+                                                                            .services
+                                                                            .servicesCode,
+                                                                    cost:
+                                                                        state
+                                                                            .model
+                                                                            .bookingSlot[0]
+                                                                            .cost[0]
+                                                                            .cost,
+                                                                  ),
+                                                                );
+                                                              }
+                                                              if (appState
+                                                                  .userId
+                                                                  .isNotEmpty) {
+                                                                context.pushNamed(
+                                                                  RouteName
+                                                                      .reviewBookingScreen,
+                                                                );
+                                                              } else {
+                                                                context.pushNamed(
+                                                                  RouteName
+                                                                      .authScreen,
+                                                                  args: {
+                                                                    "fromBooking":
+                                                                        true,
+                                                                  },
+                                                                );
+                                                              }
+                                                            },
+                                                          )
+                                                          : const SizedBox.shrink(),
+                                            ),
+                                            const Gap(40),
+                                          ],
+                                        );
+                                      },
                                     );
                                   },
                                 ),
