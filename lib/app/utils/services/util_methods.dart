@@ -7,8 +7,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:interval_time_picker/interval_time_picker.dart' as itp;
-import 'package:interval_time_picker/models/visible_step.dart';
 import 'package:intl/intl.dart';
 import 'package:timoraa/app/utils/constants/color_constants.dart';
 
@@ -394,33 +392,6 @@ final class UtilMethods {
       context: context,
       initialTime: TimeOfDay.now(),
       initialEntryMode: TimePickerEntryMode.dialOnly,
-    );
-    if (chosenTime == null) return '';
-    return UtilMethods.instance.formatTime(
-      chosenTime,
-      withSecond: timeWithSeconds,
-    );
-  }
-
-  Future<String> selectIntervalTime(
-    BuildContext context, {
-    final bool timeWithSeconds = false,
-    final int interval = 10,
-    final VisibleStep visibleStep = VisibleStep.tenths,
-  }) async {
-    int initialHour = TimeOfDay.now().hour;
-    int initialMinute = (TimeOfDay.now().minute / interval).ceil() * interval;
-    if (initialMinute >= 60) {
-      initialMinute = 0;
-      initialHour += 1;
-    }
-    if (initialHour > 23) initialHour = 0;
-    final chosenTime = await itp.showIntervalTimePicker(
-      context: context,
-      initialTime: TimeOfDay(hour: initialHour, minute: initialMinute),
-      interval: interval,
-      visibleStep: visibleStep,
-      initialEntryMode: itp.TimePickerEntryMode.dialOnly,
     );
     if (chosenTime == null) return '';
     return UtilMethods.instance.formatTime(
