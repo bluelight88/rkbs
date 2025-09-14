@@ -223,44 +223,47 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   const Gap(10),
-                  const Gap(10),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.3,
-                    width: MediaQuery.of(context).size.width,
-                    child: DynamicSlider(
-                      title: "Special Offers",
-                      scrollDirection: Axis.horizontal,
-                      items: state.homeResponseModel.offer,
-                      imageUrlGetter: (offer) => offer.imageUrl,
-                      primaryTextGetter: (offer) => offer.providerName,
-                      secondaryTextGetter:
-                          (offer) =>
-                              "${offer.providerAddressline1}, ${offer.providerCity}",
-                      badgeText: (badge) => "Subscribe Now",
-                    ),
-                  ),
-                  const Gap(10),
-                  Divider(
-                    height: 2,
-                    color: ColorConstants.searchFieldTextColor,
-                    endIndent: 20,
-                    indent: 20,
-                  ),
-                  const Gap(10),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.3,
-                    width: MediaQuery.of(context).size.width,
-                    child: DynamicSlider(
-                      title: "Barber Near You",
-                      scrollDirection: Axis.horizontal,
-                      items: state.homeResponseModel.recommended,
-                      imageUrlGetter: (recommended) => recommended.imageUrl,
-                      primaryTextGetter:
-                          (recommended) => recommended.providerName,
-                      secondaryTextGetter:
-                          (recommended) =>
-                              "${recommended.providerAddressline1}, ${recommended.providerCity}",
-                      badgeText: (badge) => "4.9 | 8993 Reviews",
+                  Column(
+                    children: List.generate(
+                      state.homeResponseModel.sections.length,
+                      (index) {
+                        final section = state.homeResponseModel.sections[index];
+
+                        // decode details into list of providers
+                        final items = section.details;
+
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 20),
+                          child: SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.3,
+                            width: MediaQuery.of(context).size.width,
+                            child: DynamicSlider(
+                              title: section.title,
+                              scrollDirection: Axis.horizontal,
+                              items: items,
+                              imageUrlGetter: (provider) => provider.imageUrl,
+                              primaryTextGetter:
+                                  (provider) => provider.providerName,
+                              secondaryTextGetter:
+                                  (provider) =>
+                                      "${provider.providerAddressline1}, ${provider.providerCity}",
+                              badgeText: (provider) {
+                                if (section.title.toLowerCase().contains(
+                                  "offer",
+                                )) {
+                                  return "Subscribe Now";
+                                } else if (provider.toJson().containsKey(
+                                  "recommend",
+                                )) {
+                                  return "${provider.reviewRating} | ${provider.reviewCount} Reviews";
+                                } else {
+                                  return "";
+                                }
+                              },
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ],

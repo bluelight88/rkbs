@@ -3,8 +3,10 @@ import 'dart:async' show StreamController;
 // ignore: depend_on_referenced_packages
 import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
+import '../services/util_methods.dart';
 import '/app/utils/manager/get_it_manager.dart';
 import '../../core/models/api/api_model.dart';
 import '../../core/models/api/exceptions.dart';
@@ -63,12 +65,25 @@ final class APIController {
       final Map<String, dynamic> headerOptions = {
         'Cookie': appState.sessionId,
         'tz': appState.timeZone,
+        if (appState.accessToken.isNotEmpty)
+          "Authorization": "Bearer ${appState.accessToken.trim()}",
         if (appState.userId.isNotEmpty) "user-id": appState.userId,
         if (appState.countryCode.value.isNotEmpty)
           "country-code": appState.countryCode.value,
+        if (appState.countryId.value != 0)
+          "country-id": appState.countryId.value,
+        if (appState.currencyId.value != 0)
+          "currency-id": appState.currencyId.value,
         if (appState.ipAddress.value.isNotEmpty)
           "ip-address": appState.ipAddress.value,
+        if (appState.deviceId.isNotEmpty) "device-id": appState.deviceId,
+        if (method == APIMethod.post) "Content-Type": "multipart/form-data",
       };
+      debugPrint("📤 REQUEST:");
+      debugPrint("➡️ METHOD: ${method.name.toUpperCase()}");
+      debugPrint("➡️ URL: $url");
+      debugPrint("➡️ HEADERS: $headerOptions");
+      debugPrint("➡️ PARAMS: $params");
       if (method == APIMethod.get) {
         response = await _dio.get(
           url,
@@ -89,9 +104,7 @@ final class APIController {
         response = await _dio.post(
           url,
           data: formData,
-          options: Options(
-            headers: {...headerOptions, "Content-Type": "multipart/form-data"},
-          ),
+          options: Options(headers: {...headerOptions}),
         );
       }
       if (method == APIMethod.delete) {
@@ -123,9 +136,34 @@ final class APIController {
         shouldShowLogoutDialog: url != APIS.logout,
       );
     } on DioException catch (e) {
+      debugPrint("➡️ Dio Exception: $e");
+      if (e.response?.statusCode == 401 || e.response?.statusCode == 500) {
+        error = ErrorModel(
+          appState.localization.error,
+          appState.localization.somethingWentWrong,
+          e.response?.statusCode == 401 ? 401 : 500,
+        );
+        apiResponse = ApiResponseModel(null, error, false);
+        CustomDialog.showTokenDialog(
+          NavigationManager.navigatorKey.currentContext!,
+        );
+        return apiResponse;
+      } else if (e.response?.statusCode == 498) {
+        error = ErrorModel(
+          appState.localization.error,
+          appState.localization.yourSessionExpired,
+          498,
+        );
+        apiResponse = ApiResponseModel(null, error, false);
+        CustomDialog.showTokenExpireDialog(
+          NavigationManager.navigatorKey.currentContext!,
+        );
+        return apiResponse;
+      }
       error = _handleError(e);
       apiResponse = ApiResponseModel(null, error, false);
     } catch (e) {
+      debugPrint("➡️ Error: $e");
       error = ErrorModel(
         appState.localization.error,
         appState.localization.somethingWentWrong,
@@ -143,91 +181,91 @@ final class APIController {
   }
 
   /// Method to make request to upload files
-  Future<ApiResponseModel> uploadFile(
-    String url,
-    APIMethod method,
-    List<FileInfo> files, {
-    Map<String, String> param = const {},
-    String filesKey = "",
-    bool shouldNotThrowException = false,
-    bool isResponseHasModel = true,
-  }) async {
-    late ApiResponseModel apiResponse;
-    late ErrorModel error;
-    if (method != APIMethod.post) {
-      error = ErrorModel(
-        appState.localization.error,
-        "Only Post Method Allowed.",
-        503,
-      );
-      return apiResponse = ApiResponseModel(null, error, false);
-    }
-    late Response response;
-    _dio.options.headers["Content-Type"] = "multipart/form-data";
-    FormData formData = FormData();
-    if (filesKey.isNotEmpty) {
-      List<MultipartFile> multiPartFiles = [];
-      for (FileInfo file in files) {
-        multiPartFiles.add(
-          MultipartFile.fromFileSync(file.path, filename: file.name),
-        );
-      }
-      formData = FormData.fromMap({filesKey: multiPartFiles});
-    } else {
-      List<MapEntry<String, MultipartFile>> multiPartFiles = [];
-      for (FileInfo file in files) {
-        multiPartFiles.add(
-          MapEntry(
-            'attachment',
-            MultipartFile.fromFileSync(file.path, filename: file.name),
-          ),
-        );
-      }
-      formData.files.addAll(multiPartFiles);
-    }
-    final mapData = param.entries.map((e) => MapEntry(e.key, e.value)).toList();
-    for (MapEntry<String, String> entry in mapData) {
-      formData.fields.add(entry);
-    }
-    try {
-      response = await _dio.post(
-        url,
-        data: formData,
-        options: Options(
-          headers: {
-            'Cookie': appState.sessionId,
-            'tz': appState.timeZone,
-            if (appState.userId.isNotEmpty) "user-id": appState.userId,
-            if (appState.countryCode.value.isNotEmpty)
-              "country-code": appState.countryCode.value,
-            if (appState.ipAddress.value.isNotEmpty)
-              "ip-address": appState.ipAddress.value,
-          },
-        ),
-      );
-      if (!isResponseHasModel) {
-        return apiResponse = ApiResponseModel(response.data, null, true);
-      }
-      apiResponse = await _responseHandler(response);
-    } on DioException catch (e) {
-      error = _handleError(e);
-      apiResponse = ApiResponseModel(null, error, false);
-    } catch (e) {
-      error = ErrorModel(
-        appState.localization.error,
-        appState.localization.somethingWentWrong,
-        504,
-      );
-      apiResponse = ApiResponseModel(null, error, false);
-    }
-    if (apiResponse.status) {
-      return apiResponse;
-    } else if (shouldNotThrowException && !apiResponse.status) {
-      return apiResponse;
-    } else {
-      throw ErrorException(apiResponse.error!);
-    }
-  }
+  // Future<ApiResponseModel> uploadFile(
+  //   String url,
+  //   APIMethod method,
+  //   List<FileInfo> files, {
+  //   Map<String, String> param = const {},
+  //   String filesKey = "",
+  //   bool shouldNotThrowException = false,
+  //   bool isResponseHasModel = true,
+  // }) async {
+  //   late ApiResponseModel apiResponse;
+  //   late ErrorModel error;
+  //   if (method != APIMethod.post) {
+  //     error = ErrorModel(
+  //       appState.localization.error,
+  //       "Only Post Method Allowed.",
+  //       503,
+  //     );
+  //     return apiResponse = ApiResponseModel(null, error, false);
+  //   }
+  //   late Response response;
+  //   _dio.options.headers["Content-Type"] = "multipart/form-data";
+  //   FormData formData = FormData();
+  //   if (filesKey.isNotEmpty) {
+  //     List<MultipartFile> multiPartFiles = [];
+  //     for (FileInfo file in files) {
+  //       multiPartFiles.add(
+  //         MultipartFile.fromFileSync(file.path, filename: file.name),
+  //       );
+  //     }
+  //     formData = FormData.fromMap({filesKey: multiPartFiles});
+  //   } else {
+  //     List<MapEntry<String, MultipartFile>> multiPartFiles = [];
+  //     for (FileInfo file in files) {
+  //       multiPartFiles.add(
+  //         MapEntry(
+  //           'attachment',
+  //           MultipartFile.fromFileSync(file.path, filename: file.name),
+  //         ),
+  //       );
+  //     }
+  //     formData.files.addAll(multiPartFiles);
+  //   }
+  //   final mapData = param.entries.map((e) => MapEntry(e.key, e.value)).toList();
+  //   for (MapEntry<String, String> entry in mapData) {
+  //     formData.fields.add(entry);
+  //   }
+  //   try {
+  //     response = await _dio.post(
+  //       url,
+  //       data: formData,
+  //       options: Options(
+  //         headers: {
+  //           'Cookie': appState.sessionId,
+  //           'tz': appState.timeZone,
+  //           if (appState.userId.isNotEmpty) "user-id": appState.userId,
+  //           if (appState.countryCode.value.isNotEmpty)
+  //             "country-code": appState.countryCode.value,
+  //           if (appState.ipAddress.value.isNotEmpty)
+  //             "ip-address": appState.ipAddress.value,
+  //         },
+  //       ),
+  //     );
+  //     if (!isResponseHasModel) {
+  //       return apiResponse = ApiResponseModel(response.data, null, true);
+  //     }
+  //     apiResponse = await _responseHandler(response);
+  //   } on DioException catch (e) {
+  //     error = _handleError(e);
+  //     apiResponse = ApiResponseModel(null, error, false);
+  //   } catch (e) {
+  //     error = ErrorModel(
+  //       appState.localization.error,
+  //       appState.localization.somethingWentWrong,
+  //       504,
+  //     );
+  //     apiResponse = ApiResponseModel(null, error, false);
+  //   }
+  //   if (apiResponse.status) {
+  //     return apiResponse;
+  //   } else if (shouldNotThrowException && !apiResponse.status) {
+  //     return apiResponse;
+  //   } else {
+  //     throw ErrorException(apiResponse.error!);
+  //   }
+  // }
 
   /// Method to download files
   Future<ApiResponseModel> downloadFile({
@@ -270,7 +308,16 @@ final class APIController {
     String? session = response.headers['set-cookie']?.firstWhereOrNull(
       (element) => element.startsWith(AppConstants.sessionId),
     );
-    // debugPrint
+    debugPrint("📥 RESPONSE HANDLER");
+    debugPrint("⬅️ Status Code: ${response.statusCode}");
+    debugPrint("⬅️ Headers: ${response.headers}");
+    if (response.data is Map) {
+      debugPrint("⬅️ Body:");
+      UtilMethods().logPrettyJson(response.data as Map);
+    } else {
+      debugPrint("⬅️ Body:");
+      UtilMethods().logFullText(response.data.toString());
+    }
     if (session != null) {
       await getIt<StorageManager>().saveData(
         AppConstants.sessionId,

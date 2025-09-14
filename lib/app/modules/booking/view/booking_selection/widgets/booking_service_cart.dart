@@ -6,6 +6,7 @@ import 'package:timoraa/app/utils/services/util_methods.dart';
 import '../../../../../core/widgets/buttons/app_elevated_button.dart';
 import '../../../../../utils/constants/asset_constants.dart';
 import '../../../../../utils/constants/color_constants.dart';
+import '../../../../../utils/services/app_state.dart';
 
 class BookingServiceCart extends StatelessWidget {
   final String title;
@@ -62,7 +63,7 @@ class BookingServiceCart extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        "\$ $price",
+                        "${appState.currencyName.value} $price",
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ],

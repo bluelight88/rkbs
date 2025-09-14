@@ -12,7 +12,7 @@ final class HomeInitial extends HomeState {}
 final class HomeLoading extends HomeState {}
 
 final class HomeSuccess extends HomeState {
-  final HomeResponseModel homeResponseModel;
+  final HomeObj homeResponseModel;
 
   const HomeSuccess(this.homeResponseModel);
 }

@@ -7,6 +7,7 @@ class APIS {
       todo = 'to_do',
       logout = '${baseUrl}api/logout',
       home = '${baseUrl}data/api/device/GetHomePageDetails',
+      initApp = '${baseUrl}data/api/auth/init_app',
       providerDetail = '${baseUrl}data/api/device/GetProviderDetails',
       bookAppointmentDetails = '${baseUrl}data/api/device/GetServiceById',
       bookAppointment = '${baseUrl}data/api/device/DoBooking',

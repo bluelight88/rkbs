@@ -7,7 +7,6 @@ import '../../../../core/widgets/custom/center_loader_widget.dart';
 import '../../../../core/widgets/custom/center_message_widget.dart';
 import '../../../../utils/constants/color_constants.dart';
 import '../../view_model/search/search_bloc.dart';
-import '../home/widget/dynamic_slider.dart';
 
 class SearchPage extends StatefulWidget {
   final TextEditingController searchController;
@@ -74,25 +73,25 @@ class _SearchPageState extends State<SearchPage> {
                     itemCount: 10,
                   ),
                 ),
-                SingleChildScrollView(
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.6,
-                    width: MediaQuery.of(context).size.width,
-                    child: DynamicSlider(
-                      title: "Barber Near You",
-                      showTileDot: false,
-                      scrollDirection: Axis.horizontal,
-                      items: state.searchResponseModel.recommended,
-                      imageUrlGetter: (recommended) => recommended.imageUrl,
-                      primaryTextGetter:
-                          (recommended) => recommended.providerName,
-                      secondaryTextGetter:
-                          (recommended) =>
-                              "${recommended.providerAddressline1}, ${recommended.providerCity}",
-                      badgeText: (badge) => "4.9 | 8993 Reviews",
-                    ),
-                  ),
-                ),
+                // SingleChildScrollView(
+                //   child: SizedBox(
+                //     height: MediaQuery.of(context).size.height * 0.6,
+                //     width: MediaQuery.of(context).size.width,
+                //     child: DynamicSlider(
+                //       title: "Barber Near You",
+                //       showTileDot: false,
+                //       scrollDirection: Axis.horizontal,
+                //       items: state.searchResponseModel.recommended,
+                //       imageUrlGetter: (recommended) => recommended.imageUrl,
+                //       primaryTextGetter:
+                //           (recommended) => recommended.providerName,
+                //       secondaryTextGetter:
+                //           (recommended) =>
+                //               "${recommended.providerAddressline1}, ${recommended.providerCity}",
+                //       badgeText: (badge) => "4.9 | 8993 Reviews",
+                //     ),
+                //   ),
+                // ),
               ],
             ),
           );

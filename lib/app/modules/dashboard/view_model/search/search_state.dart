@@ -12,7 +12,7 @@ final class SearchInitial extends SearchState {}
 final class SearchLoading extends SearchState {}
 
 final class SearchSuccess extends SearchState {
-  final HomeResponseModel searchResponseModel;
+  final HomeObj searchResponseModel;
 
   const SearchSuccess(this.searchResponseModel);
 }

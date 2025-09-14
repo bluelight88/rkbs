@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:timoraa/app/modules/auth/view_model/splash_init/splash_init_bloc.dart';
 import 'package:timoraa/app/utils/constants/asset_constants.dart';
 import 'package:timoraa/app/utils/constants/color_constants.dart';
 import 'package:timoraa/app/utils/constants/route_name.dart';
@@ -28,10 +30,12 @@ final class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void initState() {
-    _setInitialValues(context);
     ValueChecker().getUserLocationInfo().then((code) {
       appState.countryCode.value = code.countryCode;
       appState.ipAddress.value = code.ipAddress;
+      if (mounted) {
+        context.read<SplashInitBloc>().add(UserSplashInit());
+      }
       Timer(Duration(seconds: 3), () {
         if (appState.userId.isEmpty) {
           onBoard.value = true;
@@ -72,65 +76,72 @@ final class _SplashScreenState extends State<SplashScreen> {
   Scaffold build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorConstants.primaryColor,
-      body: Stack(
-        children: [
-          Image.asset(
-            AssetConstants.icSplashScreen,
-            fit: BoxFit.fill,
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-          ),
-          ValueListenableBuilder(
-            valueListenable: onBoard,
-            builder: (context, value, child) {
-              return value
-                  ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 60),
-                        child: Center(
-                          child: Text(
-                            "Find the perfect stylist\n at your door Steps",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w200,
-                              fontSize: 23,
-                              fontFamily: "PlusJakartaSans",
-                              color: ColorConstants.whiteColor,
+      body: BlocListener<SplashInitBloc, SplashInitState>(
+        listener: (context, state) {
+          if (state is SplashInitSuccess) {
+            _setInitialValues(context);
+          }
+        },
+        child: Stack(
+          children: [
+            Image.asset(
+              AssetConstants.icSplashScreen,
+              fit: BoxFit.fill,
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+            ),
+            ValueListenableBuilder(
+              valueListenable: onBoard,
+              builder: (context, value, child) {
+                return value
+                    ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 60),
+                          child: Center(
+                            child: Text(
+                              "Find the perfect stylist\n at your door Steps",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w200,
+                                fontSize: 23,
+                                fontFamily: "PlusJakartaSans",
+                                color: ColorConstants.whiteColor,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      const Gap(30),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: AppElevatedButton(
-                          Text(
-                            "Get Started",
-                            style: TextStyle(
-                              color: ColorConstants.primaryColor,
-                              fontSize: 17,
-                              fontFamily: "PlusJakartaSans",
-                              fontWeight: FontWeight.w600,
+                        const Gap(30),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: AppElevatedButton(
+                            Text(
+                              "Get Started",
+                              style: TextStyle(
+                                color: ColorConstants.primaryColor,
+                                fontSize: 17,
+                                fontFamily: "PlusJakartaSans",
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
+                            backgroundColor: ColorConstants.whiteColor,
+                            onPressed: () {
+                              context.pushReplacementNamed(
+                                RouteName.dashboardScreen,
+                              );
+                            },
                           ),
-                          backgroundColor: ColorConstants.whiteColor,
-                          onPressed: () {
-                            context.pushReplacementNamed(
-                              RouteName.dashboardScreen,
-                            );
-                          },
                         ),
-                      ),
-                      const Gap(50),
-                    ],
-                  )
-                  : SizedBox.shrink();
-            },
-          ),
-        ],
+                        const Gap(50),
+                      ],
+                    )
+                    : SizedBox.shrink();
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

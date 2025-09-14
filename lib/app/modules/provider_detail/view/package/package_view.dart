@@ -3,6 +3,7 @@ import 'package:gap/gap.dart';
 import 'package:timoraa/app/core/widgets/app_bar/custom_app_bar.dart';
 import 'package:timoraa/app/utils/constants/color_constants.dart';
 
+import '../../../../utils/services/app_state.dart';
 import '../menus/widgets/service_cards.dart';
 
 class PackageViewScreen extends StatelessWidget {
@@ -18,7 +19,7 @@ class PackageViewScreen extends StatelessWidget {
         titleColor: ColorConstants.primaryColor,
       ),
       body: ListView.separated(
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
         itemBuilder: (context, index) {
           return ServiceCards(
             title: "Service",
@@ -61,7 +62,7 @@ class PackageViewScreen extends StatelessWidget {
             ),
             middleChild: Flexible(
               child: Text(
-                "\$ 200.0",
+                "${appState.currencyName.value} 200.0",
                 maxLines: 1,
                 style: TextStyle(
                   color: ColorConstants.primaryColor,
@@ -74,7 +75,7 @@ class PackageViewScreen extends StatelessWidget {
             child: SizedBox.shrink(),
           );
         },
-        separatorBuilder: (context, index) => Gap(50),
+        separatorBuilder: (context, index) => Gap(20),
         itemCount: 4,
       ),
     );

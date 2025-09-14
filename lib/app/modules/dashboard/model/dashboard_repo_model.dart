@@ -16,7 +16,7 @@ final class DashBoardRepo {
         APIMethod.get,
         param: params,
       );
-      final homeResponse = HomeResponseModel.fromJson(
+      final homeResponse = HomeObj.fromJson(
         response.data is String ? jsonDecode(response.data) : response.data,
       );
       return DataSuccess(homeResponse);
@@ -34,7 +34,7 @@ final class DashBoardRepo {
         APIMethod.get,
         param: params,
       );
-      final homeResponse = HomeResponseModel.fromJson(
+      final homeResponse = HomeObj.fromJson(
         response.data is String ? jsonDecode(response.data) : response.data,
       );
       return DataSuccess(homeResponse);

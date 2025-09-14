@@ -7,6 +7,7 @@ import 'package:timoraa/app/modules/provider_detail/view/provider_detail_screen.
 import 'package:timoraa/app/modules/provider_detail/view_model/provider_detail/provider_detail_bloc.dart';
 import '../../modules/auth/view/login/login_screen.dart';
 import '../../modules/auth/view_model/login/login_bloc.dart';
+import '../../modules/auth/view_model/splash_init/splash_init_bloc.dart';
 import '../../modules/booking/view/appointment_confirm/appointment_confirmed_screen.dart';
 import '../../modules/booking/view/booking_selection/booking_screen.dart';
 import '../../modules/booking/view/review_booking/review_booking_screen.dart';
@@ -60,7 +61,10 @@ final class NavigationManager {
           title: args["title"],
         ),
       ),
-      RouteName.splashScreen => const SplashScreen(),
+      RouteName.splashScreen => BlocProvider(
+        create: (context) => SplashInitBloc(),
+        child: SplashScreen(),
+      ),
       RouteName.reviewBookingScreen => BlocProvider(
         create: (context) => BookingServiceBloc(),
         child: ReviewBookingScreen(),

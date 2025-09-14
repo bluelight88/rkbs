@@ -7,6 +7,7 @@ import 'package:timoraa/app/utils/constants/custom_text_form_field.dart';
 import 'package:timoraa/app/utils/constants/route_name.dart';
 import 'package:timoraa/app/utils/extensions/navigation_extension.dart';
 
+import '../../../../utils/services/app_state.dart';
 import '../../model/provider_detail_model.dart';
 
 class ServiceTab extends StatefulWidget {
@@ -125,7 +126,7 @@ class _ServiceTabState extends State<ServiceTab> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "\$${service.servicesCost[0].cost}",
+                          "${appState.currencyName.value} ${service.servicesCost[0].cost}",
                           maxLines: 1,
                           style: TextStyle(
                             color: ColorConstants.primaryColor,

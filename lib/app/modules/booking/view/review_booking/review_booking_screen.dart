@@ -175,7 +175,7 @@ class _ReviewBookingScreenState extends State<ReviewBookingScreen> {
                                   ),
                                 ),
                                 Text(
-                                  "\$${total.toStringAsFixed(2)}",
+                                  "${appState.currencyName.value} ${total.toStringAsFixed(2)}",
                                   style: TextStyle(
                                     color: ColorConstants.primaryColor,
                                     fontSize: 18,
@@ -211,7 +211,7 @@ class _ReviewBookingScreenState extends State<ReviewBookingScreen> {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Text(
-                                "\$${appState.cartItems[index].cost.toStringAsFixed(2)}",
+                                "${appState.currencyName.value} ${appState.cartItems[index].cost.toStringAsFixed(2)}",
                                 style: TextStyle(
                                   color: ColorConstants.primaryColor,
                                   fontSize: 14,

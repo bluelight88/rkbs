@@ -344,7 +344,7 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                                               builder:
                                                   (context, value, _) => Center(
                                                     child: Text(
-                                                      '\$${value.toStringAsFixed(2)}',
+                                                      '${appState.currencyName.value} ${value.toStringAsFixed(2)}',
                                                       style: const TextStyle(
                                                         fontSize: 30,
                                                         fontWeight:

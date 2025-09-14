@@ -6,6 +6,7 @@ import '../../../../utils/constants/apis.dart';
 import '../../../../utils/manager/api_controller.dart';
 import '../../../../utils/manager/get_it_manager.dart';
 import '../login_model.dart';
+import '../splash_response_model.dart';
 
 final class AuthRepo {
   Future<DataState> login(Map<String, dynamic> params) async {
@@ -21,6 +22,26 @@ final class AuthRepo {
             response.data,
           );
       return DataSuccess(loginModel);
+    } on ErrorException catch (e) {
+      return DataFailure(e.error);
+    } catch (e) {
+      return UnknownDataFailure(e);
+    }
+  }
+
+  Future<DataState> initApp(Map<String, dynamic> params) async {
+    try {
+      final response = await getIt<APIController>().request(
+        APIS.initApp,
+        APIMethod.post,
+        param: params,
+      );
+      final SplashResponseModel splashResponseModel =
+          await compute<Map<String, dynamic>, SplashResponseModel>(
+            SplashResponseModel.fromJson,
+            response.data,
+          );
+      return DataSuccess(splashResponseModel);
     } on ErrorException catch (e) {
       return DataFailure(e.error);
     } catch (e) {

@@ -36,6 +36,7 @@ final class AppState {
       _deviceId = "",
       _fcmToken = "",
       _apnsToken = "",
+      _accessToken = "",
       _userId = "",
       _userName = "-",
       _userImage = "-",
@@ -63,6 +64,8 @@ final class AppState {
 
   String get apnsToken => _apnsToken;
 
+  String get accessToken => _accessToken;
+
   String get appVersion => _appVersion;
 
   double getScreenHeight({double percent = 1}) => _screenSize.height * percent;
@@ -83,7 +86,12 @@ final class AppState {
 
   set setUserMail(String userMail) => _userMail = userMail;
 
+  set setAccessToken(String accessToken) => _accessToken = accessToken;
+
   ValueNotifier<String> countryCode = ValueNotifier<String>("UK");
+  ValueNotifier<int> countryId = ValueNotifier<int>(0);
+  ValueNotifier<int> currencyId = ValueNotifier<int>(0);
+  ValueNotifier<String> currencyName = ValueNotifier<String>("£");
   ValueNotifier<String> ipAddress = ValueNotifier<String>("");
   ValueNotifier<int> appPageIndex = ValueNotifier<int>(0);
   ValueNotifier<double> totalPrice = ValueNotifier<double>(0.0);

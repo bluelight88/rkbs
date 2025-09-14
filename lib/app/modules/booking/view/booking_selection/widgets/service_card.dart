@@ -5,6 +5,7 @@ import 'package:timoraa/app/utils/extensions/navigation_extension.dart';
 import '../../../../../core/widgets/buttons/app_elevated_button.dart';
 import '../../../../../utils/constants/asset_constants.dart';
 import '../../../../../utils/constants/color_constants.dart';
+import '../../../../../utils/services/app_state.dart';
 
 class ServiceCard extends StatelessWidget {
   final String title;
@@ -60,7 +61,7 @@ class ServiceCard extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    "\$ $price",
+                    "${appState.currencyName.value} $price",
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ],
