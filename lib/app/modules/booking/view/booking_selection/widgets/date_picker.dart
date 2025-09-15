@@ -20,27 +20,46 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
   final ScrollController _scrollController = ScrollController();
 
   List<DateTime> getMonthDates(DateTime month) {
-    final first = DateTime(month.year, month.month, 1);
     final last = DateTime(month.year, month.month + 1, 0);
-    return List.generate(last.day, (i) => first.add(Duration(days: i)));
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+
+    List<DateTime> allDates = [];
+    for (int i = 1; i <= last.day; i++) {
+      final date = DateTime(month.year, month.month, i);
+      if (date.isAtSameMomentAs(today) || date.isAfter(today)) {
+        allDates.add(date);
+      }
+    }
+
+    return allDates;
   }
 
+  DateTime _displayMonth = DateTime.now();
+
   void _changeMonth(int delta) {
-    setState(() {
-      widget.selectedDate.value = DateTime(
-        widget.selectedDate.value.year,
-        widget.selectedDate.value.month + delta,
-        1,
-      );
-    });
+    final newMonth = DateTime(
+      _displayMonth.year,
+      _displayMonth.month + delta,
+      1,
+    );
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final lastDayOfNewMonth = DateTime(newMonth.year, newMonth.month + 1, 0);
+    if (lastDayOfNewMonth.isAtSameMomentAs(today) ||
+        lastDayOfNewMonth.isAfter(today)) {
+      setState(() {
+        _displayMonth = newMonth;
+      });
+    }
   }
 
   void _scrollToDate(DateTime targetDate) {
-    final dates = getMonthDates(widget.selectedDate.value);
+    final dates = getMonthDates(_displayMonth);
     final index = dates.indexWhere((d) => DateUtils.isSameDay(d, targetDate));
 
     if (index != -1 && _scrollController.hasClients) {
-      final itemWidth = 70.0; // 60 width + 10 gap
+      final itemWidth = 70.0;
       final screenWidth = MediaQuery.of(context).size.width;
       final targetOffset =
           (index * itemWidth) - (screenWidth / 2) + (itemWidth / 2);
@@ -58,21 +77,11 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
     final normalizedToday = DateTime(now.year, now.month, now.day);
     final normalizedTap = DateTime(date.year, date.month, date.day);
 
-    if (normalizedTap.isBefore(normalizedToday)) {
-      // Past date → force to today with current time
-      setState(() {
-        widget.selectedDate.value = now;
-      });
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _scrollToDate(normalizedToday);
-      });
-    } else if (DateUtils.isSameDay(normalizedTap, normalizedToday)) {
-      // Today → keep current time for correct time parsing later
+    if (DateUtils.isSameDay(normalizedTap, normalizedToday)) {
       setState(() {
         widget.selectedDate.value = now;
       });
     } else {
-      // Future date → keep midnight
       setState(() {
         widget.selectedDate.value = normalizedTap;
       });
@@ -82,6 +91,12 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
 
   @override
   void initState() {
+    _displayMonth = DateTime(
+      widget.selectedDate.value.year,
+      widget.selectedDate.value.month,
+      1,
+    );
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _scrollToDate(widget.selectedDate.value);
     });
@@ -90,7 +105,15 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
 
   @override
   Widget build(BuildContext context) {
-    final List<DateTime> dates = getMonthDates(widget.selectedDate.value);
+    final List<DateTime> dates = getMonthDates(_displayMonth);
+    final now = DateTime.now();
+    final currentMonth = DateTime(now.year, now.month, 1);
+    final displayMonthStart = DateTime(
+      _displayMonth.year,
+      _displayMonth.month,
+      1,
+    );
+    final canGoBack = displayMonthStart.isAfter(currentMonth);
 
     return Container(
       color: Colors.black,
@@ -105,16 +128,19 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
                 Container(
                   height: 40,
                   width: 40,
-                  decoration: const BoxDecoration(
-                    color: Color(0xff272727),
+                  decoration: BoxDecoration(
+                    color:
+                        canGoBack
+                            ? const Color(0xff272727)
+                            : const Color(0xff1a1a1a),
                     shape: BoxShape.circle,
                   ),
                   child: Center(
                     child: IconButton(
-                      onPressed: () => _changeMonth(-1),
-                      icon: const Icon(
+                      onPressed: canGoBack ? () => _changeMonth(-1) : null,
+                      icon: Icon(
                         Icons.arrow_back_ios_new,
-                        color: Colors.white,
+                        color: canGoBack ? Colors.white : Colors.grey,
                         size: 20,
                       ),
                     ),
@@ -123,9 +149,7 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
                 Column(
                   children: [
                     Text(
-                      DateFormat(
-                        'MMMM',
-                      ).format(widget.selectedDate.value).toUpperCase(),
+                      DateFormat('MMMM').format(_displayMonth).toUpperCase(),
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 16,
@@ -135,7 +159,7 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
                     ),
                     const Gap(10),
                     Text(
-                      widget.selectedDate.value.year.toString(),
+                      _displayMonth.year.toString(),
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 28,
@@ -170,61 +194,79 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
           /// Horizontal Date Selector
           SizedBox(
             height: 65,
-            child: ListView.separated(
-              controller: _scrollController,
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              itemCount: dates.length,
-              separatorBuilder: (_, __) => const Gap(10),
-              itemBuilder: (context, index) {
-                final date = dates[index];
-                final isSelected = DateUtils.isSameDay(
-                  date,
-                  widget.selectedDate.value,
-                );
+            child:
+                dates.isEmpty
+                    ? const Center(
+                      child: Text(
+                        'No available dates',
+                        style: TextStyle(color: Colors.white70),
+                      ),
+                    )
+                    : ListView.separated(
+                      controller: _scrollController,
+                      scrollDirection: Axis.horizontal,
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      itemCount: dates.length,
+                      separatorBuilder: (_, __) => const Gap(10),
+                      itemBuilder: (context, index) {
+                        final date = dates[index];
+                        final isSelected = DateUtils.isSameDay(
+                          date,
+                          widget.selectedDate.value,
+                        );
 
-                return GestureDetector(
-                  onTap: () => _handleDateTap(date),
-                  child: Container(
-                    width: 60,
-                    decoration: BoxDecoration(
-                      color:
-                          isSelected ? Colors.white : const Color(0xFF1F1F1F),
-                      borderRadius: BorderRadius.circular(14),
-                      border: Border.all(color: const Color(0xff000000)),
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 10,
-                      horizontal: 10,
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          date.day.toString(),
-                          style: TextStyle(
-                            color: isSelected ? Colors.black : Colors.white,
-                            fontWeight: FontWeight.w600,
-                            fontFamily: "PlusJakartaSans",
-                            fontSize: 19,
+                        return GestureDetector(
+                          onTap: () => _handleDateTap(date),
+                          child: Container(
+                            width: 60,
+                            decoration: BoxDecoration(
+                              color:
+                                  isSelected
+                                      ? Colors.white
+                                      : const Color(0xFF1F1F1F),
+                              borderRadius: BorderRadius.circular(14),
+                              border: Border.all(
+                                color: const Color(0xff000000),
+                              ),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 10,
+                              horizontal: 10,
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  date.day.toString(),
+                                  style: TextStyle(
+                                    color:
+                                        isSelected
+                                            ? Colors.black
+                                            : Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                    fontFamily: "PlusJakartaSans",
+                                    fontSize: 19,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  DateFormat('EEE').format(date).toUpperCase(),
+                                  style: TextStyle(
+                                    fontFamily: "PlusJakartaSans",
+                                    color:
+                                        isSelected
+                                            ? Colors.black
+                                            : Colors.white70,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          DateFormat('EEE').format(date).toUpperCase(),
-                          style: TextStyle(
-                            fontFamily: "PlusJakartaSans",
-                            color: isSelected ? Colors.black : Colors.white70,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ],
+                        );
+                      },
                     ),
-                  ),
-                );
-              },
-            ),
           ),
         ],
       ),
