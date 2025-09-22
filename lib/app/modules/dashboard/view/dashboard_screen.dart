@@ -6,12 +6,15 @@ import 'package:timoraa/app/modules/dashboard/view/home/home_screen.dart';
 import 'package:timoraa/app/modules/dashboard/view/search/search_screen.dart';
 import 'package:timoraa/app/modules/dashboard/view/appointment/appointment_screen.dart';
 import 'package:timoraa/app/modules/dashboard/view/account/account_screen.dart';
+import 'package:timoraa/app/modules/dashboard/view_model/appoinment/appoinment_bloc.dart';
 import 'package:timoraa/app/modules/dashboard/view_model/search/search_bloc.dart';
 import 'package:timoraa/app/utils/services/app_state.dart';
 import 'package:timoraa/app/utils/constants/color_constants.dart';
+import 'package:timoraa/app/utils/extensions/navigation_extension.dart';
 
 import '../../../utils/constants/asset_constants.dart';
 import '../view_model/home/home_bloc.dart';
+import '../../../utils/constants/route_name.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -112,7 +115,18 @@ class _DashboardScreenState extends State<DashboardScreen>
           child: SearchPage(searchController: searchController),
         );
       case 2:
-        return const AppointmentScreen();
+       if (appState.userId.isEmpty) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          context.pushNamed(RouteName.authScreen);
+        });
+        return const SizedBox();
+      }
+      else{
+        return BlocProvider<AppoinmentBloc>(
+          create: (_) => AppoinmentBloc()..add(GetAppoinmentRecord(customerId: int.parse(appState.userId))),
+          child: AppointmentScreen(),
+        );
+      }
       case 3:
         return const AccountPage();
       default:

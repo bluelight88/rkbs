@@ -1,15 +1,17 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:timoraa/app/core/widgets/app_bar/custom_app_bar.dart';
+import 'package:timoraa/app/core/widgets/custom/center_loader_widget.dart';
+import 'package:timoraa/app/core/widgets/custom/center_message_widget.dart';
+import 'package:timoraa/app/modules/dashboard/model/appoinment_data_model.dart';
 import 'package:timoraa/app/modules/dashboard/view/appointment/widget/appointment_card.dart';
-import 'package:timoraa/app/utils/constants/asset_constants.dart';
+import 'package:timoraa/app/modules/dashboard/view_model/appoinment/appoinment_bloc.dart';
 import 'package:timoraa/app/utils/constants/color_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-
-import '../../../../core/widgets/buttons/app_elevated_button.dart';
-import '../../../../utils/services/app_state.dart';
-import '../../../auth/model/appointment_model.dart';
+import 'package:timoraa/app/utils/services/app_state.dart';
 
 class AppointmentScreen extends StatefulWidget {
+  
   const AppointmentScreen({super.key});
 
   @override
@@ -17,24 +19,20 @@ class AppointmentScreen extends StatefulWidget {
 }
 
 class _AppointmentScreenState extends State<AppointmentScreen> {
-  final List<AppointmentModel> appointments = [
-    AppointmentModel(
-      service: "Hair Cuts",
-      staffName: "Kevin Smith",
-      salonName: "ASALOON",
-      date: "May 19, 2025",
-      time: "09:30 AM – 10:00 AM",
-      status: "CONFIRMED",
-    ),
-    AppointmentModel(
-      service: "Hair Cuts",
-      staffName: "Kevin Smith",
-      salonName: "ASALOON",
-      date: "Feb 25, 2025",
-      time: "09:30 AM – 10:00 AM",
-      status: "CANCELED",
-    ),
-  ];
+  List<AppoinmentData> appointments = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _getAppoinmentData();
+  }
+
+  // Function to dispatch the event and fetch appointment data
+  void _getAppoinmentData() {
+    final customerId = int.parse(appState.userId); // Get the userId from appState
+    context.read<AppoinmentBloc>().add(GetAppoinmentRecord(customerId: customerId));
+  }
+
 
   bool shouldShowButton(String status) => status == "CANCELED";
 
@@ -65,57 +63,14 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
         "Appointments",
         titleColor: ColorConstants.primaryColor,
         color: Colors.white,
+        leading: null,
         showLeading: false,
       ),
-      body:
-          appState.userId.isEmpty
-              ? Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      AssetConstants.icAppointmentCalender,
-                      height: MediaQuery.of(context).size.height * 0.35,
-                      width: MediaQuery.of(context).size.width * 0.6,
-                    ),
-                    Text(
-                      "Schedule Appointments",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 16,
-                      ),
-                    ),
-                    const Gap(10),
-                    Text(
-                      "Easily manage your hair, skin, and wellness appointments in one place.\n"
-                      "Find salons, check availability, and book instantly.",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 11,
-                        color: Colors.grey.shade600,
-                        height: 1.5,
-                      ),
-                    ),
-                    const Gap(30),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: AppElevatedButton(
-                        Text(
-                          "Explore",
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 16,
-                          ),
-                        ),
-                        onPressed: () {
-                          appState.appPageIndex.value = 1;
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              )
-              : ListView.separated(
+      body:BlocBuilder<AppoinmentBloc, AppoinmentState>(
+      builder: (context, state) {
+        if (state is AppoinmentSuccess) {
+          appointments = state.appoinmentResponseData;
+          return ListView.separated(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 15,
                   vertical: 25,
@@ -133,13 +88,20 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                     ),
                     date: appointments[index].date,
                     time: appointments[index].time,
-                    showButton: true,
+                    showButton: shouldShowButton(appointments[index].status),
                     service: appointments[index].service,
                     staff: appointments[index].staffName,
                     salon: appointments[index].salonName,
                   );
                 },
-              ),
+              );
+        }
+        if (state is AppoinmentFailure) {
+          return FailureWidget(state.message, onRefresh: _getAppoinmentData);
+        }
+        return LoadingWidget();
+      }
+      ) 
     );
   }
 }

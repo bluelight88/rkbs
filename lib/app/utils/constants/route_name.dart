@@ -8,5 +8,6 @@ class RouteName {
       providerDetailScreen = 'providerDetailScreen',
       reviewBookingScreen = 'reviewBookingScreen',
       splashScreen = '/',
-      underDevelopmentScreen = 'underDevelopmentScreen';
+      underDevelopmentScreen = 'underDevelopmentScreen',
+      appointment = "appointmentScreen";
 }
