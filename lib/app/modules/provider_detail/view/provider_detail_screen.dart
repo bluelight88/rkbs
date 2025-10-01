@@ -337,6 +337,7 @@ class _ProviderDetailScreenState extends State<ProviderDetailScreen> {
                       ),
                     ),
                     onPressed: () {},
+                    height: 45,
                   ),
                 )
                 : const SizedBox.shrink();
@@ -375,7 +376,7 @@ class _ProviderDetailScreenState extends State<ProviderDetailScreen> {
               ),
         ];
       case 1:
-        return [ReviewTab(providerDetailModel: providerDetailModel)];
+        return [ReviewTab(providerId: widget.providerId)];
       case 2:
         return [
           SliverToBoxAdapter(

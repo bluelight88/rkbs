@@ -12,5 +12,6 @@ class APIS {
       bookAppointmentDetails = '${baseUrl}data/api/device/GetServiceById',
       bookAppointment = '${baseUrl}data/api/device/DoBooking',
       sendOtp = '${baseUrl}api/send/otp',
-      appoinment='${baseUrl}data/api/device/GetCustomerAppoinments';
+      appoinment='${baseUrl}data/api/device/GetCustomerAppoinments',
+      providerreview='${baseUrl}data/api/device/GetProviderReviews';
 }
