@@ -8,6 +8,7 @@ import 'package:timoraa/app/utils/constants/color_constants.dart';
 import 'package:timoraa/app/utils/extensions/navigation_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:timoraa/app/utils/services/app_state.dart';
 import '../../../../core/widgets/buttons/app_elevated_button.dart';
 import '../../../../utils/constants/custom_text_form_field.dart';
 import '../../../../utils/constants/route_name.dart';
@@ -83,7 +84,10 @@ class _LoginScreenState extends State<LoginScreen> {
               if (widget.fromBooking) {
                 context.pushReplacementNamed(RouteName.reviewBookingScreen);
               } else {
-                context.pushReplacementNamed(RouteName.dashboardScreen);
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  RouteName.dashboardScreen,
+                  (Route<dynamic> route) => false,
+                );
               }
             }
             if (state is LoginLoading) {
@@ -318,7 +322,13 @@ class _LoginScreenState extends State<LoginScreen> {
                 left: 20,
                 child: InkWell(
                   onTap: () {
-                    context.pop();
+                    if (widget.fromBooking) {
+                      context.pop();
+                    }
+                    else{
+                      appState.appPageIndex.value = 0;
+                      context.pushReplacementNamed(RouteName.dashboardScreen);
+                    }
                   },
                   child: Icon(
                     Icons.arrow_back,
