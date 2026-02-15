@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("kotlin-android")
+    id("com.google.gms.google-services")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
 }
@@ -25,21 +26,16 @@ android {
         applicationId = "com.timoraa.app"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
+        minSdk = 24
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        multiDexEnabled = true
     }
 
     flavorDimensions += "env"
 
     productFlavors {
-        create("dev") {
-            dimension = "env"
-            applicationId = "com.timoraa.app.dev"
-            versionNameSuffix = "-dev"
-        }
-
         create("prod") {
             dimension = "env"
             applicationId = "com.timoraa.app"
@@ -58,6 +54,7 @@ android {
 dependencies {
     // ✅ Add this for desugaring support
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
+    implementation("com.google.android.gms:play-services-auth:20.6.0")
 }
 
 flutter {

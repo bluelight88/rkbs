@@ -137,6 +137,7 @@ class _DynamicSliderState extends State<DynamicSlider> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          if(badgeText.isNotEmpty)
                           Container(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 5,

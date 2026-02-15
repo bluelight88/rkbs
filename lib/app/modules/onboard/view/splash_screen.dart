@@ -25,26 +25,68 @@ final class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-final class _SplashScreenState extends State<SplashScreen> {
+final class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _fadeAnimation;
+  late Animation<double> _scaleAnimation;
+  late Animation<Offset> _slideAnimation;
+
   final ValueNotifier<bool> onBoard = ValueNotifier<bool>(false);
 
   @override
   void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 2000),
+    );
+
+    _fadeAnimation = CurvedAnimation(
+      parent: _controller,
+      curve: const Interval(0.4, 1.0, curve: Curves.easeIn),
+    );
+
+    _scaleAnimation = Tween<double>(begin: 1.2, end: 1.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeOutQuart),
+    );
+
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, 0.3),
+      end: Offset.zero,
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0.4, 1.0, curve: Curves.easeOutCubic),
+      ),
+    );
+
+    _controller.forward();
+
     ValueChecker().getUserLocationInfo().then((code) {
       appState.countryCode.value = code.countryCode;
       appState.ipAddress.value = code.ipAddress;
       if (mounted) {
         context.read<SplashInitBloc>().add(UserSplashInit());
       }
-      Timer(Duration(seconds: 3), () {
+      Timer(const Duration(seconds: 3), () {
+        if (!mounted) return;
         if (appState.userId.isEmpty) {
           onBoard.value = true;
+          // Restart animation for the onboarding content
+          _controller.reset();
+          _controller.forward();
         } else {
           context.pushReplacementNamed(RouteName.dashboardScreen);
         }
       });
     });
-    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    onBoard.dispose();
+    super.dispose();
   }
 
   void _setInitialValues(BuildContext context) async {
@@ -73,7 +115,7 @@ final class _SplashScreenState extends State<SplashScreen> {
   }
 
   @override
-  Scaffold build(BuildContext context) {
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorConstants.primaryColor,
       body: BlocListener<SplashInitBloc, SplashInitState>(
@@ -84,46 +126,82 @@ final class _SplashScreenState extends State<SplashScreen> {
         },
         child: Stack(
           children: [
-            Image.asset(
-              AssetConstants.icSplashScreen,
-              fit: BoxFit.fill,
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
+            // Background Image with Scale Animation
+            Positioned.fill(
+              child: AnimatedBuilder(
+                animation: _scaleAnimation,
+                builder: (context, child) {
+                  return Transform.scale(
+                    scale: _scaleAnimation.value,
+                    child: child,
+                  );
+                },
+                child: Image.asset(
+                  AssetConstants.icSplashScreen,
+                  fit: BoxFit.cover,
+                ),
+              ),
             ),
+            
+            // Gradient Overlay for readability
+            Positioned.fill(
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.transparent,
+                      Colors.black.withValues(alpha: 0.2),
+                      Colors.black.withValues(alpha: 0.8),
+                    ],
+                    stops: const [0.0, 0.5, 1.0],
+                  ),
+                ),
+              ),
+            ),
+
+            // Onboarding Content
             ValueListenableBuilder(
               valueListenable: onBoard,
               builder: (context, value, child) {
-                return value
-                    ? Column(
+                if (!value) return const SizedBox.shrink();
+                return FadeTransition(
+                  opacity: _fadeAnimation,
+                  child: SlideTransition(
+                    position: _slideAnimation,
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 60),
+                          padding: const EdgeInsets.symmetric(horizontal: 40),
                           child: Center(
                             child: Text(
-                              "Find the perfect stylist\n at your door Steps",
+                              "Find the perfect stylist\nat your door Steps",
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                fontWeight: FontWeight.w200,
-                                fontSize: 23,
-                                fontFamily: "PlusJakartaSans",
+                                fontWeight: FontWeight.bold,
+                                fontSize: 26,
+                                letterSpacing: 0.5,
+                                fontFamily: AssetConstants.fontPlusJakartaSans,
                                 color: ColorConstants.whiteColor,
+                                height: 1.2,
                               ),
                             ),
                           ),
                         ),
                         const Gap(30),
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          padding: const EdgeInsets.symmetric(horizontal: 30),
                           child: AppElevatedButton(
                             Text(
                               "Get Started",
                               style: TextStyle(
                                 color: ColorConstants.primaryColor,
-                                fontSize: 17,
-                                fontFamily: "PlusJakartaSans",
-                                fontWeight: FontWeight.w600,
+                                fontSize: 18,
+                                fontFamily: AssetConstants.fontPlusJakartaSans,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                             backgroundColor: ColorConstants.whiteColor,
@@ -134,10 +212,11 @@ final class _SplashScreenState extends State<SplashScreen> {
                             },
                           ),
                         ),
-                        const Gap(50),
+                        const Gap(60),
                       ],
-                    )
-                    : SizedBox.shrink();
+                    ),
+                  ),
+                );
               },
             ),
           ],

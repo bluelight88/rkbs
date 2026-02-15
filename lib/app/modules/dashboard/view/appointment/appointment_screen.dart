@@ -11,7 +11,7 @@ import 'package:gap/gap.dart';
 import 'package:timoraa/app/utils/services/app_state.dart';
 
 class AppointmentScreen extends StatefulWidget {
-  
+
   const AppointmentScreen({super.key});
 
   @override
@@ -59,6 +59,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: ColorConstants.whiteColor,
       appBar: CustomAppBar(
         "Appointments",
         titleColor: ColorConstants.primaryColor,
@@ -101,7 +102,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
         }
         return LoadingWidget();
       }
-      ) 
+      )
     );
   }
 }

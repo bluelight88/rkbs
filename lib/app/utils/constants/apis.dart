@@ -4,6 +4,7 @@ class APIS {
 
   // Authentication
   static const String loginAPI = '${baseUrl}data/api/device/LoginCustomer',
+      socialLogin = '${baseUrl}data/api/device/SocialLoginCustomer',
       todo = 'to_do',
       logout = '${baseUrl}api/logout',
       home = '${baseUrl}data/api/device/GetHomePageDetails',

@@ -55,5 +55,16 @@
     <string>We use notifications to remind you about your appointments.</string>
     <key>NSUserNotificationUsageDescription</key>
     <string>This app needs notification access to remind you about appointments.</string>
+    <key>GIDClientID</key>
+    <string>1031869715051-s63eojiu7uooecubh1dl132aoojovu0j.apps.googleusercontent.com</string>
+    <key>CFBundleURLTypes</key>
+    <array>
+      <dict>
+        <key>CFBundleURLSchemes</key>
+        <array>
+          <string>com.googleusercontent.apps.1031869715051-s63eojiu7uooecubh1dl132aoojovu0j.apps.googleusercontent.com</string>
+        </array>
+      </dict>
+    </array>
 </dict>
 </plist>

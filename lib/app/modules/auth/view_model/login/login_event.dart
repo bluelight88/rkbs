@@ -12,3 +12,10 @@ final class UserLogin extends LoginEvent {
 
   const UserLogin({required this.email, required this.password});
 }
+
+final class SocialLoginEvent extends LoginEvent {
+  final String provider;
+  final String idToken;
+
+  const SocialLoginEvent({required this.provider, required this.idToken});
+}

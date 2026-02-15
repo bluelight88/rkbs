@@ -5,12 +5,14 @@ final class LoginModel {
   final String customerName;
   final String sessionId;
   final String customerImg;
+  final String loginMessage;
 
   LoginModel({
     required this.customerId,
     required this.customerName,
     required this.sessionId,
     required this.customerImg,
+    required this.loginMessage,
   });
 
   factory LoginModel.fromJson(Map<String, dynamic> json) => LoginModel(
@@ -18,5 +20,6 @@ final class LoginModel {
     customerName: UtilMethods().emptyStringValueParser(json['customer_name']),
     sessionId: UtilMethods().emptyStringValueParser(json['SessionId']),
     customerImg: UtilMethods().emptyStringValueParser(json['customer_img']),
+    loginMessage: UtilMethods().emptyStringValueParser(json['LoginMessage']),
   );
 }

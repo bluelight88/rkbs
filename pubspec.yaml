@@ -42,8 +42,7 @@ dependencies:
   dio: ^5.8.0+1
   equatable: ^2.0.7
   file_picker: ^9.0.2
-  firebase_core: ^3.12.1
-  firebase_messaging: ^15.2.4
+  firebase_messaging: ^16.0.2
   flutter_bloc: ^9.1.0
   flutter_local_notifications: ^18.0.1
   flutter_svg: ^2.0.17
@@ -63,7 +62,9 @@ dependencies:
   html: ^0.15.6
   url_launcher: ^6.3.1
   syncfusion_flutter_datepicker: ^29.2.5
-  google_sign_in: ^7.1.1
+  firebase_core: ^4.1.1
+  firebase_auth: ^6.1.0
+  google_sign_in: ^6.2.1
   flutter_facebook_auth: ^7.1.2
   sign_in_with_apple: ^7.0.1
 

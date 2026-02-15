@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:timoraa/app/core/widgets/custom/shimmer_widget.dart';
 import 'package:timoraa/app/modules/provider_detail/model/provider_review_model.dart';
 import 'package:timoraa/app/modules/provider_detail/view_model/provider_reviews/provider_reviews_bloc.dart';
 import 'package:timoraa/app/utils/constants/color_constants.dart';
@@ -33,41 +34,24 @@ class ReviewTab extends StatelessWidget {
       create: (_) => ProviderReviewsBloc()..add(FetchProviderReview(providerId: providerId)),
       child: BlocBuilder<ProviderReviewsBloc, ProviderReviewsState>(
         builder: (context, state) {
-          /// ✅ Show loading with height (fixes black screen issue)
           if (state is ProviderReviewLoading) {
-            return SliverToBoxAdapter(
-              child: Container(
-                color: ColorConstants.whiteColor,
-                height: MediaQuery.of(context).size.height * 0.6,
-                alignment: Alignment.center,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    CircularProgressIndicator(),
-                    SizedBox(height: 16),
-                    Text("Loading reviews..."),
-                  ],
-                ),
-              ),
-            );
+            return _buildSkeleton(context);
           }
 
-          /// ❌ Failed state
           if (state is ProviderReviewFailure) {
             return SliverToBoxAdapter(
               child: Container(
                 color: ColorConstants.whiteColor,
                 height: MediaQuery.of(context).size.height * 0.6,
                 alignment: Alignment.center,
-                child: Text(
+                child: const Text(
                   "No reviews found.",
-                  style: TextStyle(color: ColorConstants.primaryColor,fontSize: 16,fontFamily: "PlusJakartaSans",),
+                  style: TextStyle(color: ColorConstants.primaryColor, fontSize: 16, fontFamily: "PlusJakartaSans"),
                 ),
               ),
             );
           }
 
-          /// ✅ Success state
           if (state is ProviderReviewSuccess) {
             final providerReviewModel = state.providerReviewmodel;
 
@@ -77,10 +61,10 @@ class ReviewTab extends StatelessWidget {
                   color: ColorConstants.whiteColor,
                   height: MediaQuery.of(context).size.height * 0.6,
                   alignment: Alignment.center,
-                  child: Text(
+                  child: const Text(
                     "No reviews found.",
                     style: TextStyle(
-                      color: ColorConstants.whiteColor,
+                      color: ColorConstants.primaryColor,
                       fontSize: 16,
                       fontFamily: "PlusJakartaSans",
                     ),
@@ -97,7 +81,7 @@ class ReviewTab extends StatelessWidget {
             return SliverList(
               delegate: SliverChildListDelegate([
                 Container(
-                  decoration: BoxDecoration(color: ColorConstants.whiteColor),
+                  decoration: const BoxDecoration(color: ColorConstants.whiteColor),
                   child: Column(
                     children: [
                       const Gap(20),
@@ -131,7 +115,7 @@ class ReviewTab extends StatelessWidget {
                           opacity: 0.7,
                           child: Text(
                             "based on $totalReviews reviews",
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: ColorConstants.primaryColor,
                               fontFamily: "PlusJakartaSans",
                               fontSize: 14,
@@ -277,17 +261,82 @@ class ReviewTab extends StatelessWidget {
             );
           }
 
-          /// 🔁 Fallback state (should never hit ideally)
-          return SliverToBoxAdapter(
-            child: Container(
-              color: ColorConstants.whiteColor,
-              height: MediaQuery.of(context).size.height * 0.6,
-              alignment: Alignment.center,
-              child: const CircularProgressIndicator(),
-            ),
-          );
+          return _buildSkeleton(context);
         },
       ),
+    );
+  }
+
+  Widget _buildSkeleton(BuildContext context) {
+    return SliverList(
+      delegate: SliverChildListDelegate([
+        Container(
+          color: ColorConstants.whiteColor,
+          padding: const EdgeInsets.symmetric(vertical: 20),
+          child: Column(
+            children: [
+              const ShimmerWidget.rectangular(width: 80, height: 60),
+              const Gap(10),
+              const ShimmerWidget.rectangular(width: 120, height: 20),
+              const Gap(10),
+              const ShimmerWidget.rectangular(width: 150, height: 15),
+              const Gap(30),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  children: List.generate(
+                    4,
+                    (index) => const Padding(
+                      padding: EdgeInsets.only(bottom: 10),
+                      child: Row(
+                        children: [
+                          ShimmerWidget.rectangular(width: 60, height: 12),
+                          Gap(10),
+                          Expanded(child: ShimmerWidget.rectangular(height: 8)),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const Divider(height: 40, thickness: 1, indent: 20, endIndent: 20),
+              Column(
+                children: List.generate(
+                  3,
+                  (index) => Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Row(
+                          children: [
+                            ShimmerWidget.circular(width: 50, height: 50),
+                            Gap(15),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  ShimmerWidget.rectangular(width: 120, height: 15),
+                                  Gap(8),
+                                  ShimmerWidget.rectangular(width: 80, height: 12),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        const Gap(15),
+                        const ShimmerWidget.rectangular(height: 12),
+                        const Gap(8),
+                        ShimmerWidget.rectangular(height: 12, width: MediaQuery.of(context).size.width * 0.6),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ]),
     );
   }
 }

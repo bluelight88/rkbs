@@ -12,6 +12,7 @@ import 'package:timoraa/app/utils/services/app_state.dart';
 import '../../../../core/widgets/buttons/app_elevated_button.dart';
 import '../../../../utils/constants/custom_text_form_field.dart';
 import '../../../../utils/constants/route_name.dart';
+import '../social_auth.dart';
 
 class LoginScreen extends StatefulWidget {
   final bool fromBooking;
@@ -45,7 +46,6 @@ class _LoginScreenState extends State<LoginScreen> {
     if (value.isEmpty) return 'Password is required';
     if (value.length < 6) return 'Password must be at least 6 characters';
 
-    // Optional: if you want to enforce at least 1 letter and 1 number
     final hasLetter = RegExp(r'[A-Za-z]').hasMatch(value);
     final hasNumber = RegExp(r'[0-9]').hasMatch(value);
 
@@ -53,7 +53,7 @@ class _LoginScreenState extends State<LoginScreen> {
       return 'Password must contain letters and numbers';
     }
 
-    return null; // ✅ valid
+    return null;
   }
 
   @override
@@ -68,8 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
-        statusBarIconBrightness:
-            Brightness.light, // light icons for dark background
+        statusBarIconBrightness: Brightness.light,
         statusBarBrightness: Brightness.dark,
       ),
       child: Scaffold(
@@ -125,7 +124,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Gap(20),
-                        Text(
+                        const Text(
                           "Login",
                           style: TextStyle(
                             fontSize: 30,
@@ -134,7 +133,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                         const Gap(30),
-                        Text(
+                        const Text(
                           "Welcome back!",
                           style: TextStyle(
                             fontSize: 22,
@@ -187,7 +186,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         const Gap(30),
                         AppElevatedButton(
-                          Text(
+                          const Text(
                             "Login",
                             style: TextStyle(
                               fontSize: 17,
@@ -209,9 +208,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           },
                         ),
                         const Gap(40),
-                        Row(
+                        const Row(
                           children: [
-                            const Expanded(
+                            Expanded(
                               child: Divider(
                                 thickness: 1,
                                 color: ColorConstants.whiteColor,
@@ -227,7 +226,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 color: ColorConstants.whiteColor,
                               ),
                             ),
-                            const Expanded(
+                            Expanded(
                               child: Divider(
                                 thickness: 1,
                                 color: ColorConstants.whiteColor,
@@ -240,16 +239,23 @@ class _LoginScreenState extends State<LoginScreen> {
                         const Gap(30),
                         Row(
                           children: [
-                            Spacer(),
+                            const Spacer(),
                             InkWell(
-                              onTap: () {
-                                // todo: key and setups once account is ready
-                                // SocialAuthService.signInWithFacebook();
+                              onTap: () async {
+                                final result = await SocialAuthService.signInWithFacebook();
+                                if (result != null && context.mounted) {
+                                  context.read<LoginBloc>().add(
+                                    SocialLoginEvent(
+                                      provider: result.provider,
+                                      idToken: result.idToken,
+                                    ),
+                                  );
+                                }
                               },
                               child: Container(
                                 height: 50,
                                 width: MediaQuery.of(context).size.width * 0.25,
-                                padding: EdgeInsets.symmetric(horizontal: 20),
+                                padding: const EdgeInsets.symmetric(horizontal: 20),
                                 decoration: BoxDecoration(
                                   color: ColorConstants.whiteColor,
                                   borderRadius: BorderRadius.circular(10),
@@ -263,16 +269,23 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                               ),
                             ),
-                            Spacer(),
+                            const Spacer(),
                             InkWell(
-                              onTap: () {
-                                // todo: key and setups once account is ready
-                                // SocialAuthService.signInWithGoogle();
+                              onTap: () async {
+                                final result = await SocialAuthService.signInWithGoogle();
+                                if (result != null && context.mounted) {
+                                  context.read<LoginBloc>().add(
+                                    SocialLoginEvent(
+                                      provider: result.provider,
+                                      idToken: result.idToken,
+                                    ),
+                                  );
+                                }
                               },
                               child: Container(
                                 height: 50,
                                 width: MediaQuery.of(context).size.width * 0.25,
-                                padding: EdgeInsets.symmetric(horizontal: 20),
+                                padding: const EdgeInsets.symmetric(horizontal: 20),
                                 decoration: BoxDecoration(
                                   color: ColorConstants.whiteColor,
                                   borderRadius: BorderRadius.circular(10),
@@ -286,16 +299,23 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                               ),
                             ),
-                            Spacer(),
+                            const Spacer(),
                             InkWell(
-                              onTap: () {
-                                // todo: key and setups once account is ready
-                                // SocialAuthService.signInWithApple();
+                              onTap: () async {
+                                final result = await SocialAuthService.signInWithApple();
+                                if (result != null && context.mounted) {
+                                  context.read<LoginBloc>().add(
+                                    SocialLoginEvent(
+                                      provider: result.provider,
+                                      idToken: result.idToken,
+                                    ),
+                                  );
+                                }
                               },
                               child: Container(
                                 height: 50,
                                 width: MediaQuery.of(context).size.width * 0.25,
-                                padding: EdgeInsets.symmetric(horizontal: 20),
+                                padding: const EdgeInsets.symmetric(horizontal: 20),
                                 decoration: BoxDecoration(
                                   color: ColorConstants.whiteColor,
                                   borderRadius: BorderRadius.circular(10),
@@ -309,7 +329,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                               ),
                             ),
-                            Spacer(),
+                            const Spacer(),
                           ],
                         ),
                       ],
@@ -330,7 +350,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       context.pushReplacementNamed(RouteName.dashboardScreen);
                     }
                   },
-                  child: Icon(
+                  child: const Icon(
                     Icons.arrow_back,
                     color: ColorConstants.whiteColor,
                     size: 25,
