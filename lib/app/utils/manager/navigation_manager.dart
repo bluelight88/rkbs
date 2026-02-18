@@ -1,8 +1,21 @@
+import 'package:timoraa/app/modules/dashboard/view/dashboard_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:timoraa/app/modules/provider_detail/view/package/package_view.dart';
+import 'package:timoraa/app/modules/provider_detail/view/provider_detail_screen.dart';
+import 'package:timoraa/app/modules/provider_detail/view_model/provider_detail/provider_detail_bloc.dart';
 import '../../modules/auth/view/login/login_screen.dart';
+import '../../modules/auth/view/otp_verify.dart';
+import '../../modules/auth/view/register/register_screen.dart';
 import '../../modules/auth/view_model/login/login_bloc.dart';
+import '../../modules/auth/view_model/register/register_bloc.dart';
+import '../../modules/auth/view_model/splash_init/splash_init_bloc.dart';
+import '../../modules/booking/view/appointment_confirm/appointment_confirmed_screen.dart';
+import '../../modules/booking/view/booking_selection/booking_screen.dart';
+import '../../modules/booking/view/review_booking/review_booking_screen.dart';
+import '../../modules/booking/view_model/booking_service_bloc.dart';
+import '../../modules/onboard/view/on_boarding_screen.dart';
 import '../../modules/onboard/view/splash_screen.dart';
 import '../../modules/onboard/view/under_development_screen.dart';
 import '../constants/route_name.dart';
@@ -32,17 +45,40 @@ final class NavigationManager {
   }) {
     Widget routeScreen = const UnderDevelopmentScreen();
     routeScreen = switch (routeName) {
-      // ************** OnBoard module starts **************
-      RouteName.splashScreen => const SplashScreen(),
-      // ************** OnBoard module ends **************
-      // ************** Authentication module starts **************
+      RouteName.appointmentConfirmed => AppointmentConfirmedScreen(),
       RouteName.authScreen => MultiBlocProvider(
-        providers: [
-          BlocProvider(create: (context) => LoginBloc()),
-        ],
-        child: const LoginScreen(),
+        providers: [BlocProvider(create: (context) => LoginBloc())],
+        child: LoginScreen(fromBooking: args['fromBooking'] ?? false),
       ),
-      // ************** Authentication module ends **************
+      RouteName.register => BlocProvider(
+        create: (context) => RegisterBloc(),
+        child: RegisterScreen(),
+      ),
+      RouteName.otpVerify => OtpScreen(
+        customerId: args["customerId"],
+      ),
+      RouteName.bookingScreen => BlocProvider(
+        create: (context) => BookingServiceBloc(),
+        child: BookAppointmentScreen(services: args["services"]),
+      ),
+      RouteName.dashboardScreen => const DashboardScreen(),
+      RouteName.onBoardingScreen => const OnBoardingScreen(),
+      RouteName.packageViewScreen => const PackageViewScreen(),
+      RouteName.providerDetailScreen => BlocProvider(
+        create: (context) => ProviderDetailBloc(),
+        child: ProviderDetailScreen(
+          providerId: args["providerId"],
+          title: args["title"],
+        ),
+      ),
+      RouteName.splashScreen => BlocProvider(
+        create: (context) => SplashInitBloc(),
+        child: SplashScreen(),
+      ),
+      RouteName.reviewBookingScreen => BlocProvider(
+        create: (context) => BookingServiceBloc(),
+        child: ReviewBookingScreen(),
+      ),
       _ => UnderDevelopmentScreen(showLeading: args['showLeading'] ?? true),
     };
     return routeScreen;

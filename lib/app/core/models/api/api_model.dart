@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import '../../../utils/services/util_methods.dart';
 
 class ApiResponseModel<T> {
@@ -7,6 +9,28 @@ class ApiResponseModel<T> {
   T data;
 
   ApiResponseModel(this.data, this.error, this.status, {this.message = ""});
+
+  /// Global response handler from raw JSON
+  factory ApiResponseModel.fromJson(
+    Map<String, dynamic> json,
+    T Function(dynamic json) fromJsonT,
+  ) {
+    final bool isSuccess = json['status'] == 'success';
+    final String? rawObj = json['obj'];
+    T? parsedData;
+
+    if (isSuccess && rawObj != null && rawObj.isNotEmpty) {
+      final dynamic decodedObj = jsonDecode(rawObj);
+      parsedData = fromJsonT(decodedObj);
+    }
+
+    return ApiResponseModel<T>(
+      parsedData as T,
+      null,
+      isSuccess,
+      message: json['strMessage'] ?? '',
+    );
+  }
 }
 
 final class ErrorModel {
@@ -15,11 +39,8 @@ final class ErrorModel {
 
   ErrorModel(this.title, this.description, this.statusCode);
 
-  factory ErrorModel.fromJson(Map<String, dynamic> json) => ErrorModel(
-        json["title"],
-        json["description"],
-        json["statusCode"],
-      );
+  factory ErrorModel.fromJson(Map<String, dynamic> json) =>
+      ErrorModel(json["title"], json["description"], json["statusCode"]);
 }
 
 class ValidationErrorModel {
@@ -39,8 +60,9 @@ class ValidationErrorModel {
       ValidationErrorModel(
         name: json["name"],
         message: json["message"],
-        arguments: List<String>.from(json["arguments"]
-            .map((x) => UtilMethods().emptyStringValueParser(x))),
+        arguments: List<String>.from(
+          json["arguments"].map((x) => UtilMethods().emptyStringValueParser(x)),
+        ),
         exceptionType: json["exception_type"],
       );
 }
@@ -48,12 +70,14 @@ class ValidationErrorModel {
 final class FileInfo {
   String path, name, ext;
   bool isFromNetwork;
+
   FileInfo({
     required this.path,
     required this.name,
     this.ext = '',
     this.isFromNetwork = false,
   });
+
   factory FileInfo.fromJson(Map<String, dynamic> json) =>
       FileInfo(path: json["id"], name: json["name"], isFromNetwork: true);
 }

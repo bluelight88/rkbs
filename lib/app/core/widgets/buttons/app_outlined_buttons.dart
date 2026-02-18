@@ -19,17 +19,17 @@ final class SVGOutlinedButton extends StatelessWidget {
 
   @override
   OutlinedButton build(BuildContext context) => OutlinedButton(
-        onPressed: onPressed,
-        style: OutlinedButton.styleFrom(
-          maximumSize: Size(width, height),
-          minimumSize: Size(width, height),
-          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-          side: BorderSide(color: outlineColor),
-          foregroundColor: outlineColor,
-        ),
-        child: child,
-      );
+    onPressed: onPressed,
+    style: OutlinedButton.styleFrom(
+      maximumSize: Size(width, height),
+      minimumSize: Size(width, height),
+      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+      side: BorderSide(color: outlineColor),
+      foregroundColor: outlineColor,
+    ),
+    child: child,
+  );
 }
 
 final class AppOutlinedButton extends StatelessWidget {
@@ -42,7 +42,7 @@ final class AppOutlinedButton extends StatelessWidget {
     this.child, {
     required this.onPressed,
     super.key,
-    this.outlineColor = ColorConstants.redColor,
+    this.outlineColor = ColorConstants.primaryColor,
     this.width = double.infinity,
     this.height = 35,
     this.borderRadius = 5,
@@ -50,19 +50,19 @@ final class AppOutlinedButton extends StatelessWidget {
 
   @override
   OutlinedButton build(BuildContext context) => OutlinedButton(
-        onPressed: onPressed,
-        style: OutlinedButton.styleFrom(
-          maximumSize: Size(width, height),
-          minimumSize: Size(width, height),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(borderRadius),
-          ),
-          side: BorderSide(color: outlineColor),
-          foregroundColor: outlineColor,
-          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
-        ),
-        child: child,
-      );
+    onPressed: onPressed,
+    style: OutlinedButton.styleFrom(
+      maximumSize: Size(width, height),
+      minimumSize: Size(width, height),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(borderRadius),
+      ),
+      side: BorderSide(color: outlineColor),
+      foregroundColor: outlineColor,
+      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+    ),
+    child: child,
+  );
 }
 
 final class AppOutlinedIconButton extends StatelessWidget {
@@ -84,18 +84,18 @@ final class AppOutlinedIconButton extends StatelessWidget {
 
   @override
   OutlinedButton build(BuildContext context) => OutlinedButton.icon(
-        onPressed: onPressed,
-        style: OutlinedButton.styleFrom(
-          maximumSize: Size(width, height),
-          minimumSize: Size(width, height),
-          side: BorderSide(color: outlineColor),
-          foregroundColor: outlineColor,
-          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(borderRadius),
-          ),
-        ),
-        icon: icon,
-        label: child,
-      );
+    onPressed: onPressed,
+    style: OutlinedButton.styleFrom(
+      maximumSize: Size(width, height),
+      minimumSize: Size(width, height),
+      side: BorderSide(color: outlineColor),
+      foregroundColor: outlineColor,
+      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(borderRadius),
+      ),
+    ),
+    icon: icon,
+    label: child,
+  );
 }

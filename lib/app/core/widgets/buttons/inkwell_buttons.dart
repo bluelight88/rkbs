@@ -16,26 +16,19 @@ final class ChangeActivityButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => InkWell(
-        onTap: onTap,
-        splashColor: Colors.transparent,
-        highlightColor: Colors.transparent,
-        child: Wrap(
-          crossAxisAlignment: WrapCrossAlignment.center,
-          children: [
-            Icon(
-              icon,
-              color: ColorConstants.greyColor,
-              size: 12,
-            ),
-            const SizedBox(
-              width: 2,
-            ),
-            Text(
-              title,
-              style: const TextStyle(
-                  color: ColorConstants.greyColor, fontSize: 12),
-            ),
-          ],
+    onTap: onTap,
+    splashColor: Colors.transparent,
+    highlightColor: Colors.transparent,
+    child: Wrap(
+      crossAxisAlignment: WrapCrossAlignment.center,
+      children: [
+        Icon(icon, color: ColorConstants.greyColor, size: 12),
+        const SizedBox(width: 2),
+        Text(
+          title,
+          style: const TextStyle(color: ColorConstants.greyColor, fontSize: 12),
         ),
-      );
+      ],
+    ),
+  );
 }

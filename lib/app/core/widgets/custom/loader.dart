@@ -11,10 +11,8 @@ final class CenterLoaderWidget extends StatelessWidget {
 
   @override
   SizedBox build(BuildContext context) => SizedBox(
-        width: width,
-        height: height,
-        child: const Align(
-          child: CircularProgressIndicator.adaptive(),
-        ),
-      );
+    width: width,
+    height: height,
+    child: const Align(child: CircularProgressIndicator.adaptive()),
+  );
 }

@@ -15,31 +15,29 @@ class DetailRowWidget extends StatelessWidget {
 
   @override
   Row build(BuildContext context) => Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            flex: 5,
-            child: Text(
-              title,
-              style: Theme.of(context)
-                  .textTheme
-                  .titleSmall
-                  ?.copyWith(color: ColorConstants.blackColor),
-            ),
-          ),
-          const Gap(5),
-          Expanded(
-            flex: 5,
-            child: Text(
-              subtitle,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyMedium
-                  ?.copyWith(fontSize: 13, height: 2),
-            ),
-          ),
-        ],
-      );
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Expanded(
+        flex: 5,
+        child: Text(
+          title,
+          style: Theme.of(
+            context,
+          ).textTheme.titleSmall?.copyWith(color: ColorConstants.primaryColor),
+        ),
+      ),
+      const Gap(5),
+      Expanded(
+        flex: 5,
+        child: Text(
+          subtitle,
+          style: Theme.of(
+            context,
+          ).textTheme.bodyMedium?.copyWith(fontSize: 13, height: 2),
+        ),
+      ),
+    ],
+  );
 }
 
 class DetailRowWidgetWithChild extends StatelessWidget {
@@ -54,17 +52,16 @@ class DetailRowWidgetWithChild extends StatelessWidget {
 
   @override
   Row build(BuildContext context) => Row(
-        children: [
-          Expanded(
-            child: Text(
-              title,
-              style: Theme.of(context)
-                  .textTheme
-                  .titleSmall
-                  ?.copyWith(color: ColorConstants.blackColor),
-            ),
-          ),
-          child,
-        ],
-      );
+    children: [
+      Expanded(
+        child: Text(
+          title,
+          style: Theme.of(
+            context,
+          ).textTheme.titleSmall?.copyWith(color: ColorConstants.primaryColor),
+        ),
+      ),
+      child,
+    ],
+  );
 }

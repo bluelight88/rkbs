@@ -2,7 +2,7 @@ import 'localization.dart';
 
 final class EnLocalization extends Localization {
   @override
-  String get appName => "BASE SETUP";
+  String get appName => "Timoraa";
 
   @override
   String get comingSoon => "Coming Soon";

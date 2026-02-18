@@ -5,6 +5,7 @@ class AppConstants {
       userId = "userId",
       partnerId = "partnerId",
       name = "name",
+      userImage = "userImage",
       emailId = "emailId",
       password = "password",
       role = "role",

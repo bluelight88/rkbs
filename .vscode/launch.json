@@ -1,0 +1,47 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "base_project (dev)",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main.dart",
+            "args": [
+                "--flavor", "dev",
+                "-t", "lib/main.dart"
+            ]
+        },
+        {
+            "name": "base_project (prod)",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/app/core/flavor/prod/main.dart",
+            "args": [
+                "--flavor", "prod",
+                "-t", "lib/app/core/flavor/prod/main.dart"
+            ]
+        },
+        {
+            "name": "base_project (prod profile mode)",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/app/core/flavor/prod/main.dart",
+            "flutterMode": "profile",
+            "args": [
+                "--flavor", "prod",
+                "-t", "lib/app/core/flavor/prod/main.dart"
+            ]
+        },
+        {
+            "name": "base_project (prod release mode)",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/app/core/flavor/prod/main.dart",
+            "flutterMode": "release",
+            "args": [
+                "--flavor", "prod",
+                "-t", "lib/app/core/flavor/prod/main.dart"
+            ]
+        }
+    ]
+}

@@ -14,8 +14,9 @@ final class AppLanguageController extends ChangeNotifier {
   }
 
   Future<void> fetchLocale() async {
-    String? locale =
-        await getIt<StorageManager>().getData(AppConstants.languageCode);
+    String? locale = await getIt<StorageManager>().getData(
+      AppConstants.languageCode,
+    );
     _appLocale = Locale(locale ?? AppConstants.localeAr);
     notifyListeners();
   }

@@ -17,15 +17,15 @@ final class SVGElevatedButton extends StatelessWidget {
 
   @override
   ElevatedButton build(BuildContext context) => ElevatedButton(
-        onPressed: onPressed,
-        style: ElevatedButton.styleFrom(
-          maximumSize: Size(width, height),
-          minimumSize: Size(width, height),
-          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-        ),
-        child: child,
-      );
+    onPressed: onPressed,
+    style: ElevatedButton.styleFrom(
+      maximumSize: Size(width, height),
+      minimumSize: Size(width, height),
+      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+    ),
+    child: child,
+  );
 }
 
 final class AppElevatedButton extends StatelessWidget {
@@ -42,25 +42,38 @@ final class AppElevatedButton extends StatelessWidget {
     this.foregroundColor = ColorConstants.whiteColor,
     this.width = double.infinity,
     this.height = 40,
-    this.borderRadius = 15,
+    this.borderRadius = 10,
   });
 
+  //
+  // @override
+  // ElevatedButton build(BuildContext context) => ElevatedButton(
+  //   onPressed: onPressed,
+  //   style: ElevatedButton.styleFrom(
+  //     maximumSize: Size(width, height),
+  //     minimumSize: Size(width, height),
+  //     side: BorderSide(color: backgroundColor),
+  //     backgroundColor: backgroundColor,
+  //     foregroundColor: foregroundColor,
+  //     shape: RoundedRectangleBorder(
+  //       borderRadius: BorderRadius.circular(borderRadius),
+  //     ),
+  //   ),
+  //   child: child,
+  // );
   @override
-  ElevatedButton build(BuildContext context) => ElevatedButton(
-        onPressed: onPressed,
-        style: ElevatedButton.styleFrom(
-          maximumSize: Size(width, height),
-          minimumSize: Size(width, height),
-          side: BorderSide(color: backgroundColor),
-          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
-          backgroundColor: backgroundColor,
-          foregroundColor: foregroundColor,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(borderRadius),
-          ),
-        ),
-        child: child,
-      );
+  InkWell build(BuildContext context) => InkWell(
+    onTap: onPressed,
+    child: Container(
+      height: height,
+      width: width,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(borderRadius),
+        color: backgroundColor,
+      ),
+      child: Center(child: child),
+    ),
+  );
 }
 
 final class AppElevatedIconButton extends StatelessWidget {
@@ -82,19 +95,19 @@ final class AppElevatedIconButton extends StatelessWidget {
 
   @override
   ElevatedButton build(BuildContext context) => ElevatedButton.icon(
-        onPressed: onPressed,
-        style: ElevatedButton.styleFrom(
-          maximumSize: Size(width, height),
-          minimumSize: Size(width, height),
-          side: BorderSide(color: backgroundColor),
-          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(borderRadius),
-          ),
-        ),
-        icon: icon,
-        label: child,
-      );
+    onPressed: onPressed,
+    style: ElevatedButton.styleFrom(
+      maximumSize: Size(width, height),
+      minimumSize: Size(width, height),
+      side: BorderSide(color: backgroundColor),
+      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(borderRadius),
+      ),
+    ),
+    icon: icon,
+    label: child,
+  );
 }
 
 final class AppTextButton extends StatelessWidget {
@@ -119,21 +132,23 @@ final class AppTextButton extends StatelessWidget {
 
   @override
   TextButton build(BuildContext context) => TextButton(
-        onPressed: onPressed,
-        style: TextButton.styleFrom(
-          maximumSize: Size(width, height),
-          minimumSize: Size(width, height),
-          side: BorderSide(color: backgroundColor),
-          padding: EdgeInsets.symmetric(
-              vertical: verticalPadding, horizontal: horizontalPadding),
-          backgroundColor: backgroundColor,
-          foregroundColor: foregroundColor,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(borderRadius),
-          ),
-        ),
-        child: child,
-      );
+    onPressed: onPressed,
+    style: TextButton.styleFrom(
+      maximumSize: Size(width, height),
+      minimumSize: Size(width, height),
+      side: BorderSide(color: backgroundColor),
+      padding: EdgeInsets.symmetric(
+        vertical: verticalPadding,
+        horizontal: horizontalPadding,
+      ),
+      backgroundColor: backgroundColor,
+      foregroundColor: foregroundColor,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(borderRadius),
+      ),
+    ),
+    child: child,
+  );
 }
 
 final class AppTextIconButton extends StatelessWidget {
@@ -159,20 +174,22 @@ final class AppTextIconButton extends StatelessWidget {
 
   @override
   TextButton build(BuildContext context) => TextButton.icon(
-        onPressed: onPressed,
-        style: TextButton.styleFrom(
-          maximumSize: Size(width, height),
-          minimumSize: Size(width, height),
-          side: BorderSide(color: backgroundColor),
-          padding: EdgeInsets.symmetric(
-              vertical: verticalPadding, horizontal: horizontalPadding),
-          backgroundColor: backgroundColor,
-          foregroundColor: foregroundColor,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(borderRadius),
-          ),
-        ),
-        icon: icon,
-        label: child,
-      );
+    onPressed: onPressed,
+    style: TextButton.styleFrom(
+      maximumSize: Size(width, height),
+      minimumSize: Size(width, height),
+      side: BorderSide(color: backgroundColor),
+      padding: EdgeInsets.symmetric(
+        vertical: verticalPadding,
+        horizontal: horizontalPadding,
+      ),
+      backgroundColor: backgroundColor,
+      foregroundColor: foregroundColor,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(borderRadius),
+      ),
+    ),
+    icon: icon,
+    label: child,
+  );
 }

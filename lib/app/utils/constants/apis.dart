@@ -1,19 +1,19 @@
 class APIS {
   /// LOCAL
-  static const String baseUrlLocal = '';
-
-  /// DO NOT Change following url without approval
-  /// Development
-  static const String baseUrlDev = '';
-
-  /// Production
-  static const String baseUrlProd = '';
-
-  // VERSIONS
-  static const String version = 'v1/';
+  static const String baseUrl = 'http://api.timoraa.com/';
 
   // Authentication
-  static const String loginAPI = '${version}api/login',
+  static const String loginAPI = '${baseUrl}data/api/device/LoginCustomer',
+      socialLogin = '${baseUrl}data/api/device/SocialLoginCustomer',
       todo = 'to_do',
-      logout = '${version}api/logout';
+      logout = '${baseUrl}api/logout',
+      home = '${baseUrl}data/api/device/GetHomePageDetails',
+      initApp = '${baseUrl}data/api/auth/init_app',
+      providerDetail = '${baseUrl}data/api/device/GetProviderDetails',
+      bookAppointmentDetails = '${baseUrl}data/api/device/GetServiceById',
+      bookAppointment = '${baseUrl}data/api/device/DoBooking',
+      sendOtp = '${baseUrl}api/send/otp',
+      appoinment='${baseUrl}data/api/device/GetCustomerAppoinments',
+      providerreview='${baseUrl}data/api/device/GetProviderReviews',
+      registerNativeCustomer = '${baseUrl}data/api/device/RegisterNativeCustomer';
 }

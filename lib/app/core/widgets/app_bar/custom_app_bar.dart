@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-import '../../../utils/constants/color_constants.dart';
 import '../../../utils/extensions/navigation_extension.dart';
-import '../../../utils/services/app_state.dart';
 
 final class CustomAppBar extends StatelessWidget
     implements PreferredSizeWidget {
   final String title;
   final Widget? leading;
+  final Color color;
+  final Color titleColor;
   final List<Widget> actions;
   final bool showLeading;
   final bool isCenter;
@@ -17,7 +17,9 @@ final class CustomAppBar extends StatelessWidget
     this.title, {
     super.key,
     this.leading,
-    this.isCenter = false,
+    required this.color,
+    required this.titleColor,
+    this.isCenter = true,
     this.actions = const [],
     this.showLeading = true,
     this.leadingWidth,
@@ -25,20 +27,22 @@ final class CustomAppBar extends StatelessWidget
 
   @override
   AppBar build(BuildContext context) => AppBar(
+    backgroundColor: color,
     leadingWidth: leadingWidth,
+    elevation: 0,
     title: Text(
       title,
-      style: const TextStyle(
-        fontSize: 18,
-        fontWeight: FontWeight.w800,
-        color: ColorConstants.primaryColor,
-        fontFamily: "HelveticaNeueLTArabic",
+      style: TextStyle(
+        fontSize: 22,
+        fontWeight: FontWeight.w600,
+        color: titleColor,
+        fontFamily: "PlusJakartaSans",
       ),
     ),
-    centerTitle: isCenter,
+    centerTitle: true,
     leading:
         showLeading && context.canPop()
-            ? leading ?? const AppBackButton()
+            ? leading ?? AppBackButton(color: titleColor)
             : null,
     actions: actions,
   );
@@ -48,11 +52,13 @@ final class CustomAppBar extends StatelessWidget
 }
 
 class AppBackButton extends StatelessWidget {
-  const AppBackButton({super.key});
+  final Color color;
+
+  const AppBackButton({required this.color, super.key});
 
   @override
   IconButton build(BuildContext context) => IconButton(
     onPressed: context.pop,
-    icon: const Icon(Icons.arrow_back_ios_new_rounded),
+    icon: Icon(Icons.arrow_back_sharp, color: color),
   );
 }

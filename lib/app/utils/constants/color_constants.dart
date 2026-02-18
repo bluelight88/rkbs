@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
 
 final class ColorConstants {
-  static const Color primaryOldColor = Color(0xff6C47F6),
-      primaryColor = Color(0xff6C47F6),
-      lightPrimaryColor = Color(0xff6b5aa2),
+  static const Color primaryOldColor = Colors.black,
+      primaryColor = Colors.black,
+      lightPrimaryColor = Color(0xff2b2a2a),
+      lightTextColor = Color(0xff020202),
       secondaryColor = Color(0xfff4f2f8),
       primaryBrightColor = Color(0xff876bec),
       scaffoldBgColor = Color(0xFFe9eef4),
       shadowColor = Color(0xffD6D6D6),
       textFieldIconColor = Color(0xFFA5A5A5),
+      greyText = Color(0xFF4D4D4D),
+      greyBackGround = Color(0xFFEDEDED),
+      greyBackGround2 = Color(0xFFDBD9D9),
       whiteColor = Colors.white,
-      lightGreyColor = Color(0xffDEDEDE),
+      lightGreyColor = Color(0xffDBD9D9),
       bottomNavBarUnselectedColor = Color(0xffCACACA),
-      blackColor = Colors.black,
+      searchFieldTextColor = Color(0xFF848484),
       greyColor = Colors.grey,
       redColor = Colors.red;
 }

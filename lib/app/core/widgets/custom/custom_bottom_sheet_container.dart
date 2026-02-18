@@ -10,30 +10,30 @@ final class CustomBottomSheetContainer extends StatelessWidget {
 
   @override
   ConstrainedBox build(BuildContext context) => ConstrainedBox(
-        constraints:
-            BoxConstraints(maxHeight: appState.getScreenHeight(percent: 0.9)),
-        child: SingleChildScrollView(
-          padding: MediaQuery.of(context).viewInsets,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Container(
-                  width: 80,
-                  height: 2.5,
-                  margin: const EdgeInsets.only(top: 15, bottom: 5),
-                  color: ColorConstants.primaryColor,
-                ),
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                child: child,
-              ),
-              const SizedBox(height: 15),
-            ],
+    constraints: BoxConstraints(
+      maxHeight: appState.getScreenHeight(percent: 0.9),
+    ),
+    child: SingleChildScrollView(
+      padding: MediaQuery.of(context).viewInsets,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Center(
+            child: Container(
+              width: 80,
+              height: 2.5,
+              margin: const EdgeInsets.only(top: 15, bottom: 5),
+              color: ColorConstants.primaryColor,
+            ),
           ),
-        ),
-      );
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+            child: child,
+          ),
+          const SizedBox(height: 15),
+        ],
+      ),
+    ),
+  );
 }

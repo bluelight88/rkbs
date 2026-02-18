@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:bot_toast/bot_toast.dart';
 
 import '../../../utils/constants/asset_constants.dart';
-import '../../../utils/constants/color_constants.dart';
 
 final class ToastUtils {
   static void showSuccess({required String message, int duration = 3}) {
@@ -38,7 +37,7 @@ final class ToastUtils {
                         style: const TextStyle(
                           color: Colors.white,
                           height: 1,
-                          fontFamily: AssetConstants.fontHelvetica,
+                          fontFamily: AssetConstants.fontPlusJakartaSans,
                         ),
                       ),
                     ),
@@ -83,7 +82,7 @@ final class ToastUtils {
                           style: const TextStyle(
                             color: Colors.white,
                             height: 1,
-                            fontFamily: AssetConstants.fontHelvetica,
+                            fontFamily: AssetConstants.fontPlusJakartaSans,
                           ),
                         ),
                       ),
@@ -118,11 +117,7 @@ final class ToastUtils {
               title: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(
-                    Icons.phone_callback_outlined,
-                    color: Colors.white,
-                    size: 30,
-                  ),
+                  const Icon(Icons.engineering, color: Colors.white, size: 30),
                   const SizedBox(width: 20),
                   Expanded(
                     child: Container(
@@ -133,7 +128,7 @@ final class ToastUtils {
                           style: const TextStyle(
                             color: Colors.white,
                             height: 1,
-                            fontFamily: AssetConstants.fontHelvetica,
+                            fontFamily: AssetConstants.fontPlusJakartaSans,
                           ),
                         ),
                       ),

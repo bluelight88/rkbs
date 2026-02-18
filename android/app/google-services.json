@@ -1,0 +1,38 @@
+{
+  "project_info": {
+    "project_number": "482265189932",
+    "project_id": "timoraa-b8453",
+    "storage_bucket": "timoraa-b8453.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:482265189932:android:7b8fe36f057f133c91cb89",
+        "android_client_info": {
+          "package_name": "com.timoraa.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "482265189932-in4c6spo95nv1c8tueb2qhocr004sqak.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.timoraa.app",
+            "certificate_hash": "63fe7ac712b164b8fe4297c6e245f83eecfc41e7"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAY-UG8JeovVydwYlEhVEzEWphOBOFQvKA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -2,7 +2,7 @@ import 'localization.dart';
 
 final class ArLocalization extends Localization {
   @override
-  String get appName => "BASE SETUP";
+  String get appName => "Timoraa";
 
   @override
   String get comingSoon => "Coming Soon";
@@ -61,6 +61,7 @@ final class ArLocalization extends Localization {
 
   @override
   String get yes => "Yes";
+
   @override
   String get underDevelopment => "Under Development";
 }

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:timoraa/app/core/models/cart_service_model.dart';
 
 import '../constants/app_config.dart';
 import '../constants/app_constants.dart';
@@ -35,9 +36,10 @@ final class AppState {
       _deviceId = "",
       _fcmToken = "",
       _apnsToken = "",
-      _userRole = "",
+      _accessToken = "",
       _userId = "",
       _userName = "-",
+      _userImage = "-",
       _userMail = "-",
       _appVersion = "";
 
@@ -50,7 +52,7 @@ final class AppState {
 
   String get userName => _userName;
 
-  String get userRole => _userRole;
+  String get userImage => _userImage;
 
   String get userMail => _userMail;
 
@@ -61,6 +63,8 @@ final class AppState {
   String get fcmToken => _fcmToken;
 
   String get apnsToken => _apnsToken;
+
+  String get accessToken => _accessToken;
 
   String get appVersion => _appVersion;
 
@@ -78,9 +82,25 @@ final class AppState {
 
   set setUserName(String userName) => _userName = userName;
 
+  set setUserImage(String userImage) => _userImage = userImage;
+
   set setUserMail(String userMail) => _userMail = userMail;
 
-  set setUserRole(String userRole) => _userRole = userRole;
+  set setAccessToken(String accessToken) => _accessToken = accessToken;
+
+  ValueNotifier<String> countryCode = ValueNotifier<String>("UK");
+  ValueNotifier<int> countryId = ValueNotifier<int>(0);
+  ValueNotifier<int> currencyId = ValueNotifier<int>(0);
+  ValueNotifier<String> currencyName = ValueNotifier<String>("£");
+  ValueNotifier<String> ipAddress = ValueNotifier<String>("");
+  ValueNotifier<int> appPageIndex = ValueNotifier<int>(0);
+  ValueNotifier<double> totalPrice = ValueNotifier<double>(0.0);
+  ValueNotifier<String> selectedTimeSlot = ValueNotifier<String>('');
+  ValueNotifier<String> loginUserName = ValueNotifier<String>('');
+  ValueNotifier<String> selectedSlotInfo = ValueNotifier<String>("");
+  ValueNotifier<String> selectedSaloon = ValueNotifier<String>("");
+  ValueNotifier<String> selectedSaloonAddress = ValueNotifier<String>("");
+  List<CartServiceModel> cartItems = [];
 
   /// Method to set initial Values
   Future<void> setInitialValues() async {
@@ -92,17 +112,17 @@ final class AppState {
     );
     await _setDeviceId();
     await _setPackageInfo();
-    await _setAPNSToken();
-    await _setFCMToken();
+    // await _setAPNSToken();
+    // await _setFCMToken();
   }
 
   void _clearValues() {
     _sessionId = "";
     _fcmToken = "";
     _apnsToken = "";
-    _userRole = "";
     _userId = "";
     _userName = "-";
+    _userImage = "-";
     _userMail = "-";
   }
 
@@ -126,33 +146,33 @@ final class AppState {
   }
 
   /// Set FCM Token
-  Future<void> _setFCMToken() async {
-    if (_fcmToken.isNotEmpty) return debugPrint("FCM Token already assigned.");
-    try {
-      _fcmToken = (await FirebaseMessaging.instance.getToken() ?? '');
-      debugPrint("FCM Token is => $_fcmToken");
-    } catch (e) {
-      debugPrint("Error found in _setFCMToken => $e");
-      await _setFCMToken();
-    }
-  }
+  // Future<void> _setFCMToken() async {
+  //   if (_fcmToken.isNotEmpty) return debugPrint("FCM Token already assigned.");
+  //   try {
+  //     _fcmToken = (await FirebaseMessaging.instance.getToken() ?? '');
+  //     debugPrint("FCM Token is => $_fcmToken");
+  //   } catch (e) {
+  //     debugPrint("Error found in _setFCMToken => $e");
+  //     await _setFCMToken();
+  //   }
+  // }
 
   /// Set APNS Token
-  Future<void> _setAPNSToken() async {
-    if (_apnsToken.isNotEmpty) {
-      return debugPrint("APNS Token already assigned.");
-    }
-    try {
-      _apnsToken = (await FirebaseMessaging.instance.getAPNSToken() ?? "");
-      debugPrint("APNS Token is => $_apnsToken");
-    } catch (e) {
-      debugPrint("Error found in _setAPNSToken => $e");
-      await Future.delayed(
-        const Duration(seconds: 2),
-        () async => await _setAPNSToken(),
-      );
-    }
-  }
+  // Future<void> _setAPNSToken() async {
+  //   if (_apnsToken.isNotEmpty) {
+  //     return debugPrint("APNS Token already assigned.");
+  //   }
+  //   try {
+  //     _apnsToken = (await FirebaseMessaging.instance.getAPNSToken() ?? "");
+  //     debugPrint("APNS Token is => $_apnsToken");
+  //   } catch (e) {
+  //     debugPrint("Error found in _setAPNSToken => $e");
+  //     await Future.delayed(
+  //       const Duration(seconds: 2),
+  //       () async => await _setAPNSToken(),
+  //     );
+  //   }
+  // }
 
   /// Set Package info
   Future<void> _setPackageInfo() async {

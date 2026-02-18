@@ -28,24 +28,24 @@ final class ElevatedContainer extends StatelessWidget {
 
   @override
   Container build(BuildContext context) => Container(
-        margin: EdgeInsets.symmetric(
-          horizontal: horizontalMargin,
-          vertical: verticalMargin,
-        ),
-        padding: EdgeInsets.symmetric(
-          horizontal: horizontalPadding,
-          vertical: verticalPadding,
-        ),
-        width: width,
-        alignment: alignment,
-        clipBehavior: Clip.hardEdge,
-        decoration: BoxDecoration(
-          color: ColorConstants.whiteColor,
-          boxShadow: [
-            BoxShadow(color: ColorConstants.shadowColor, blurRadius: blurRadius)
-          ],
-          borderRadius: BorderRadius.circular(borderRadius),
-        ),
-        child: child,
-      );
+    margin: EdgeInsets.symmetric(
+      horizontal: horizontalMargin,
+      vertical: verticalMargin,
+    ),
+    padding: EdgeInsets.symmetric(
+      horizontal: horizontalPadding,
+      vertical: verticalPadding,
+    ),
+    width: width,
+    alignment: alignment,
+    clipBehavior: Clip.hardEdge,
+    decoration: BoxDecoration(
+      color: ColorConstants.whiteColor,
+      boxShadow: [
+        BoxShadow(color: ColorConstants.shadowColor, blurRadius: blurRadius),
+      ],
+      borderRadius: BorderRadius.circular(borderRadius),
+    ),
+    child: child,
+  );
 }

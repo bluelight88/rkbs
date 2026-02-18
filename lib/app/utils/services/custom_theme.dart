@@ -7,17 +7,16 @@ final class CustomTheme {
   static ThemeData lightTheme() {
     final OutlineInputBorder outlineInputBorder = OutlineInputBorder(
       borderRadius: BorderRadius.circular(5),
-      borderSide: const BorderSide(
-        color: ColorConstants.lightGreyColor,
-      ),
+      borderSide: const BorderSide(color: ColorConstants.lightGreyColor),
     );
     return ThemeData(
       useMaterial3: false,
-      fontFamily: AssetConstants.fontHelvetica,
+      fontFamily: AssetConstants.fontPlusJakartaSans,
       scaffoldBackgroundColor: ColorConstants.scaffoldBgColor,
       primaryColor: ColorConstants.primaryColor,
-      colorScheme:
-          const ColorScheme.light(primary: ColorConstants.primaryColor),
+      colorScheme: const ColorScheme.light(
+        primary: ColorConstants.primaryColor,
+      ),
       bottomSheetTheme: const BottomSheetThemeData(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
@@ -32,7 +31,7 @@ final class CustomTheme {
         elevation: 1,
         titleTextStyle: TextStyle(
           color: ColorConstants.primaryColor,
-          fontFamily: AssetConstants.fontHelvetica,
+          fontFamily: AssetConstants.fontPlusJakartaSans,
           height: 1,
           fontSize: 15,
         ),
@@ -44,17 +43,19 @@ final class CustomTheme {
         selectedItemColor: ColorConstants.primaryColor,
         unselectedItemColor: ColorConstants.bottomNavBarUnselectedColor,
         selectedIconTheme: IconThemeData(color: ColorConstants.primaryColor),
-        unselectedIconTheme:
-            IconThemeData(color: ColorConstants.bottomNavBarUnselectedColor),
+        unselectedIconTheme: IconThemeData(
+          color: ColorConstants.bottomNavBarUnselectedColor,
+        ),
       ),
-      progressIndicatorTheme:
-          const ProgressIndicatorThemeData(color: ColorConstants.primaryColor),
+      progressIndicatorTheme: const ProgressIndicatorThemeData(
+        color: ColorConstants.primaryColor,
+      ),
       inputDecorationTheme: InputDecorationTheme(
         border: outlineInputBorder,
         hintStyle: const TextStyle(
           color: Color(0xFF848484),
           height: 1,
-          fontFamily: AssetConstants.fontHelvetica,
+          fontFamily: AssetConstants.fontPlusJakartaSans,
           fontWeight: FontWeight.normal,
           fontSize: 12,
         ),
@@ -67,11 +68,14 @@ final class CustomTheme {
         ),
         prefixIconColor: ColorConstants.textFieldIconColor,
         suffixIconColor: ColorConstants.textFieldIconColor,
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 15,
+          vertical: 10,
+        ),
       ),
-      textSelectionTheme:
-          const TextSelectionThemeData(cursorColor: ColorConstants.greyColor),
+      textSelectionTheme: const TextSelectionThemeData(
+        cursorColor: ColorConstants.greyColor,
+      ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           foregroundColor: Colors.white,
@@ -97,23 +101,35 @@ final class CustomTheme {
       ),
       textTheme: TextTheme(
         // headline 1
-        displayLarge: Typography.whiteMountainView.displayMedium
-            ?.copyWith(height: 1, fontFamily: AssetConstants.fontHelvetica),
+        displayLarge: Typography.whiteMountainView.displayMedium?.copyWith(
+          height: 1,
+          fontFamily: AssetConstants.fontPlusJakartaSans,
+        ),
         // headline 2
-        displayMedium: Typography.whiteMountainView.displayMedium
-            ?.copyWith(height: 1, fontFamily: AssetConstants.fontHelvetica),
+        displayMedium: Typography.whiteMountainView.displayMedium?.copyWith(
+          height: 1,
+          fontFamily: AssetConstants.fontPlusJakartaSans,
+        ),
         // headline 3
-        displaySmall: Typography.whiteMountainView.displayMedium
-            ?.copyWith(height: 1, fontFamily: AssetConstants.fontHelvetica),
+        displaySmall: Typography.whiteMountainView.displayMedium?.copyWith(
+          height: 1,
+          fontFamily: AssetConstants.fontPlusJakartaSans,
+        ),
         // headline 4
-        headlineMedium: Typography.whiteMountainView.displayMedium
-            ?.copyWith(height: 1, fontFamily: AssetConstants.fontHelvetica),
+        headlineMedium: Typography.whiteMountainView.displayMedium?.copyWith(
+          height: 1,
+          fontFamily: AssetConstants.fontPlusJakartaSans,
+        ),
         // headline 5
-        headlineSmall: Typography.whiteMountainView.displayMedium
-            ?.copyWith(height: 1, fontFamily: AssetConstants.fontHelvetica),
+        headlineSmall: Typography.whiteMountainView.displayMedium?.copyWith(
+          height: 1,
+          fontFamily: AssetConstants.fontPlusJakartaSans,
+        ),
         // headline 6
-        titleLarge: Typography.whiteMountainView.displayMedium
-            ?.copyWith(height: 1, fontFamily: AssetConstants.fontHelvetica),
+        titleLarge: Typography.whiteMountainView.displayMedium?.copyWith(
+          height: 1,
+          fontFamily: AssetConstants.fontPlusJakartaSans,
+        ),
         // displayMedium: Typography.whiteMountainView.displayMedium?.copyWith(
         //   color: ColorConstants.primaryColor,
         //   fontSize: 25,
@@ -158,9 +174,10 @@ final class CustomTheme {
         // ),
         // // Body Medium fonts - for Medium common texts
         bodyMedium: Typography.whiteMountainView.bodyMedium?.copyWith(
-            height: 1,
-            color: ColorConstants.primaryColor,
-            fontFamily: AssetConstants.fontHelvetica),
+          height: 1,
+          color: ColorConstants.primaryColor,
+          fontFamily: AssetConstants.fontPlusJakartaSans,
+        ),
         // Body Small fonts - for Small common texts
         // bodySmall: Typography.whiteMountainView.bodySmall?.copyWith(
         //   color: ColorConstants.primaryColor,
@@ -168,7 +185,7 @@ final class CustomTheme {
         //   fontWeight: FontWeight.w300,
         // ),
         // labelLarge: Typography.whiteMountainView.labelLarge?.copyWith(
-        //   color: ColorConstants.blackColor,
+        //   color: ColorConstants.primaryColor,
         //   fontSize: 14.0,
         //   fontWeight: FontWeight.normal,
         // ),
@@ -194,9 +211,10 @@ final class CustomTheme {
       ),
       dialogTheme: DialogThemeData(
         titleTextStyle: Typography.whiteMountainView.displayLarge?.copyWith(
-            color: Colors.black,
-            fontSize: 18,
-            fontFamily: AssetConstants.fontHelvetica),
+          color: Colors.black,
+          fontSize: 18,
+          fontFamily: AssetConstants.fontPlusJakartaSans,
+        ),
       ),
       datePickerTheme: const DatePickerThemeData(
         backgroundColor: ColorConstants.whiteColor,
@@ -210,7 +228,8 @@ final class CustomTheme {
   }
 
   static ThemeData darkTheme() => ThemeData(
-      colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      useMaterial3: true,
-      fontFamily: AssetConstants.fontHelvetica);
+    colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+    useMaterial3: true,
+    fontFamily: AssetConstants.fontPlusJakartaSans,
+  );
 }

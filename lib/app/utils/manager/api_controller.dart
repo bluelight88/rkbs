@@ -1,12 +1,13 @@
 import 'dart:async' show StreamController;
-import 'dart:convert' show JsonEncoder;
-import 'dart:developer' show log;
 
-import 'package:flutter/foundation.dart' show debugPrint, kDebugMode;
-
+// ignore: depend_on_referenced_packages
 import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
+import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
+import '../services/util_methods.dart';
+import '/app/utils/manager/get_it_manager.dart';
 import '../../core/models/api/api_model.dart';
 import '../../core/models/api/exceptions.dart';
 import '../../core/widgets/dialog/custom_dialog.dart';
@@ -16,7 +17,6 @@ import '../constants/app_constants.dart';
 import '../constants/route_name.dart';
 import '../extensions/navigation_extension.dart';
 import '../services/app_state.dart';
-import '/app/utils/manager/get_it_manager.dart';
 import 'navigation_manager.dart';
 import 'storage_manager.dart';
 
@@ -24,36 +24,6 @@ enum APIMethod { post, get, delete, put, patch }
 
 final class APIController {
   static final Dio _dio = Dio();
-
-  void _addInterceptors() {
-    const String apiTag = "API :";
-    final InterceptorsWrapper mInterceptorsWrapper = InterceptorsWrapper(
-      onRequest: (options, handler) {
-        debugPrint("$apiTag headers ${options.headers}");
-        debugPrint("$apiTag Method ${options.method}");
-        debugPrint("$apiTag Request ${options.baseUrl + options.path}");
-        debugPrint(
-          "$apiTag Request Parameters ${options.method == "GET" ? options.queryParameters : options.data}",
-        );
-        return handler.next(options);
-      },
-      onResponse: (response, handler) {
-        debugPrint("Response Code ${response.statusCode}");
-        final prettyString = const JsonEncoder.withIndent(
-          '  ',
-        ).convert(response.data);
-        debugPrint("Response is :");
-        log(prettyString.toString());
-        return handler.next(response);
-      },
-      onError: (error, handler) {
-        debugPrint("$apiTag Error ${error.error}", wrapWidth: 1024);
-        debugPrint("$apiTag Error ${error.response}", wrapWidth: 1024);
-        return handler.next(error);
-      },
-    );
-    _dio.interceptors.add(mInterceptorsWrapper);
-  }
 
   void prepareRequest() {
     BaseOptions dioOptions = BaseOptions(
@@ -64,7 +34,19 @@ final class APIController {
       },
     );
     _dio.options = dioOptions;
-    if (kDebugMode) _addInterceptors();
+    _dio.interceptors.add(
+      PrettyDioLogger(
+        compact: false,
+        request: true,
+        requestBody: true,
+        requestHeader: true,
+        responseBody: true,
+        responseHeader: true,
+        filter: (options, args) {
+          return !args.hasUint8ListData;
+        },
+      ),
+    );
   }
 
   /// Method to make normal Requests
@@ -78,14 +60,30 @@ final class APIController {
     late ApiResponseModel apiResponse;
     late ErrorModel error;
     late Response response;
-    final Map<String, dynamic> params = {"params": param};
+    final Map<String, dynamic> params = param;
     try {
       final Map<String, dynamic> headerOptions = {
         'Cookie': appState.sessionId,
         'tz': appState.timeZone,
-        "role": appState.userRole,
+        if (appState.accessToken.isNotEmpty)
+          "Authorization": "Bearer ${appState.accessToken.trim()}",
         if (appState.userId.isNotEmpty) "user-id": appState.userId,
+        if (appState.countryCode.value.isNotEmpty)
+          "country-code": appState.countryCode.value,
+        if (appState.countryId.value != 0)
+          "country-id": appState.countryId.value,
+        if (appState.currencyId.value != 0)
+          "currency-id": appState.currencyId.value,
+        if (appState.ipAddress.value.isNotEmpty)
+          "ip-address": appState.ipAddress.value,
+        if (appState.deviceId.isNotEmpty) "device-id": appState.deviceId,
+        if (method == APIMethod.post) "Content-Type": "multipart/form-data",
       };
+      debugPrint("📤 REQUEST:");
+      debugPrint("➡️ METHOD: ${method.name.toUpperCase()}");
+      debugPrint("➡️ URL: $url");
+      debugPrint("➡️ HEADERS: $headerOptions");
+      debugPrint("➡️ PARAMS: $params");
       if (method == APIMethod.get) {
         response = await _dio.get(
           url,
@@ -94,10 +92,19 @@ final class APIController {
         );
       }
       if (method == APIMethod.post) {
+        final formData = FormData.fromMap(
+          params.map((key, value) {
+            if (value is String) {
+              return MapEntry(key, value);
+            } else {
+              return MapEntry(key, value.toString());
+            }
+          }),
+        );
         response = await _dio.post(
           url,
-          data: params,
-          options: Options(headers: headerOptions),
+          data: formData,
+          options: Options(headers: {...headerOptions}),
         );
       }
       if (method == APIMethod.delete) {
@@ -129,9 +136,34 @@ final class APIController {
         shouldShowLogoutDialog: url != APIS.logout,
       );
     } on DioException catch (e) {
+      debugPrint("➡️ Dio Exception: $e");
+      if (e.response?.statusCode == 401 || e.response?.statusCode == 500) {
+        error = ErrorModel(
+          appState.localization.error,
+          appState.localization.somethingWentWrong,
+          e.response?.statusCode == 401 ? 401 : 500,
+        );
+        apiResponse = ApiResponseModel(null, error, false);
+        CustomDialog.showTokenDialog(
+          NavigationManager.navigatorKey.currentContext!,
+        );
+        return apiResponse;
+      } else if (e.response?.statusCode == 498) {
+        error = ErrorModel(
+          appState.localization.error,
+          appState.localization.yourSessionExpired,
+          498,
+        );
+        apiResponse = ApiResponseModel(null, error, false);
+        CustomDialog.showTokenExpireDialog(
+          NavigationManager.navigatorKey.currentContext!,
+        );
+        return apiResponse;
+      }
       error = _handleError(e);
       apiResponse = ApiResponseModel(null, error, false);
     } catch (e) {
+      debugPrint("➡️ Error: $e");
       error = ErrorModel(
         appState.localization.error,
         appState.localization.somethingWentWrong,
@@ -149,88 +181,91 @@ final class APIController {
   }
 
   /// Method to make request to upload files
-  Future<ApiResponseModel> uploadFile(
-    String url,
-    APIMethod method,
-    List<FileInfo> files, {
-    Map<String, String> param = const {},
-    String filesKey = "",
-    bool shouldNotThrowException = false,
-    bool isResponseHasModel = true,
-  }) async {
-    late ApiResponseModel apiResponse;
-    late ErrorModel error;
-    if (method != APIMethod.post) {
-      error = ErrorModel(
-        appState.localization.error,
-        "Only Post Method Allowed.",
-        503,
-      );
-      return apiResponse = ApiResponseModel(null, error, false);
-    }
-    late Response response;
-    _dio.options.headers["Content-Type"] = "multipart/form-data";
-    FormData formData = FormData();
-    if (filesKey.isNotEmpty) {
-      List<MultipartFile> multiPartFiles = [];
-      for (FileInfo file in files) {
-        multiPartFiles.add(
-          MultipartFile.fromFileSync(file.path, filename: file.name),
-        );
-      }
-      formData = FormData.fromMap({filesKey: multiPartFiles});
-    } else {
-      List<MapEntry<String, MultipartFile>> multiPartFiles = [];
-      for (FileInfo file in files) {
-        multiPartFiles.add(
-          MapEntry(
-            'attachment',
-            MultipartFile.fromFileSync(file.path, filename: file.name),
-          ),
-        );
-      }
-      formData.files.addAll(multiPartFiles);
-    }
-    final mapData = param.entries.map((e) => MapEntry(e.key, e.value)).toList();
-    for (MapEntry<String, String> entry in mapData) {
-      formData.fields.add(entry);
-    }
-    try {
-      response = await _dio.post(
-        url,
-        data: formData,
-        options: Options(
-          headers: {
-            'Cookie': appState.sessionId,
-            'tz': appState.timeZone,
-            "role": appState.userRole,
-            if (appState.userId.isNotEmpty) "user-id": appState.userId,
-          },
-        ),
-      );
-      if (!isResponseHasModel) {
-        return apiResponse = ApiResponseModel(response.data, null, true);
-      }
-      apiResponse = await _responseHandler(response);
-    } on DioException catch (e) {
-      error = _handleError(e);
-      apiResponse = ApiResponseModel(null, error, false);
-    } catch (e) {
-      error = ErrorModel(
-        appState.localization.error,
-        appState.localization.somethingWentWrong,
-        504,
-      );
-      apiResponse = ApiResponseModel(null, error, false);
-    }
-    if (apiResponse.status) {
-      return apiResponse;
-    } else if (shouldNotThrowException && !apiResponse.status) {
-      return apiResponse;
-    } else {
-      throw ErrorException(apiResponse.error!);
-    }
-  }
+  // Future<ApiResponseModel> uploadFile(
+  //   String url,
+  //   APIMethod method,
+  //   List<FileInfo> files, {
+  //   Map<String, String> param = const {},
+  //   String filesKey = "",
+  //   bool shouldNotThrowException = false,
+  //   bool isResponseHasModel = true,
+  // }) async {
+  //   late ApiResponseModel apiResponse;
+  //   late ErrorModel error;
+  //   if (method != APIMethod.post) {
+  //     error = ErrorModel(
+  //       appState.localization.error,
+  //       "Only Post Method Allowed.",
+  //       503,
+  //     );
+  //     return apiResponse = ApiResponseModel(null, error, false);
+  //   }
+  //   late Response response;
+  //   _dio.options.headers["Content-Type"] = "multipart/form-data";
+  //   FormData formData = FormData();
+  //   if (filesKey.isNotEmpty) {
+  //     List<MultipartFile> multiPartFiles = [];
+  //     for (FileInfo file in files) {
+  //       multiPartFiles.add(
+  //         MultipartFile.fromFileSync(file.path, filename: file.name),
+  //       );
+  //     }
+  //     formData = FormData.fromMap({filesKey: multiPartFiles});
+  //   } else {
+  //     List<MapEntry<String, MultipartFile>> multiPartFiles = [];
+  //     for (FileInfo file in files) {
+  //       multiPartFiles.add(
+  //         MapEntry(
+  //           'attachment',
+  //           MultipartFile.fromFileSync(file.path, filename: file.name),
+  //         ),
+  //       );
+  //     }
+  //     formData.files.addAll(multiPartFiles);
+  //   }
+  //   final mapData = param.entries.map((e) => MapEntry(e.key, e.value)).toList();
+  //   for (MapEntry<String, String> entry in mapData) {
+  //     formData.fields.add(entry);
+  //   }
+  //   try {
+  //     response = await _dio.post(
+  //       url,
+  //       data: formData,
+  //       options: Options(
+  //         headers: {
+  //           'Cookie': appState.sessionId,
+  //           'tz': appState.timeZone,
+  //           if (appState.userId.isNotEmpty) "user-id": appState.userId,
+  //           if (appState.countryCode.value.isNotEmpty)
+  //             "country-code": appState.countryCode.value,
+  //           if (appState.ipAddress.value.isNotEmpty)
+  //             "ip-address": appState.ipAddress.value,
+  //         },
+  //       ),
+  //     );
+  //     if (!isResponseHasModel) {
+  //       return apiResponse = ApiResponseModel(response.data, null, true);
+  //     }
+  //     apiResponse = await _responseHandler(response);
+  //   } on DioException catch (e) {
+  //     error = _handleError(e);
+  //     apiResponse = ApiResponseModel(null, error, false);
+  //   } catch (e) {
+  //     error = ErrorModel(
+  //       appState.localization.error,
+  //       appState.localization.somethingWentWrong,
+  //       504,
+  //     );
+  //     apiResponse = ApiResponseModel(null, error, false);
+  //   }
+  //   if (apiResponse.status) {
+  //     return apiResponse;
+  //   } else if (shouldNotThrowException && !apiResponse.status) {
+  //     return apiResponse;
+  //   } else {
+  //     throw ErrorException(apiResponse.error!);
+  //   }
+  // }
 
   /// Method to download files
   Future<ApiResponseModel> downloadFile({
@@ -273,6 +308,16 @@ final class APIController {
     String? session = response.headers['set-cookie']?.firstWhereOrNull(
       (element) => element.startsWith(AppConstants.sessionId),
     );
+    debugPrint("📥 RESPONSE HANDLER");
+    debugPrint("⬅️ Status Code: ${response.statusCode}");
+    debugPrint("⬅️ Headers: ${response.headers}");
+    if (response.data is Map) {
+      debugPrint("⬅️ Body:");
+      UtilMethods().logPrettyJson(response.data as Map);
+    } else {
+      debugPrint("⬅️ Body:");
+      UtilMethods().logFullText(response.data.toString());
+    }
     if (session != null) {
       await getIt<StorageManager>().saveData(
         AppConstants.sessionId,
@@ -316,26 +361,26 @@ final class APIController {
       return ApiResponseModel(null, error, false);
     }
     if (response.statusCode == 200) {
-      (responseData['result']['status']['success'])
+      (responseData['status'].toString().toLowerCase() == 'success')
           ? apiResponse = ApiResponseModel(
-            responseData['result']['result'],
+            responseData['obj'],
             null,
-            responseData['result']['status']['success'],
+            responseData['status'].toString().toLowerCase() == 'success',
             message:
-                responseData['result']['status']['error_message'] ??
+                responseData['errorMessage'] ??
                 appState.localization.somethingWentWrong,
           )
           : apiResponse = ApiResponseModel(
             responseData,
             ErrorModel(
               appState.localization.error,
-              responseData['result']['status']['error_message'] ??
+              responseData['errorMessage'] ??
                   appState.localization.somethingWentWrong,
-              responseData['result']['status']['error_code'],
+              responseData['error_code'],
             ),
-            responseData['result']['status']['success'],
+            responseData['status'].toString().toLowerCase() == 'success',
             message:
-                responseData['result']['status']['error_message'] ??
+                responseData['errorMessage'] ??
                 appState.localization.somethingWentWrong,
           );
     } else if (response.statusCode == 401) {
@@ -359,8 +404,8 @@ final class APIController {
       if (response.data.isNotEmpty) {
         error = ErrorModel(
           appState.localization.error,
-         responseData['result']['status']['error_message'] ??
-                  appState.localization.somethingWentWrong,
+          responseData['result']['status']['errorMessage'] ??
+              appState.localization.somethingWentWrong,
           responseData['result']['status']['error_code'] ?? 401,
         );
         apiResponse = ApiResponseModel(null, error, false);

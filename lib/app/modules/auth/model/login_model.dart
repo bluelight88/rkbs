@@ -1,17 +1,25 @@
 import '../../../utils/services/util_methods.dart';
 
 final class LoginModel {
-  final int uid;
-  final String name;
+  final int customerId;
+  final String customerName;
+  final String sessionId;
+  final String customerImg;
+  final String loginMessage;
 
   LoginModel({
-    required this.uid,
-    required this.name,
+    required this.customerId,
+    required this.customerName,
+    required this.sessionId,
+    required this.customerImg,
+    required this.loginMessage,
   });
 
   factory LoginModel.fromJson(Map<String, dynamic> json) => LoginModel(
-        uid: UtilMethods().intValueParser(json['uid']),
-        name: UtilMethods().stringValueParser(json['name']),
-      );
+    customerId: UtilMethods().intValueParser(json['customer_id']),
+    customerName: UtilMethods().emptyStringValueParser(json['customer_name']),
+    sessionId: UtilMethods().emptyStringValueParser(json['SessionId']),
+    customerImg: UtilMethods().emptyStringValueParser(json['customer_img']),
+    loginMessage: UtilMethods().emptyStringValueParser(json['LoginMessage']),
+  );
 }
-

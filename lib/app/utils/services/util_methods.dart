@@ -1,13 +1,14 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:html/parser.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:interval_time_picker/interval_time_picker.dart' as itp;
-import 'package:interval_time_picker/models/visible_step.dart';
 import 'package:intl/intl.dart';
+import 'package:timoraa/app/utils/constants/color_constants.dart';
 
 import '../../core/models/app_location_model.dart';
 import '../../core/widgets/cupertino_date_picker/cupertino_date_picker_dialog.dart';
@@ -399,33 +400,6 @@ final class UtilMethods {
     );
   }
 
-  Future<String> selectIntervalTime(
-    BuildContext context, {
-    final bool timeWithSeconds = false,
-    final int interval = 10,
-    final VisibleStep visibleStep = VisibleStep.tenths,
-  }) async {
-    int initialHour = TimeOfDay.now().hour;
-    int initialMinute = (TimeOfDay.now().minute / interval).ceil() * interval;
-    if (initialMinute >= 60) {
-      initialMinute = 0;
-      initialHour += 1;
-    }
-    if (initialHour > 23) initialHour = 0;
-    final chosenTime = await itp.showIntervalTimePicker(
-      context: context,
-      initialTime: TimeOfDay(hour: initialHour, minute: initialMinute),
-      interval: interval,
-      visibleStep: visibleStep,
-      initialEntryMode: itp.TimePickerEntryMode.dialOnly,
-    );
-    if (chosenTime == null) return '';
-    return UtilMethods.instance.formatTime(
-      chosenTime,
-      withSecond: timeWithSeconds,
-    );
-  }
-
   Future<void> setOrientation() async =>
       await SystemChrome.setPreferredOrientations([
         DeviceOrientation.portraitUp,
@@ -438,8 +412,14 @@ final class UtilMethods {
         statusBarBrightness: Brightness.light,
         statusBarColor: color,
         systemNavigationBarColor: color,
-        statusBarIconBrightness: Brightness.dark,
-        systemNavigationBarIconBrightness: Brightness.light,
+        statusBarIconBrightness:
+            color == ColorConstants.whiteColor
+                ? Brightness.light
+                : Brightness.dark,
+        systemNavigationBarIconBrightness:
+            color == ColorConstants.whiteColor
+                ? Brightness.dark
+                : Brightness.light,
       ),
     );
   }
@@ -461,5 +441,116 @@ final class UtilMethods {
       address:
           "${place.street}, ${place.subLocality} ${place.locality} ${place.administrativeArea} ${place.country}",
     );
+  }
+
+  void logPrettyJson(Map data) {
+    const JsonEncoder encoder = JsonEncoder.withIndent('  ');
+    final prettyJson = encoder.convert(data);
+    logFullText(prettyJson);
+  }
+
+  void logFullText(String text) {
+    const int chunkSize = 800;
+    for (var i = 0; i < text.length; i += chunkSize) {
+      final chunk = text.substring(
+        i,
+        i + chunkSize > text.length ? text.length : i + chunkSize,
+      );
+      debugPrint(chunk);
+    }
+  }
+
+  String cleanHtmlString(String input) {
+    final document = parse(input); // from package:html/parser.dart
+    return parse(document.body?.text).documentElement?.text ?? '';
+  }
+
+  String getFormattedSlotInfo({
+    required DateTime selectedDate,
+    required String selectedSlot,
+    required int slotDuration,
+  }) {
+    final cleanSlot =
+        selectedSlot
+            .replaceAll('\u202F', ' ')
+            .replaceAll('\u00A0', ' ')
+            .replaceAll(RegExp(r'\s+'), ' ')
+            .trim()
+            .toUpperCase();
+
+    final match = RegExp(r'(\d{1,2}):(\d{2})\s*(AM|PM)').firstMatch(cleanSlot);
+    if (match == null) {
+      throw FormatException('Invalid time format: $selectedSlot');
+    }
+
+    int hour = int.parse(match.group(1)!);
+    int minute = int.parse(match.group(2)!);
+    final period = match.group(3)!;
+
+    if (period == 'PM' && hour != 12) hour += 12;
+    if (period == 'AM' && hour == 12) hour = 0;
+
+    final startDateTime = DateTime(
+      selectedDate.year,
+      selectedDate.month,
+      selectedDate.day,
+      hour,
+      minute,
+    );
+    final endDateTime = startDateTime.add(Duration(minutes: slotDuration));
+
+    final day = DateFormat('EEE d').format(selectedDate).toUpperCase();
+    final startFormatted = DateFormat.jm().format(startDateTime);
+    final endFormatted = DateFormat.jm().format(endDateTime);
+
+    return '$day, $startFormatted - $endFormatted - ${slotDuration}min';
+  }
+
+  String getSlotNameWithDuration(
+    String slotNameRaw,
+    int serviceDurationMinutes,
+  ) {
+    try {
+      final now = DateTime.now();
+
+      final formatter = DateFormat.jm(); // parse input with AM/PM
+      final parsedTime = formatter.parse(slotNameRaw.trim());
+
+      final startTime = DateTime(
+        now.year,
+        now.month,
+        now.day,
+        parsedTime.hour,
+        parsedTime.minute,
+      );
+
+      final endTime = startTime.add(Duration(minutes: serviceDurationMinutes));
+      final outputFormat = DateFormat.jm(); // format output with AM/PM
+
+      final formattedStart = outputFormat.format(startTime);
+      final formattedEnd = outputFormat.format(endTime);
+
+      return '$formattedStart - $formattedEnd';
+    } catch (_) {
+      return slotNameRaw;
+    }
+  }
+
+  String extractCleanTimeRange(String raw) {
+    final commaIndex = raw.indexOf(',');
+    String afterComma = commaIndex != -1 ? raw.substring(commaIndex + 1) : raw;
+
+    final cleaned = afterComma.replaceAll(
+      RegExp(r'\s*-\s*\d+Min\.?$', caseSensitive: false),
+      '',
+    );
+
+    String noSpacesAroundDash = cleaned.replaceAll(RegExp(r'\s*-\s*'), '-');
+    String formatted = noSpacesAroundDash.replaceAllMapped(
+      RegExp(r'(\d{1,2}:\d{2})\s*([AaPp][Mm])'),
+      (m) => '${m[1]}${m[2]!.toLowerCase()}',
+    );
+
+    return formatted.trim();
   }
 }
