@@ -6,7 +6,10 @@ import 'package:timoraa/app/modules/provider_detail/view/package/package_view.da
 import 'package:timoraa/app/modules/provider_detail/view/provider_detail_screen.dart';
 import 'package:timoraa/app/modules/provider_detail/view_model/provider_detail/provider_detail_bloc.dart';
 import '../../modules/auth/view/login/login_screen.dart';
+import '../../modules/auth/view/otp_verify.dart';
+import '../../modules/auth/view/register/register_screen.dart';
 import '../../modules/auth/view_model/login/login_bloc.dart';
+import '../../modules/auth/view_model/register/register_bloc.dart';
 import '../../modules/auth/view_model/splash_init/splash_init_bloc.dart';
 import '../../modules/booking/view/appointment_confirm/appointment_confirmed_screen.dart';
 import '../../modules/booking/view/booking_selection/booking_screen.dart';
@@ -46,6 +49,13 @@ final class NavigationManager {
       RouteName.authScreen => MultiBlocProvider(
         providers: [BlocProvider(create: (context) => LoginBloc())],
         child: LoginScreen(fromBooking: args['fromBooking'] ?? false),
+      ),
+      RouteName.register => BlocProvider(
+        create: (context) => RegisterBloc(),
+        child: RegisterScreen(),
+      ),
+      RouteName.otpVerify => OtpScreen(
+        customerId: args["customerId"],
       ),
       RouteName.bookingScreen => BlocProvider(
         create: (context) => BookingServiceBloc(),

@@ -332,6 +332,36 @@ class _LoginScreenState extends State<LoginScreen> {
                             const Spacer(),
                           ],
                         ),
+                        const Gap(20),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Don't have an account? ",
+                              style: TextStyle(
+                                color: ColorConstants.whiteColor,
+                                fontSize: 15,
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                Navigator.pushNamed(
+                                  context,
+                                  RouteName.register, // ✅ OPEN REGISTER
+                                );
+                              },
+                              child: Text(
+                                "Register",
+                                style: TextStyle(
+                                  color: ColorConstants.whiteColor,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                   ),

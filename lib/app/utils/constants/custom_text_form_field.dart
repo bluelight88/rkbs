@@ -13,6 +13,7 @@ final class SearchTextFormField extends StatefulWidget {
   final IconData image;
   final bool enable, isPassword, isVisible;
   final String? Function(String?)? validator;
+  final TextInputType? keyboardType;
 
   const SearchTextFormField({
     required this.controller,
@@ -24,6 +25,7 @@ final class SearchTextFormField extends StatefulWidget {
     this.isVisible = false,
     this.image = Icons.search,
     this.validator,
+    this.keyboardType,
     super.key,
   });
 

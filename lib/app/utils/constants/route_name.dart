@@ -9,5 +9,7 @@ class RouteName {
       reviewBookingScreen = 'reviewBookingScreen',
       splashScreen = '/',
       underDevelopmentScreen = 'underDevelopmentScreen',
-      appointment = "appointmentScreen";
+      appointment = "appointmentScreen",
+      register="registerScreen",
+      otpVerify="otpVerifyScreen";
 }
