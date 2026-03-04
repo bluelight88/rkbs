@@ -26,7 +26,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
   late AnimationController _fadeController;
   late Animation<double> _fadeAnimation;
-
   @override
   void initState() {
     super.initState();
@@ -83,8 +82,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   isLoading
-                      ?
-                  const Column(
+                      ? const Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             ShimmerWidget.rectangular(width: 80, height: 15),
@@ -141,12 +139,25 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                       ? const ShimmerWidget.circular(width: 50, height: 50)
                       : ClipRRect(
                           borderRadius: BorderRadius.circular(30),
-                          child: Image.asset(
-                            AssetConstants.icBoardingImage,
-                            height: 50,
-                            width: 50,
-                            fit: BoxFit.cover,
-                          ),
+                          child: appState.userImage.isNotEmpty && appState.userImage.startsWith("http")
+                              ? Image.network(
+                                  appState.userImage,
+                                  height: 50,
+                                  width: 50,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) => Image.asset(
+                                    AssetConstants.icBoardingImage,
+                                    height: 50,
+                                    width: 50,
+                                    fit: BoxFit.cover,
+                                  ),
+                                )
+                              : Image.asset(
+                                  AssetConstants.icBoardingImage,
+                                  height: 50,
+                                  width: 50,
+                                  fit: BoxFit.cover,
+                                ),
                         ),
                 ],
               ),

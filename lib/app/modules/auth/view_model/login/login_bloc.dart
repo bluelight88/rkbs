@@ -13,6 +13,7 @@ import '../../../../utils/services/app_state.dart';
 import '../../model/repo/auth_repo.dart';
 
 part 'login_event.dart';
+
 part 'login_state.dart';
 
 final class LoginBloc extends Bloc<LoginEvent, LoginState> {
@@ -81,7 +82,7 @@ final class LoginBloc extends Bloc<LoginEvent, LoginState> {
       } else if (errorMessage.isEmpty) {
         errorMessage = "Invalid credentials";
       }
-      
+
       emit(LoginFailure(errorMessage));
       return;
     }
@@ -90,7 +91,7 @@ final class LoginBloc extends Bloc<LoginEvent, LoginState> {
     appState.setUserName = response.data.customerName;
     appState.loginUserName.value = response.data.customerName;
     appState.setSessionId = response.data.sessionId;
-
+    appState.setUserImage = response.data.customerImg;
     await getIt<StorageManager>().saveIntData(
       AppConstants.userId,
       response.data.customerId,
