@@ -27,9 +27,8 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
     _getAppoinmentData();
   }
 
-  // Function to dispatch the event and fetch appointment data
   void _getAppoinmentData() {
-    final customerId = int.parse(appState.userId); // Get the userId from appState
+    final customerId = int.parse(appState.userId);
     context.read<AppoinmentBloc>().add(GetAppoinmentRecord(customerId: customerId));
   }
 

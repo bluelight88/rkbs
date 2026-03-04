@@ -115,20 +115,32 @@ class _DashboardScreenState extends State<DashboardScreen>
           child: SearchPage(searchController: searchController),
         );
       case 2:
-       if (appState.userId.isEmpty) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          context.pushNamed(RouteName.authScreen);
-        });
-        return const SizedBox();
-      }
-      else{
-        return BlocProvider<AppoinmentBloc>(
-          create: (_) => AppoinmentBloc()..add(GetAppoinmentRecord(customerId: int.parse(appState.userId))),
-          child: AppointmentScreen(),
-        );
-      }
+        if (appState.userId.isEmpty) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            context.pushNamed(RouteName.authScreen);
+          });
+          return const SizedBox();
+        } else {
+          return BlocProvider<AppoinmentBloc>(
+            create:
+                (_) =>
+                    AppoinmentBloc()..add(
+                      GetAppoinmentRecord(
+                        customerId: int.parse(appState.userId),
+                      ),
+                    ),
+            child: AppointmentScreen(),
+          );
+        }
       case 3:
-        return const AccountPage();
+        if (appState.userId.isEmpty) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            context.pushNamed(RouteName.authScreen);
+          });
+          return const SizedBox();
+        } else {
+          return const AccountPage();
+        }
       default:
         return const SizedBox();
     }
